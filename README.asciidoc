@@ -1,6 +1,29 @@
 == Maio
 PHP фреймоворк
 
-== Requirements
+== Installing/Configuring
 
-* PHP > 5.3 
+=== Requirements
+
+* PHP 5.3
+* PHPUnit
+
+=== Installation
+
+Скачиваем архив https://github.com/TheRatG/miao.
+
+Устанавливаем link:https://github.com/sebastianbergmann/phpunit[PHPUnit]
+ 
+http://www.phpunit.de/manual/current/en/installation.html
+
+-----
+pear config-set auto_discover 1
+
+pear install --alldeps pear.phpunit.de/PHPUnit
+-----
+
+=== Test
+Убеждаемся в том что все необходимое установлено, запускаем тесты.
+-----
+php scripts/test.php -d Miao
+-----
