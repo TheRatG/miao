@@ -1,0 +1,6 @@
+== Maio
+PHP фреймоворк
+
+== Requirements
+
+* PHP > 5.3 
