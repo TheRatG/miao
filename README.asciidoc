@@ -17,8 +17,7 @@ PHP фреймоворк
 http://www.phpunit.de/manual/current/en/installation.html
 
 -----
-pear config-set auto_discover 1
-
+pear config-set auto_discover 1; 
 pear install --alldeps pear.phpunit.de/PHPUnit
 -----
 
