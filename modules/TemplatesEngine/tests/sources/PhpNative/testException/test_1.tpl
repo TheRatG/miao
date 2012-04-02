@@ -1,0 +1,1 @@
+test debug mode <?=$this->_includeTemplate( 'test_1_1.tpl', true );?> continue

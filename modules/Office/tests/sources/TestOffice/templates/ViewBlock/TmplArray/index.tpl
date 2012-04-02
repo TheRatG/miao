@@ -1,0 +1,1 @@
+title: <?=$this->_getValueOf( 'title' )?>, body: <?=$this->_getValueOf( 'body' )?>
