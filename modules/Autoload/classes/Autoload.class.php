@@ -64,7 +64,10 @@ class Miao_Autoload
 		foreach ( $autoloadConfig as $configItem )
 		{
 			$auto->checkConfigItem( $configItem );
-			$auto->registerItem( $configItem[ 'name' ], $configItem[ 'plugin' ], $configItem[ 'path' ] );
+			if ( 0 !== strcasecmp( $configItem[ 'plugin' ], 'None' ) )
+			{
+				$auto->registerItem( $configItem[ 'name' ], $configItem[ 'plugin' ], $configItem[ 'path' ] );
+			}
 		}
 		spl_autoload_register( array( $auto, 'autoload' ), true, false );
 	}
@@ -92,7 +95,14 @@ class Miao_Autoload
 	{
 		$index = $this->_getIndex( $name );
 		$className = 'Miao_Autoload_Plugin_' . $plugin;
-		$this->_registerList[ $index ] = new $className( $libPath );
+		$plugin = new $className( $libPath );
+
+		$this->registerPlugin( $index, $plugin );
+	}
+
+	public function registerPlugin( $name, Miao_Autoload_Plugin $plugin )
+	{
+		$this->_registerList[ $name ] = $plugin;
 	}
 
 	public function autoload( $className )

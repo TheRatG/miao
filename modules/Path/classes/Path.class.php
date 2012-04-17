@@ -47,6 +47,14 @@ class Miao_Path
 		return $result;
 	}
 
+	/**
+	 *
+	 * @param unknown_type $root
+	 * @param unknown_type $mainConfigFilename
+	 * @param array $pathsMap
+	 * @throws Miao_Path_Exception
+	 * @throws Miao_Path_Exception_EmptyMap
+	 */
 	public function __construct( $root, $mainConfigFilename, array $pathsMap )
 	{
 		$this->_root = $root;

@@ -1,13 +1,23 @@
 <?php
 class Miao_Config
 {
-	const SECTION_NAME_BUILD = 'build';
+	const SECTION_NAME_MAIN = 'main';
+	const SECTION_NAME_PROJECT = 'project';
 
 	static public function Main()
 	{
 		$instance = self::_getDefaultInstance();
 
-		$path = self::SECTION_NAME_BUILD;
+		$path = self::SECTION_NAME_MAIN;
+		$result = $instance->_get( $path );
+		return $result;
+	}
+
+	static public function Project()
+	{
+		$instance = self::_getDefaultInstance();
+
+		$path = self::SECTION_NAME_PROJECT;
 		$result = $instance->_get( $path );
 		return $result;
 	}
@@ -19,12 +29,6 @@ class Miao_Config
 		$path = str_replace( '_', '/', $className );
 		$result = $instance->_get( $path );
 		return $result;
-	}
-
-	static public function Modules( $className )
-	{
-		// trigger_error( 'Use function Miao_Config::Libs()', E_DEPRECATED );
-		return self::Libs( $className );
 	}
 
 	/**
@@ -92,18 +96,19 @@ class Miao_Config
 			$ar = explode( '/', $path );
 			$className = implode( '_', $ar );
 
-			if ( self::SECTION_NAME_BUILD == $path )
+			if ( in_array( $path, array(
+				self::SECTION_NAME_MAIN,
+				self::SECTION_NAME_PROJECT ) ) )
 			{
 				$pathMain = $path;
-				$configFilename = $this->_file->getFilenameMain();
-				$configData = include $configFilename;
-				$configData = $configData[ 'config' ];
+				$funcName = '_getSection' . ucfirst( $path );
+				$configData = $this->$funcName( $className );
 			}
 			else
+
 			{
 				$pathMain = $ar[ 0 ];
-				$configFilename = $this->_file->getFilenameByClassName( $className );
-				$configData = include $configFilename;
+				$configData = $this->_getSectionDefault( $className );
 			}
 
 			$base->add( $pathMain, $configData );
@@ -111,5 +116,32 @@ class Miao_Config
 		$configData = $base->get( $path );
 		$result = new Miao_Config_Base( $configData );
 		return $result;
+	}
+
+	private function _getSectionDefault()
+	{
+		$configFilename = $this->_file->getFilenameByClassName( $className );
+		$configData = include $configFilename;
+		return $configData;
+	}
+
+	private function _getSectionMain()
+	{
+		$pathMain = $path;
+		$configFilename = $this->_file->getFilenameMain();
+		$configData = include $configFilename;
+		return $configData;
+	}
+
+	private function _getSectionProject()
+	{
+		$configFilename = $this->_file->getFilenameProject();
+		$configData = include $configFilename;
+		$configData = $configData[ 'config' ];
+		if ( isset( $configData[ 'libs' ] ) )
+		{
+			unset( $configData[ 'libs' ] );
+		}
+		return $configData;
 	}
 }

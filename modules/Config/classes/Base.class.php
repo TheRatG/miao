@@ -1,6 +1,8 @@
 <?php
 class Miao_Config_Base
 {
+	const DELIMETR = '.';
+
 	private $_configData;
 
 	public function __construct( array $configData )
@@ -14,15 +16,15 @@ class Miao_Config_Base
 		{
 			throw new Miao_Config_Exception_InvalidPath( $path, 'path is empty' );
 		}
-		if ( substr( $path, 0, 1 ) !== '/' )
+		if ( substr( $path, 0, 1 ) !== self::DELIMETR )
 		{
-			$path = '/' . $path;
+			$path = self::DELIMETR . $path;
 		}
 
 		$result = $this->_configData;
-		if ( $path !== '/' )
+		if ( $path !== self::DELIMETR )
 		{
-			$keys = explode( '/', $path );
+			$keys = explode( self::DELIMETR, $path );
 			for( $i = 1, $c = count( $keys ); $i < $c; $i++ )
 			{
 				if ( empty( $keys[ $i ] ) )

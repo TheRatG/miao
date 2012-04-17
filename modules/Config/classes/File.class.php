@@ -1,6 +1,13 @@
 <?php
 class Miao_Config_File
 {
+	public function getFilenameProject()
+	{
+		$path = Miao_Path::getDefaultInstance();
+		$result = $path->getRoot() . '/data/config.php';
+		return $result;
+	}
+
 	public function getFilenameMain()
 	{
 		$path = Miao_Path::getDefaultInstance();
