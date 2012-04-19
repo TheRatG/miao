@@ -70,7 +70,6 @@ class Miao_Env_Initializer
 		{
 			error_reporting( E_ALL | E_STRICT );
 		}
-		ini_set( 'display_errors', true );
 		return $this;
 	}
 

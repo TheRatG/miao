@@ -40,6 +40,7 @@ require_once 'Plugin/IncludePath.class.php';
 require_once 'Plugin/Zend.class.php';
 require_once 'Plugin/PHPExcel.class.php';
 require_once 'Plugin/PHPUnit.class.php';
+require_once 'Plugin/Pheanstalk.class.php';
 
 abstract class Miao_Autoload_Plugin
 {
