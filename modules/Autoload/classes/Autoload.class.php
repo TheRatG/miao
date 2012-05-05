@@ -85,7 +85,7 @@ class Miao_Autoload
 		foreach ( $auto->getRegisterList() as $item )
 		{
 			$filename = $item->getFilenameByClassName( $className );
-			$auto->_history = $filename;
+			$auto->_history[] = $filename;
 			if ( file_exists( $filename ) )
 			{
 				$result = $filename;
