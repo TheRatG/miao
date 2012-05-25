@@ -1,1 +1,3 @@
-/modules/Env/data/*
+data/config.php
+data/config.xml
+modules/Env/data/*

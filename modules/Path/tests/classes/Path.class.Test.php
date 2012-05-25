@@ -73,43 +73,43 @@ class Miao_Path_Test extends PHPUnit_Framework_TestCase
 		$data = array();
 
 		$map = array(
-			'Teleprog' => '/project_root/libs/teleprog/trunk/modules',
-			'Miao' => '/project_root/libs/miao/tag/modules' );
+			'Teleprog' => '/project_root/libs/teleprog/trunk',
+			'Miao' => '/project_root/libs/miao/tag' );
 
 		$data[] = array(
 			$map,
 			'Teleprog_FrontOffice',
-			$map[ 'Teleprog' ] . '/FrontOffice/templates' );
+			$map[ 'Teleprog' ] . '/modules/FrontOffice/templates' );
 		$data[] = array(
 			$map,
 			'Teleprog_FrontOffice_View',
-			$map[ 'Teleprog' ] . '/FrontOffice/templates/View' );
+			$map[ 'Teleprog' ] . '/modules/FrontOffice/templates/View' );
 		$data[] = array(
 			$map,
 			'Teleprog_FrontOffice_View_First',
-			$map[ 'Teleprog' ] . '/FrontOffice/templates/View/First' );
+			$map[ 'Teleprog' ] . '/modules/FrontOffice/templates/View/First' );
 		$data[] = array(
 			$map,
 			'Teleprog_FrontOffice_View_First_Second',
-			$map[ 'Teleprog' ] . '/FrontOffice/templates/View/First/Second' );
+			$map[ 'Teleprog' ] . '/modules/FrontOffice/templates/View/First/Second' );
 		$data[] = array(
 			$map,
 			'Teleprog_FrontOffice_ViewBlock_First_Second',
-			$map[ 'Teleprog' ] . '/FrontOffice/templates/ViewBlock/First/Second' );
+			$map[ 'Teleprog' ] . '/modules/FrontOffice/templates/ViewBlock/First/Second' );
 
 		$data[] = array(
 			$map,
 			'Miao_BackOffice_View',
-			$map[ 'Miao' ] . '/BackOffice/templates/View' );
+			$map[ 'Miao' ] . '/modules/BackOffice/templates/View' );
 		$data[] = array(
 			$map,
 			'Miao_BackOffice_View_First_Second',
-			$map[ 'Miao' ] . '/BackOffice/templates/View/First/Second' );
+			$map[ 'Miao' ] . '/modules/BackOffice/templates/View/First/Second' );
 
 		$data[] = array(
 			$map,
 			'Miao_DevOffice_View_First',
-			$map[ 'Miao' ] . '/DevOffice/templates/View/First' );
+			$map[ 'Miao' ] . '/modules/DevOffice/templates/View/First' );
 
 		$data[] = array( $map, '', '', 'Miao_Autoload_Exception_InvalidClassName' );
 		$data[] = array(

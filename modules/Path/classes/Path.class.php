@@ -181,6 +181,7 @@ class Miao_Path
 			$libName = $this->_pathNameObj->getLib();
 			$moduleName = $this->_pathNameObj->getModule();
 			$root = $this->getRootByLibName( $libName );
+
 			$path = sprintf( '%s/modules/%s/templates/%s', $root, $moduleName, str_replace( '_', '/', $this->_pathNameObj->getClass() ) );
 			$result = rtrim( $path, '/' );
 		}

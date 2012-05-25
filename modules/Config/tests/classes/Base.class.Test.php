@@ -27,26 +27,26 @@ class Miao_Config_Base_Test extends PHPUnit_Framework_TestCase
 				'login' => 'test-user',
 				'password' => 'test-password' ) );
 
-		$data[] = array( '/db/login', 'test-user', $config );
-		$data[] = array( '/db', $config[ 'db' ], $config, '' );
-		$data[] = array( '/', $config, $config, '' );
+		$data[] = array( 'db.login', 'test-user', $config );
+		$data[] = array( 'db', $config[ 'db' ], $config, '' );
+		$data[] = array( '.', $config, $config, '' );
 
 		$exceptionName = 'Miao_Config_Exception_InvalidPath';
 		$data[] = array( '', null, $config, $exceptionName );
-		$data[] = array( '/', $config, $config );
-		$data[] = array( '//', null, $config, $exceptionName );
-		$data[] = array( '///', null, $config, $exceptionName );
-		$data[] = array( '/db/password/', null, $config, $exceptionName );
-		$data[] = array( '/db/password//', null, $config, $exceptionName );
-		$data[] = array( '/db//password', null, $config, $exceptionName );
+		$data[] = array( '.', $config, $config );
+		$data[] = array( '..', null, $config, $exceptionName );
+		$data[] = array( '...', null, $config, $exceptionName );
+		$data[] = array( '.db.password.', null, $config, $exceptionName );
+		$data[] = array( '.db.password..', null, $config, $exceptionName );
+		$data[] = array( '.db..password', null, $config, $exceptionName );
 
 		$exceptionName = 'Miao_Config_Exception_PathNotFound';
 		$data[] = array( 'password', null, $config, $exceptionName );
-		$data[] = array( '/asd', null, $config, $exceptionName );
-		$data[] = array( '/db/type', null, $config, $exceptionName );
-		$data[] = array( '/db/asd/password', null, $config, $exceptionName );
-		$data[] = array( '/lo1gin', null, $config, $exceptionName );
-		$data[] = array( '/db/server/wrong-key', null, $config, $exceptionName );
+		$data[] = array( 'asd', null, $config, $exceptionName );
+		$data[] = array( 'db.type', null, $config, $exceptionName );
+		$data[] = array( 'db.asd.password', null, $config, $exceptionName );
+		$data[] = array( 'lo1gin', null, $config, $exceptionName );
+		$data[] = array( 'db.server.wrong-key', null, $config, $exceptionName );
 
 		return $data;
 	}
