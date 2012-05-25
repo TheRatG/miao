@@ -98,8 +98,7 @@ class Miao_Log
 	 * Factory to construct the logger and one or more writers
 	 * based on the configuration array
 	 *
-	 * @param
-	 *       	 array|Zend_Config Array or instance of Zend_Config
+	 * @param array|Zend_Config Array or instance of Zend_Config
 	 * @return Miao_Log
 	 */
 	static public function factory( $config = array() )
@@ -126,7 +125,7 @@ class Miao_Log
 		return $log;
 	}
 
-	static public function factory2( $filename, $verbose = false, $level = 7 )
+	static public function easyFactory( $filename = '', $verbose = false, $level = 7 )
 	{
 		$result = new self();
 		if ( $filename )
