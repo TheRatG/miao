@@ -18,7 +18,7 @@ class Miao_Config
 		$instance = self::_getDefaultInstance();
 
 		$path = self::SECTION_NAME_PROJECT;
-		$result = $instance->_get( $path );
+		$result = $instance->_get( $path, '' );
 		return $result;
 	}
 
@@ -26,8 +26,10 @@ class Miao_Config
 	{
 		$instance = self::_getDefaultInstance();
 
-		$path = str_replace( '_', '/', $className );
-		$result = $instance->_get( $path );
+		$pieces = explode( '_', $className );
+		array_shift( $pieces );
+		$path = implode( Miao_Config_Base::DELIMETR, $pieces );
+		$result = $instance->_get( $path, $className );
 		return $result;
 	}
 
@@ -82,7 +84,7 @@ class Miao_Config
 		return $result;
 	}
 
-	private function _get( $path )
+	private function _get( $path, $className )
 	{
 		$base = $this->getBase();
 
@@ -93,8 +95,11 @@ class Miao_Config
 		}
 		catch ( Miao_Config_Exception_PathNotFound $e )
 		{
-			$ar = explode( '/', $path );
-			$className = implode( '_', $ar );
+			$ar = explode( Miao_Config_Base::DELIMETR, $path );
+			if ( empty( $className ) )
+			{
+				$className = implode( '_', $ar );
+			}
 
 			if ( in_array( $path, array(
 				self::SECTION_NAME_MAIN,
@@ -105,10 +110,10 @@ class Miao_Config
 				$configData = $this->$funcName( $className );
 			}
 			else
-
 			{
 				$pathMain = $ar[ 0 ];
 				$configData = $this->_getSectionDefault( $className );
+				$configData = $configData[ $pathMain ];
 			}
 
 			$base->add( $pathMain, $configData );
@@ -118,7 +123,7 @@ class Miao_Config
 		return $result;
 	}
 
-	private function _getSectionDefault()
+	private function _getSectionDefault( $className )
 	{
 		$configFilename = $this->_file->getFilenameByClassName( $className );
 		$configData = include $configFilename;

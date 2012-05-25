@@ -32,7 +32,9 @@ class Miao_Path
 
 	/**
 	 *
+	 *
 	 * Enter description here ...
+	 *
 	 * @throws Miao_Path_Exception
 	 * @return Miao_Path
 	 */
@@ -75,6 +77,7 @@ class Miao_Path
 	}
 
 	/**
+	 *
 	 * @return the $_mainConfigFilename
 	 */
 	public function getMainConfigFilename()
@@ -89,11 +92,20 @@ class Miao_Path
 
 	public function getRootByLibName( $libName )
 	{
-		if ( !isset( $this->_map[ $libName ] ) )
+		$result = null;
+		foreach ( $this->_map as $key => $val )
+		{
+			if ( 0 === strcasecmp( $key, $libName ) )
+			{
+				$result = $val;
+				break;
+			}
+		}
+		if ( is_null( $result ) )
 		{
 			throw new Miao_Path_Exception_LibNotFound( $libName );
 		}
-		return $this->_map[ $libName ];
+		return $result;
 	}
 
 	/**
@@ -134,7 +146,9 @@ class Miao_Path
 
 	/**
 	 *
+	 *
 	 * Enter description here ...
+	 *
 	 * @param string $libName
 	 */
 	public function getModuleList( $libName )

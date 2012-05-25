@@ -69,7 +69,11 @@ class Miao_Autoload
 				$auto->registerItem( $configItem[ 'name' ], $configItem[ 'plugin' ], $configItem[ 'path' ] );
 			}
 		}
-		spl_autoload_register( array( $auto, 'autoload' ), true, false );
+		$res = spl_autoload_register( array( $auto, 'autoload' ), true );
+		if ( !$res )
+		{
+			throw new Exception( 'Maio autoload didn\'t register' );
+		}
 	}
 
 	static public function getFilenameByClassName( $className )
@@ -81,7 +85,7 @@ class Miao_Autoload
 		foreach ( $auto->getRegisterList() as $item )
 		{
 			$filename = $item->getFilenameByClassName( $className );
-			$auto->_history = $filename;
+			$auto->_history[] = $filename;
 			if ( file_exists( $filename ) )
 			{
 				$result = $filename;
