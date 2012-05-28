@@ -7,7 +7,7 @@ class Miao_Path_Test extends PHPUnit_Framework_TestCase
 	public function setUp()
 	{
 		$this->_root = realpath( dirname( __FILE__ ) . '/../../../..' );
-		$this->_mainConfigFilename = $this->_root . '/data/config.php';
+		$this->_mainConfigFilename = $this->_root . '/modules/Path/tests/sources/config.php';
 	}
 
 	public function testCreate()
@@ -29,7 +29,6 @@ class Miao_Path_Test extends PHPUnit_Framework_TestCase
 		$path = new Miao_Path( $this->_root, $this->_mainConfigFilename, $map );
 		$this->assertEquals( $expectedPath, $path->getRootByLibName( $libName ) );
 	}
-
 	public function providerTestGetRoot()
 	{
 		$data = array();
@@ -67,7 +66,6 @@ class Miao_Path_Test extends PHPUnit_Framework_TestCase
 		$actualPath = $path->getTemplateDir( $className );
 		$this->assertEquals( $expectedPath, $actualPath );
 	}
-
 	public function providerTestGetTemplateDir()
 	{
 		$data = array();
@@ -111,7 +109,11 @@ class Miao_Path_Test extends PHPUnit_Framework_TestCase
 			'Miao_DevOffice_View_First',
 			$map[ 'Miao' ] . '/modules/DevOffice/templates/View/First' );
 
-		$data[] = array( $map, '', '', 'Miao_Autoload_Exception_InvalidClassName' );
+		$data[] = array(
+			$map,
+			'',
+			'',
+			'Miao_Autoload_Exception_InvalidClassName' );
 		$data[] = array(
 			$map,
 			'Miao',
@@ -125,7 +127,9 @@ class Miao_Path_Test extends PHPUnit_Framework_TestCase
 
 	/**
 	 *
+	 *
 	 * @dataProvider providerTestGetModuleRoot
+	 *
 	 * @param unknown_type $className
 	 * @param unknown_type $expected
 	 * @param unknown_type $exceptionName
@@ -140,7 +144,6 @@ class Miao_Path_Test extends PHPUnit_Framework_TestCase
 		$actual = $path->getModuleRoot( $className );
 		$this->assertEquals( $expected, $actual );
 	}
-
 	public function providerTestGetModuleRoot()
 	{
 		$data = array();
@@ -164,7 +167,6 @@ class Miao_Path_Test extends PHPUnit_Framework_TestCase
 
 		return $data;
 	}
-
 	public function testGetModuleList()
 	{
 		$path = Miao_Path::getDefaultInstance();
@@ -175,7 +177,9 @@ class Miao_Path_Test extends PHPUnit_Framework_TestCase
 
 	/**
 	 *
+	 *
 	 * @dataProvider providerTestGetFilenameByClassName
+	 *
 	 * @param unknown_type $className
 	 * @param unknown_type $actual
 	 * @param unknown_type $expectedException
@@ -191,7 +195,6 @@ class Miao_Path_Test extends PHPUnit_Framework_TestCase
 		$expected = $path->getFilenameByClassName( $className );
 		$this->assertEquals( $expected, $actual );
 	}
-
 	public function providerTestGetFilenameByClassName()
 	{
 		$data = array();

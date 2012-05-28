@@ -1,3 +1,4 @@
 data/config.php
 data/config.xml
+scripts/miao.php
 modules/Env/data/*
