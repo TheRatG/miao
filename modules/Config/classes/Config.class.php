@@ -3,7 +3,6 @@ class Miao_Config
 {
 	const SECTION_NAME_MAIN = 'main';
 	const SECTION_NAME_PROJECT = 'project';
-
 	static public function Main()
 	{
 		$instance = self::_getDefaultInstance();
@@ -12,7 +11,6 @@ class Miao_Config
 		$result = $instance->_get( $path );
 		return $result;
 	}
-
 	static public function Project()
 	{
 		$instance = self::_getDefaultInstance();
@@ -21,7 +19,6 @@ class Miao_Config
 		$result = $instance->_get( $path, '' );
 		return $result;
 	}
-
 	static public function Libs( $className )
 	{
 		$instance = self::_getDefaultInstance();
@@ -44,7 +41,6 @@ class Miao_Config
 	 * @var Miao_Config_File
 	 */
 	private $_file;
-
 	public function __construct()
 	{
 		$this->setBase( new Miao_Config_Base( array() ) );
@@ -67,6 +63,25 @@ class Miao_Config
 	public function setBase( $base )
 	{
 		$this->_base = $base;
+	}
+
+	/**
+	 * Return true if config.php exists
+	 *
+	 * @param string $className
+	 * @return bool
+	 */
+	static public function checkConfig( $className )
+	{
+		$instance = self::_getDefaultInstance();
+		$filename = $instance->_file->getFilenameByClassName( $className );
+
+		$result = true;
+		if ( !file_exists( $filename ) )
+		{
+			$result = false;
+		}
+		return $result;
 	}
 
 	static private function _getDefaultInstance()
@@ -123,6 +138,11 @@ class Miao_Config
 		return $result;
 	}
 
+	/**
+	 * Especially we don't use file_exists
+	 * @param unknown_type $className
+	 * @return array
+	 */
 	private function _getSectionDefault( $className )
 	{
 		$configFilename = $this->_file->getFilenameByClassName( $className );
