@@ -1,187 +1,96 @@
 <?php
-abstract class Miao_Office_DataHelper_JsCssList
+abstract class Miao_Office_DataHelper_JsCssList extends Miao_Office_DataHelper
 {
-	// you can change ------------
-	protected $_jsList;
-	protected $_cssList;
+	const TYPE_JS = 'js';
+	const TYPE_CSS = 'css';
+	const SECTION_COMMON = 'common';
+
+	protected $_resourceList = array();
+
 	protected $_minify = false;
 	protected $_dstFolder = false;
-
-	protected $_jsPath = 'jslib';
-	protected $_cssPath = 'skin';
-	// ---------------------------
+	protected $_client = null;
 
 	/**
+	 *
 	 * @var Miao_Office_DataHelper_Url
 	 */
 	protected $_dataHelperUrl;
 
-	// generated -----------------
-	protected $_jsSrcList;
-	protected $_cssSrcList;
-
-	protected $_jsFilenameList;
-	protected $_cssFilenameList;
-	// ---------------------------
-
-	/**
-	 * @return the $_dataHelperUrlClassName
-	 */
-	public function getDataHelperUrlClassName()
+	protected function _makeLinks( array $fileList )
 	{
-		return $this->_dataHelperUrlClassName;
-	}
-
-	/**
-	 * @return the $_jsList
-	 */
-	public function getJsSrcList()
-	{
-		$result = $this->_jsSrcList;
-		if ( $this->_minify )
+		$result = array();
+		$search = $this->_dstFolder . DIRECTORY_SEPARATOR;
+		$replace = '';
+		foreach ( $fileList as $value )
 		{
-			$result  = array( $this->getMinifyJsSrc() );
+			$query = 't=' . Miao_Config::Main()->get( 'config.timestamp' );
+			$result[] = $this->_dataHelperUrl->src( str_replace( $search, $replace, $value ), $query );
 		}
 		return $result;
 	}
 
-	/**
-	 * @return the $_cssList
-	 */
-	public function getCssSrcList()
+	protected function __construct( Miao_Office_DataHelper_Url $dhUrl, $dstFolder, $minify = true )
 	{
-		$result = $this->_cssSrcList;
-		if ( $this->_minify )
-		{
-			$result  = array( $this->getMinifyCssSrc() );
-		}
+		$this->_dataHelperUrl = $dhUrl;
+		$this->_dstFolder = $dstFolder;
+		$this->_minify = $minify;
 
-		return $result;
-	}
-
-	public function getJsFilenameList()
-	{
-		return $this->_jsFilenameList;
-	}
-
-	public function getCssFilenameList()
-	{
-		return $this->_cssFilenameList;
-	}
-
-	public function __construct()
-	{
+		$this->_client = new Miaox_Compress_Client( $this->_dstFolder, $this->_minify );
 		$this->_init();
-		$this->_initSrcList();
-		$this->_initFilenameList();
 	}
 
-	public function getJsFolder()
-	{
-		$result = $this->_getDstFolder() . DIRECTORY_SEPARATOR . $this->_jsPath;
-		return $result;
-	}
+	/**
+	 * initialize js, css resource
+	 */
+	abstract protected function _init();
 
-	public function getCssFolder()
+	protected function _addResource( $path, $type, $section = self::SECTION_COMMON )
 	{
-		$result = $this->_getDstFolder() . DIRECTORY_SEPARATOR . $this->_cssPath;
-		return $result;
-	}
+		assert( !empty( $section ) );
+		$this->_prepareType( $type );
 
-	public function getMinifyJsFilename()
-	{
-		$jsList = $this->getJsFilenameList();
-		$dstFolder = $this->getJsFolder();
-		$result = Miao_Compress::makeFilename( $dstFolder, $jsList );
-		return $result;
-	}
-
-	public function getMinifyCssFilename()
-	{
-		$cssList = $this->getCssFilenameList();
-		$dstFolder = $this->getCssFolder();
-		$result = Miao_Compress::makeFilename( $dstFolder, $cssList );
-		return $result;
-	}
-
-	public function getMinifyJsSrc()
-	{
-		$jsList = $this->getJsFilenameList();
-		$path = Miao_Compress::makeFilename( 'jslib', $jsList );
-		$result = $this->_src( $path );
-		return $result;
-	}
-
-	public function getMinifyCssSrc()
-	{
-		$cssList = $this->getCssFilenameList();
-		$path = Miao_Compress::makeFilename( 'skin', $cssList );
-		$result = $this->_src( $path );
-		return $result;
-	}
-
-	static protected function _getInstance( $className )
-	{
-		$index = 'dh:jscsslist' . $className;
-		$result = null;
-		if ( !Miao_Registry::isRegistered( $index ) )
+		if ( !array_key_exists( $type, $this->_resourceList ) )
 		{
-			$result = new $className();
-			Miao_Registry::set( $index, $result );
+			$this->_resourceList[ $type ] = array();
+		}
+		$typeAr = & $this->_resourceList[ $type ];
+		if ( !array_key_exists( $section, $typeAr ) )
+		{
+			$typeAr[ $section ] = array();
+		}
+		$sectionAr = &$typeAr[ $section ];
+		if ( array_search( $path, $sectionAr ) )
+		{
+			$msg = sprintf( 'Resource (%s) already exists', $path );
+			throw new Miao_Office_DataHelper_JsCssList_Exception( $msg );
 		}
 		else
 		{
-			$result = Miao_Registry::get( $index );
+			$sectionAr[] = $path;
+		}
+	}
+
+	public function getResourceList( $type, $section = self::SECTION_COMMON )
+	{
+		assert( !empty( $section ) );
+		$this->_prepareType( $type );
+
+		$result = array();
+		if ( isset( $this->_resourceList[ $type ][ $section ] ) )
+		{
+			$result = $this->_resourceList[ $type ][ $section ];
 		}
 		return $result;
 	}
 
-	protected function _initSrcList()
+	protected function _prepareType( $type )
 	{
-		$urlHelper = $this->_dataHelperUrl;
-		foreach ( $this->_jsList as $item )
+		$type = strtolower( $type );
+		if ( $type != self::TYPE_CSS && $type != self::TYPE_JS )
 		{
-			$this->_jsSrcList[] = $urlHelper->src( $this->_jsPath . '/' . $item );
+			throw new Miao_Office_DataHelper_JsCssList_Exception( 'Wrong resource type' );
 		}
-		foreach ( $this->_cssList as $item )
-		{
-			$this->_cssSrcList[] = $urlHelper->src(
-			$this->_cssPath . '/' . $item );
-		}
+		return $type;
 	}
-
-	protected function _initFilenameList()
-	{
-		$dir = $this->_getDstFolder();
-
-		foreach ( $this->_jsList as $item )
-		{
-			$this->_jsFilenameList[] = $dir . '/' . $this->_jsPath . '/' . $item;
-		}
-		foreach ( $this->_cssList as $item )
-		{
-			$this->_cssFilenameList[] = $dir . '/' . $this->_cssPath . '/' . $item;
-		}
-	}
-
-	protected function _getDstFolder()
-	{
-		$dir = $this->_dstFolder;
-		if ( !$dir )
-		{
-			$path = Miao_Path::getDefaultInstance();
-			$dir = $path->getModuleRoot( get_class( $this->_dataHelperUrl ) );
-			$dir .= '/public/images';
-		}
-		return $dir;
-	}
-
-	protected function _src( $path )
-	{
-		$helper = $this->_dataHelperUrl;
-		$result = $helper->src( $path );
-		return $result;
-	}
-
-	abstract protected function _init();
 }

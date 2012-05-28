@@ -9,20 +9,18 @@ abstract class Miao_Office_View
 	 * @var Miao_Office_TemplatesEngine_PhpNative
 	 */
 	protected $_templatesObj;
-
 	abstract protected function _initializeBlock();
-
 	public function __construct( Miao_Office_TemplatesEngine_PhpNative $templatesObj )
 	{
 		$this->setTemplateObj( $templatesObj );
 	}
-
 	public function getTemplateObj()
 	{
 		return $this->_templatesObj;
 	}
 
 	/**
+	 *
 	 * @return the $_layout
 	 */
 	public function getLayout()
@@ -39,18 +37,17 @@ abstract class Miao_Office_View
 	}
 
 	/**
+	 *
 	 * @param field_type $_layout
 	 */
 	public function setLayout( $layout )
 	{
 		$this->_layout = $layout;
 	}
-
 	public function setTemplateObj( Miao_Office_TemplatesEngine_PhpNative $templatesObj )
 	{
 		$this->_templatesObj = $templatesObj;
 	}
-
 	public function fetch( $layout = '' )
 	{
 		if ( empty( $layout ) )
@@ -69,14 +66,15 @@ abstract class Miao_Office_View
 	/**
 	 * Установка данных в шаблон
 	 *
-	 * @param string $name Имя переменной
-	 * @param mixed $value Значение переменной
+	 * @param string $name
+	 *        	Имя переменной
+	 * @param mixed $value
+	 *        	Значение переменной
 	 */
 	final public function setTmplVars( $name, $value )
 	{
 		$this->_templatesObj->setValueOf( $name, $value );
 	}
-
 	protected function _makeViewTemplate()
 	{
 		$className = get_class( $this );
@@ -102,9 +100,15 @@ abstract class Miao_Office_View
 	/**
 	 * Добавить описание создаваемого блока
 	 *
-	 * @param string $name Имя блока, при помощи него вызывается нужный блок
-	 * @param string or array $class_name Имя класса блока. Если массив, то первый элемент - это имя класса, второй обязательно массив с параметрами, которые будут использованы как аргументы функции process() блока
-	 * @param array $templates Шаблоны блока
+	 * @param string $name
+	 *        	Имя блока, при помощи него вызывается нужный блок
+	 * @param
+	 *        	string or array $class_name Имя класса блока. Если массив, то
+	 *        	первый элемент - это имя класса, второй обязательно массив с
+	 *        	параметрами, которые будут использованы как аргументы функции
+	 *        	process() блока
+	 * @param array $templates
+	 *        	Шаблоны блока
 	 */
 	protected function _addBlock( $name, $className, $templates = array('index.tpl') )
 	{
@@ -121,11 +125,15 @@ abstract class Miao_Office_View
 		{
 			$block_class_name = $className[ 0 ];
 			$block_class_process_params = $className[ 1 ];
+			if ( !is_array( $block_class_process_params ) )
+			{
+				$block_class_process_params = array( $block_class_process_params );
+			}
 		}
 
 		$viewBlock = new $block_class_name( $name, $templates, $block_class_process_params );
 		$viewBlock->setTemplates( $templates );
-		$viewBlock->setProcessParams($block_class_process_params);
+		$viewBlock->setProcessParams( $block_class_process_params );
 		$this->_templatesObj->addBlock( $name, $viewBlock );
 	}
 }

@@ -99,7 +99,7 @@ class Miao_Config
 		return $result;
 	}
 
-	private function _get( $path, $className )
+	private function _get( $path, $className = '' )
 	{
 		$base = $this->getBase();
 
