@@ -1,5 +1,5 @@
 <?php
-class Uniora_Session_Handler_Memcache extends Uniora_Session_Handler
+class Miao_Session_Handler_Memcache extends Miao_Session_Handler
 {
 	private $_host;
 	private $_port;

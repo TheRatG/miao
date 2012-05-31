@@ -19,6 +19,9 @@ class Miao_PHPUnit_Console
 
 		$this->_init();
 		$this->_testSuite = new PHPUnit_Framework_TestSuite();
+
+		//can't isolate session
+		Miao_Session::getInstance();
 	}
 
 	public function getListFileListByModuleName( $moduleName )
