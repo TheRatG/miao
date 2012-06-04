@@ -12,9 +12,8 @@ class Miao_Form_Control_Submit_Test extends PHPUnit_Framework_TestCase
 			$this->setExpectedException( $exceptionName );
 		}
 
-		$control = new Miao_Form_Control_Submit( $name );
+		$control = new Miao_Form_Control_Submit( $name, $attributes );
 		$control->setValue( $value );
-		$control->setAttributes( $attributes );
 
 		$expected = $control->render();
 

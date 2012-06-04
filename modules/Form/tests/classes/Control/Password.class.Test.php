@@ -12,9 +12,8 @@ class Miao_Form_Control_Password_Test extends PHPUnit_Framework_TestCase
 			$this->setExpectedException( $exceptionName );
 		}
 
-		$control = new Miao_Form_Control_Password( $name );
+		$control = new Miao_Form_Control_Password( $name, $attributes );
 		$control->setValue( $value );
-		$control->setAttributes( $attributes );
 
 		$expected = $control->render();
 

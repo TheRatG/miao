@@ -1,9 +1,24 @@
 <?php
 abstract class Miao_Form_Control
 {
+
+	/**
+	 *
+	 * @var string
+	 */
 	protected $_id;
 
+	/**
+	 *
+	 * @var string
+	 */
 	protected $_value;
+
+	/**
+	 *
+	 * @var array
+	 */
+	protected $_attributes = array();
 
 	/**
 	 *
@@ -11,9 +26,47 @@ abstract class Miao_Form_Control
 	 */
 	protected $_validator;
 
+	/**
+	 *
+	 * @var Miao_Form_Label
+	 */
 	protected $_label;
 
 	protected $_exceptAttrMap = array( 'id', 'name', 'value' );
+
+	/**
+	 *
+	 * @param string $id
+	 * @param array $attributes
+	 */
+	public function __construct( $id, array $attributes = array() )
+	{
+		$this->setId( $id );
+		$this->setAttributes( $attributes );
+		$this->_label = new Miao_Form_Label( '' );
+	}
+
+	public function __get( $propertyName )
+	{
+		$result = null;
+		if ( 'label' == $propertyName )
+		{
+			$result = $this->_label->getLabel();
+		}
+
+		if ( is_null( $result ) )
+		{
+			$msg = sprintf( 'Call undefined property (%s)', $propertyName );
+			throw new Miao_Form_Exception( $msg );
+		}
+
+		return $result;
+	}
+
+	public function __toString()
+	{
+		return $this->render();
+	}
 
 	/**
 	 * @return the $_id
@@ -74,9 +127,8 @@ abstract class Miao_Form_Control
 	/**
 	 * @param array $attributes
 	 */
-	public function setAttributes( $attributes )
+	public function setAttributes( array $attributes )
 	{
-		$this->_attributes = $attributes;
 		foreach ( $attributes as $name => $value )
 		{
 			$this->addAttribute( $name, $value );
@@ -96,12 +148,17 @@ abstract class Miao_Form_Control
 			$msg = sprintf( 'Invalid attr name (%s), you should use method (set%s)', $name, ucfirst( $name ) );
 			throw new Miao_Form_Exception( $msg );
 		}
+		$this->_attributes[ $name ] = $value;
 	}
 
-	public function __construct( $id, array $attributes = array() )
+	public function setLabel( $label )
 	{
-		$this->setId( $id );
-		$this->setAttributes( $attributes );
+		$this->_label->setLabel( $label );
+	}
+
+	public function getLabel()
+	{
+		return $this->_label;
 	}
 
 	/**
@@ -116,14 +173,7 @@ abstract class Miao_Form_Control
 		return $this;
 	}
 
-	public function setLabel( $value, array $attributes )
-	{
-	}
-
-	public function __toString()
-	{
-		return $this->render();
-	}
+	abstract public function render();
 
 	protected function _renderAttributes()
 	{
@@ -135,6 +185,4 @@ abstract class Miao_Form_Control
 		$result = implode( ' ', $pieces );
 		return $result;
 	}
-
-	abstract public function render();
 }

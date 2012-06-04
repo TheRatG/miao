@@ -3,7 +3,7 @@ class Miao_TemplatesEngine_PhpNative implements Miao_TemplatesEngine_Interface
 {
 	protected $_templatesDir;
 	protected $_templateVars = array();
-	protected $_debugMode;
+	protected $_debugMode = false;
 	protected $_forceExceptionsOnInclude;
 	protected $_logFilename = '';
 
@@ -59,7 +59,7 @@ class Miao_TemplatesEngine_PhpNative implements Miao_TemplatesEngine_Interface
 	 * @param string $templatesDir
 	 * @param bool $debugMode
 	 */
-	public function __construct( $templatesDir = '', $debugMode = true )
+	public function __construct( $templatesDir = '', $debugMode = false )
 	{
 		$this->setTemplatesDir( $templatesDir );
 		$this->setDebugMode( $debugMode );

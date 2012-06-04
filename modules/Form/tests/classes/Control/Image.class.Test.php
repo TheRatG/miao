@@ -12,9 +12,8 @@ class Miao_Form_Control_Image_Test extends PHPUnit_Framework_TestCase
 			$this->setExpectedException( $exceptionName );
 		}
 
-		$control = new Miao_Form_Control_Image( $name );
+		$control = new Miao_Form_Control_Image( $name, $attributes );
 		$control->setValue( $value );
-		$control->setAttributes( $attributes );
 
 		$expected = $control->render();
 

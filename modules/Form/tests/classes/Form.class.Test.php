@@ -105,4 +105,30 @@ class Miao_Form_Test extends PHPUnit_Framework_TestCase
 
 		return $data;
 	}
+
+	/**
+	 * @dataProvider providerTestRender
+	 */
+	public function testRender( $num, $form, $exceptionName = '' )
+	{
+		$sourceFolder = Miao_PHPUnit::getSourceFolder( __METHOD__ );
+		$actualFilename = $sourceFolder . '/form_' . $num . '_actual.html';
+		$actual = file_get_contents( $actualFilename );
+		$tmplFilename = 'form_' . $num . '.tpl';
+
+		$tmpl = new Miao_TemplatesEngine_PhpNative( $sourceFolder, true );
+		$tmpl->setValueOf( 'form', $form );
+		$expected = $tmpl->fetch( $tmplFilename );
+		$this->assertEquals($expected, $actual );
+	}
+
+	public function providerTestRender()
+	{
+		$data = array();
+
+		$form = new Miao_Form( 'frm_form1' );
+		$form->addText( 'name' )->setLabel( 'Name:' );
+		$data[] = array( 1, $form, '' );
+		return $data;
+	}
 }

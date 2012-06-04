@@ -12,9 +12,8 @@ class Miao_Form_Control_Hidden_Test extends PHPUnit_Framework_TestCase
 			$this->setExpectedException( $exceptionName );
 		}
 
-		$control = new Miao_Form_Control_Hidden( $name );
+		$control = new Miao_Form_Control_Hidden( $name, $attributes );
 		$control->setValue( $value );
-		$control->setAttributes( $attributes );
 
 		$expected = $control->render();
 
