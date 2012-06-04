@@ -1,5 +1,5 @@
 <?php
-class Miao_Office_Exception extends Exception
+class Miao_Form_Exception extends Exception
 {
 
 }

@@ -25,13 +25,13 @@ class Miao_Form_Validate
 	{
 		if ( is_object( $validator ) )
 		{
-			$this->_addValidator( $validate, $breakChainOnFailure );
+			$this->_addValidator( $validator, $breakChainOnFailure );
 		}
 		elseif ( is_string( $validator ) )
 		{
 			$className = __CLASS__ . '_' . ucfirst( $validator );
-			$validate = new $className();
-			$this->_addValidator( $validate, $breakChainOnFailure );
+			$validator = new $className();
+			$this->_addValidator( $validator, $breakChainOnFailure );
 		}
 	}
 
