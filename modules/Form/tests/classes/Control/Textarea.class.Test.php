@@ -24,7 +24,7 @@ class Miao_Form_Control_Textarea_Test extends PHPUnit_Framework_TestCase
 	{
 		$data = array();
 
-		$actual = '<textarea id="name" name="name" class="input-xlarge">value</textarea>';
+		$actual = '<textarea name="name" class="input-xlarge">value</textarea>';
 		$data[] = array(
 			'name',
 			$actual,

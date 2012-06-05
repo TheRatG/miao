@@ -19,7 +19,7 @@ class Miao_Form_Control_RadioList extends Miao_Form_Control
 	{
 		foreach ( $items as $key => $value )
 		{
-			$control = new Miao_Form_Control_Radio( $this->getId(), $this->getAttributes() );
+			$control = new Miao_Form_Control_Radio( $this->getName(), $this->getAttributes() );
 			$control->setValue( $key );
 			$control->setLabel( $value );
 

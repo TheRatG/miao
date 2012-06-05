@@ -1,4 +1,7 @@
 <?php
+/**
+ *
+ */
 abstract class Miao_Form_Control
 {
 
@@ -6,7 +9,7 @@ abstract class Miao_Form_Control
 	 *
 	 * @var string
 	 */
-	protected $_id;
+	protected $_name;
 
 	/**
 	 *
@@ -32,18 +35,23 @@ abstract class Miao_Form_Control
 	 */
 	protected $_label;
 
-	protected $_exceptAttrMap = array( 'id', 'name', 'value' );
+	/**
+	 * Disallow attributes
+	 * @var array
+	 */
+	protected $_exceptAttrMap = array( 'name', 'value' );
 
 	/**
 	 *
 	 * @param string $id
 	 * @param array $attributes
 	 */
-	public function __construct( $id, array $attributes = array() )
+	public function __construct( $name, array $attributes = array() )
 	{
-		$this->setId( $id );
+		$this->setName( $name );
 		$this->setAttributes( $attributes );
 		$this->_label = new Miao_Form_Label( '' );
+		$this->_validator = new Miao_Form_Validate();
 	}
 
 	public function __get( $propertyName )
@@ -52,6 +60,10 @@ abstract class Miao_Form_Control
 		if ( 'label' == $propertyName )
 		{
 			$result = $this->_label->getLabel();
+		}
+		else if ( 'error' == $propertyName )
+		{
+			$result = $this->_validator;
 		}
 
 		if ( is_null( $result ) )
@@ -69,14 +81,6 @@ abstract class Miao_Form_Control
 	}
 
 	/**
-	 * @return the $_id
-	 */
-	public function getId()
-	{
-		return $this->_id;
-	}
-
-	/**
 	 * @return the $_value
 	 */
 	public function getValue()
@@ -85,7 +89,7 @@ abstract class Miao_Form_Control
 	}
 
 	/**
-	 * @param field_type $value
+	 * @param string $value
 	 */
 	public function setValue( $value )
 	{
@@ -93,19 +97,11 @@ abstract class Miao_Form_Control
 	}
 
 	/**
-	 * @param string $id
-	 */
-	public function setId( $id )
-	{
-		$this->_id = $id;
-	}
-
-	/**
-	 * @return the $_id
+	 * @return the $_name
 	 */
 	public function getName()
 	{
-		return $this->_id;
+		return $this->_name;
 	}
 
 	/**
@@ -113,7 +109,7 @@ abstract class Miao_Form_Control
 	 */
 	public function setName( $name )
 	{
-		$this->_id = $name;
+		$this->_name = $name;
 	}
 
 	/**
@@ -151,14 +147,24 @@ abstract class Miao_Form_Control
 		$this->_attributes[ $name ] = $value;
 	}
 
-	public function setLabel( $label )
-	{
-		$this->_label->setLabel( $label );
-	}
-
+	/**
+	 *
+	 * @return Miao_Form_Label
+	 */
 	public function getLabel()
 	{
 		return $this->_label;
+	}
+
+	/**
+	 *
+	 * @param string $label
+	 * @return Miao_Form_Control
+	 */
+	public function setLabel( $label )
+	{
+		$this->_label->setLabel( $label );
+		return $this;
 	}
 
 	/**
@@ -171,6 +177,17 @@ abstract class Miao_Form_Control
 	{
 		$this->_validator->addValidator( $validator, $breakChainOnFailure );
 		return $this;
+	}
+
+	/**
+	 *
+	 * @return boolean
+	 */
+	public function isValid()
+	{
+		$value = $this->getValue();
+		$result = $this->_validator->isValid( $value );
+		return $result;
 	}
 
 	abstract public function render();

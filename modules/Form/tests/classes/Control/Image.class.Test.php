@@ -24,7 +24,7 @@ class Miao_Form_Control_Image_Test extends PHPUnit_Framework_TestCase
 	{
 		$data = array();
 
-		$actual = '<input id="push" name="push" value="push" type="image" class="btn" src="but.jpg" />';
+		$actual = '<input name="push" value="push" type="image" class="btn" src="but.jpg" />';
 		$data[] = array(
 			'push',
 			$actual,

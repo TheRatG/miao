@@ -24,7 +24,7 @@ class Miao_Form_Control_Text_Test extends PHPUnit_Framework_TestCase
 	{
 		$data = array();
 
-		$actual = '<input id="name" name="name" value="" type="text" class="input-xlarge" />';
+		$actual = '<input name="name" value="" type="text" class="input-xlarge" />';
 		$data[] = array(
 			'name',
 			$actual,

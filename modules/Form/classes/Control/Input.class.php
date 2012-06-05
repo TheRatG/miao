@@ -18,8 +18,7 @@ abstract class Miao_Form_Control_Input extends Miao_Form_Control
 	{
 		$pieces = array();
 		$pieces[] = '<input';
-		$pieces[] = sprintf( 'id="%s"', $this->getId() );
-		$pieces[] = sprintf( 'name="%s"', $this->getId() );
+		$pieces[] = sprintf( 'name="%s"', $this->getName() );
 		$pieces[] = sprintf( 'value="%s"', $this->getValue() );
 		$pieces[] = $this->_renderType();
 		$pieces[] = $this->_renderAttributes();

@@ -24,7 +24,7 @@ class Miao_Form_Control_Radio_Test extends PHPUnit_Framework_TestCase
 	{
 		$data = array();
 
-		$actual = '<input id="sex" name="sex" value="male" type="radio" />';
+		$actual = '<input name="sex" value="male" type="radio" />';
 		$data[] = array( 'sex', $actual, 'male' );
 
 		return $data;

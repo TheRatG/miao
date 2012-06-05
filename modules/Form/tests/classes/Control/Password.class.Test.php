@@ -24,7 +24,7 @@ class Miao_Form_Control_Password_Test extends PHPUnit_Framework_TestCase
 	{
 		$data = array();
 
-		$actual = '<input id="inp_hid" name="inp_hid" value="secret" type="password" />';
+		$actual = '<input name="inp_hid" value="secret" type="password" />';
 		$data[] = array( 'inp_hid', $actual, 'secret' );
 
 		return $data;

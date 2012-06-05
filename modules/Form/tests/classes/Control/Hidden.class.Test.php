@@ -24,7 +24,7 @@ class Miao_Form_Control_Hidden_Test extends PHPUnit_Framework_TestCase
 	{
 		$data = array();
 
-		$actual = '<input id="inp_hid" name="inp_hid" value="secret" type="hidden" />';
+		$actual = '<input name="inp_hid" value="secret" type="hidden" />';
 		$data[] = array(
 			'inp_hid',
 			$actual,

@@ -24,8 +24,8 @@ class Miao_Form_Control_RadioList_Test extends PHPUnit_Framework_TestCase
 		$data = array();
 
 		$actual = array();
-		$actual[] = '<input id="sex" name="sex" value="m" type="radio" />';
-		$actual[] = '<input id="sex" name="sex" value="f" type="radio" />';
+		$actual[] = '<input name="sex" value="m" type="radio" />';
+		$actual[] = '<input name="sex" value="f" type="radio" />';
 		$data[] = array(
 			'sex',
 			array( 'm' => 'male', 'f' => 'female' ),
@@ -33,8 +33,8 @@ class Miao_Form_Control_RadioList_Test extends PHPUnit_Framework_TestCase
 			'' );
 
 		$actual = array();
-		$actual[] = '<input id="sex" name="sex" value="m" type="radio" checked="checked" />';
-		$actual[] = '<input id="sex" name="sex" value="f" type="radio" />';
+		$actual[] = '<input name="sex" value="m" type="radio" checked="checked" />';
+		$actual[] = '<input name="sex" value="f" type="radio" />';
 		$data[] = array(
 			'sex',
 			array( 'm' => 'male', 'f' => 'female' ),

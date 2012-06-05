@@ -24,7 +24,7 @@ class Miao_Form_Control_Submit_Test extends PHPUnit_Framework_TestCase
 	{
 		$data = array();
 
-		$actual = '<input id="push" name="push" value="push" type="submit" class="btn" />';
+		$actual = '<input name="push" value="push" type="submit" class="btn" />';
 		$data[] = array(
 			'push',
 			$actual,

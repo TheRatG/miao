@@ -10,6 +10,10 @@ class Miao_Form extends Miao_Form_Control
 
 	protected $_attributes = array();
 
+	/**
+	 *
+	 * @var array Miao_Form_Control
+	 */
 	protected $_controls = array();
 
 	/**
@@ -70,7 +74,7 @@ class Miao_Form extends Miao_Form_Control
 
 	public function addControl( Miao_Form_Control $obj )
 	{
-		$index = $obj->getId();
+		$index = $obj->getName();
 		if ( array_key_exists( $index, $this->_controls ) )
 		{
 			$msg = sprintf( 'Control with name (%s) already exists', $index );
@@ -98,8 +102,10 @@ class Miao_Form extends Miao_Form_Control
 		return $result;
 	}
 
-	public function loadValue( $data )
+	public function load( $data )
 	{
+		$data = self::getHtmlName( $data );
+
 		foreach ( $data as $key => $value )
 		{
 			if ( array_key_exists( $key, $this->_controls ) )
@@ -109,12 +115,23 @@ class Miao_Form extends Miao_Form_Control
 		}
 	}
 
+	public function isValid( $data )
+	{
+		$this->load( $data );
+
+		$result = true;
+		foreach ( $this->_controls as $control )
+		{
+			$result = $result && $control->isValid();
+		}
+		return $result;
+	}
+
 	public function begin()
 	{
 		$pieces = array();
 		$pieces[] = '<form';
-		$pieces[] = sprintf( 'id="%s"', $this->getId() );
-		$pieces[] = sprintf( 'name="%s"', $this->getId() );
+		$pieces[] = sprintf( 'name="%s"', $this->getName() );
 		$pieces[] = sprintf( 'action="%s"', $this->getAction() );
 		$pieces[] = sprintf( 'method="%s"', $this->getMethod() );
 		$pieces[] = sprintf( 'enctype="%s"', $this->getEnctype() );
@@ -137,16 +154,25 @@ class Miao_Form extends Miao_Form_Control
 		return $obj;
 	}
 
-	public function addTextArea()
+	public function addTextArea( $name, array $attributes = array() )
 	{
+		$obj = new Miao_Form_Control_TextArea( $name, $attributes );
+		$this->addControl( $obj );
+		return $obj;
 	}
 
-	public function addSubmit()
+	public function addSubmit( $name, array $attributes = array() )
 	{
+		$obj = new Miao_Form_Control_Submit( $name, $attributes );
+		$this->addControl( $obj );
+		return $obj;
 	}
 
-	public function addButton()
+	public function addButton( $name, array $attributes = array() )
 	{
+		$obj = new Miao_Form_Control_Button( $name, $attributes );
+		$this->addControl( $obj );
+		return $obj;
 	}
 
 	public function render()
@@ -159,5 +185,34 @@ class Miao_Form extends Miao_Form_Control
 		$result = implode( chr( 10 ), $pieces );
 
 		return $result;
+	}
+
+	static public function getHtmlName( $data )
+	{
+		$result = array();
+		self::_getHtmlName( $data, $result );
+		return $result;
+	}
+
+	static protected function _getHtmlName( $data, &$result, array & $keys = array() )
+	{
+		if ( is_array( $data ) )
+		{
+			foreach ( $data as $key => $value )
+			{
+				$newKeys = $keys;
+				$newKeys[] = $key;
+				self::_getHtmlName( $value, $result, $newKeys );
+			}
+		}
+		else
+		{
+			$name = array_shift( $keys );
+			if ( !empty( $keys ) )
+			{
+				$name .= '[' . implode( '][', $keys ) . ']';
+			}
+			$result[ $name ] = $data;
+		}
 	}
 }

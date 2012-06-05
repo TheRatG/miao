@@ -24,7 +24,7 @@ class Miao_Form_Control_Reset_Test extends PHPUnit_Framework_TestCase
 	{
 		$data = array();
 
-		$actual = '<input id="reset" name="reset" value="clear" type="reset" class="btn" />';
+		$actual = '<input name="reset" value="clear" type="reset" class="btn" />';
 		$data[] = array(
 			'reset',
 			$actual,

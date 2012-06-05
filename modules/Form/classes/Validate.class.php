@@ -72,6 +72,13 @@ class Miao_Form_Validate
 		return $this->_messages;
 	}
 
+	public function __toString()
+	{
+		$pieces = $this->getMessages();
+		$result = implode( ', ', $pieces );
+		return $result;
+	}
+
 	protected function _addValidator( Miao_Form_Validate_Base $validate, $breakChainOnFailure = false )
 	{
 		$item = array();
