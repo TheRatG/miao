@@ -1,7 +1,9 @@
 <?php
 abstract class Miao_Office_View
 {
+
 	protected $_defaultLayout = 'layouts/index.tpl';
+
 	protected $_layout;
 
 	/**
@@ -9,11 +11,38 @@ abstract class Miao_Office_View
 	 * @var Miao_Office_TemplatesEngine_PhpNative
 	 */
 	protected $_templatesObj;
+
+	/**
+	 *
+	 * @var Miao_Office
+	 */
+	protected $_office;
+
+	/**
+	 *
+	 * @param Miao_Office $office
+	 */
+	public function setOffice( Miao_Office $office )
+	{
+		$this->_office = $office;
+	}
+
+	/**
+	 *
+	 * @return Miao_Office
+	 */
+	public function getOffice()
+	{
+		return $this->_office;
+	}
+
 	abstract protected function _initializeBlock();
+
 	public function __construct( Miao_Office_TemplatesEngine_PhpNative $templatesObj )
 	{
 		$this->setTemplateObj( $templatesObj );
 	}
+
 	public function getTemplateObj()
 	{
 		return $this->_templatesObj;
@@ -44,10 +73,12 @@ abstract class Miao_Office_View
 	{
 		$this->_layout = $layout;
 	}
+
 	public function setTemplateObj( Miao_Office_TemplatesEngine_PhpNative $templatesObj )
 	{
 		$this->_templatesObj = $templatesObj;
 	}
+
 	public function fetch( $layout = '' )
 	{
 		if ( empty( $layout ) )
@@ -75,6 +106,7 @@ abstract class Miao_Office_View
 	{
 		$this->_templatesObj->setValueOf( $name, $value );
 	}
+
 	protected function _makeViewTemplate()
 	{
 		$className = get_class( $this );
@@ -127,7 +159,8 @@ abstract class Miao_Office_View
 			$block_class_process_params = $className[ 1 ];
 			if ( !is_array( $block_class_process_params ) )
 			{
-				$block_class_process_params = array( $block_class_process_params );
+				$block_class_process_params = array(
+					$block_class_process_params );
 			}
 		}
 

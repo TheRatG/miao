@@ -66,7 +66,7 @@ class Miao_Office
 	}
 
 	/**
-	 * @return the $_header
+	 * @return Miao_Office_Header $_header
 	 */
 	public function getHeader()
 	{
@@ -95,6 +95,7 @@ class Miao_Office
 	public function setAction( $action )
 	{
 		$this->_action = $action;
+		$this->_action->setOffice( $this );
 	}
 
 	/**

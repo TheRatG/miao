@@ -66,7 +66,7 @@ abstract class Miao_Form_Validate_Base
 	 * @param  string $messageString
 	 * @param  string $messageKey     OPTIONAL
 	 * @return Miao_Form_Validate_Base Provides a fluent interface
-	 * @throws Miao_Office_Validate_Exception
+	 * @throws Miao_Form_Validate_Exception
 	 */
 	public function setMessage( $messageString, $messageKey = null )
 	{
@@ -82,7 +82,7 @@ abstract class Miao_Form_Validate_Base
 
 		if ( !isset( $this->_messageTemplates[ $messageKey ] ) )
 		{
-			throw new Miao_Office_Validate_Exception( "No message template exists for key '$messageKey'" );
+			throw new Miao_Form_Validate_Exception( "No message template exists for key '$messageKey'" );
 		}
 
 		$this->_messageTemplates[ $messageKey ] = $messageString;

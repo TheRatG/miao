@@ -18,8 +18,8 @@ class Miao_Form_Validate
 
 	/**
 	 *
-	 * @param unknown_type $validator
-	 * @param unknown_type $breakChainOnFailure
+	 * @param mixed $validator
+	 * @param bool $breakChainOnFailure
 	 */
 	public function addValidator( $validator, $breakChainOnFailure = false )
 	{
@@ -31,6 +31,14 @@ class Miao_Form_Validate
 		{
 			$className = __CLASS__ . '_' . ucfirst( $validator );
 			$validator = new $className();
+			$this->_addValidator( $validator, $breakChainOnFailure );
+		}
+		elseif ( is_array( $validator ) )
+		{
+			$className = __CLASS__ . '_' . ucfirst( $validator[ 0 ] );
+			$params = $validator[ 1 ];
+			$rc = new ReflectionClass( $className );
+			$validator = $rc->newInstanceArgs( $params );
 			$this->_addValidator( $validator, $breakChainOnFailure );
 		}
 	}

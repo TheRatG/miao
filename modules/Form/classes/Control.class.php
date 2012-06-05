@@ -54,27 +54,6 @@ abstract class Miao_Form_Control
 		$this->_validator = new Miao_Form_Validate();
 	}
 
-	public function __get( $propertyName )
-	{
-		$result = null;
-		if ( 'label' == $propertyName )
-		{
-			$result = $this->_label->getLabel();
-		}
-		else if ( 'error' == $propertyName )
-		{
-			$result = $this->_validator;
-		}
-
-		if ( is_null( $result ) )
-		{
-			$msg = sprintf( 'Call undefined property (%s)', $propertyName );
-			throw new Miao_Form_Exception( $msg );
-		}
-
-		return $result;
-	}
-
 	public function __toString()
 	{
 		return $this->render();
@@ -151,9 +130,14 @@ abstract class Miao_Form_Control
 	 *
 	 * @return Miao_Form_Label
 	 */
-	public function getLabel()
+	public function label()
 	{
 		return $this->_label;
+	}
+
+	public function error()
+	{
+		return $this->_validator;
 	}
 
 	/**
@@ -176,6 +160,23 @@ abstract class Miao_Form_Control
 	public function addValidator( $validator, $breakChainOnFailure = false )
 	{
 		$this->_validator->addValidator( $validator, $breakChainOnFailure );
+		return $this;
+	}
+
+	/**
+	 *
+	 * @param unknown_type $msg
+	 * @return Miao_Form_Control
+	 */
+	public function setRequired( $msg = '' )
+	{
+		$val = new Miao_Form_Validate_Require();
+		if ( !empty( $msg ) )
+		{
+			$val->setMessages( array(
+				Miao_Form_Validate_Require::IS_EMPTY => $msg ) );
+		}
+		$this->addValidator( $val );
 		return $this;
 	}
 

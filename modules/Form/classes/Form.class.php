@@ -122,7 +122,7 @@ class Miao_Form extends Miao_Form_Control
 		$result = true;
 		foreach ( $this->_controls as $control )
 		{
-			$result = $result && $control->isValid();
+			$result = $control->isValid() && $result;
 		}
 		return $result;
 	}
@@ -156,7 +156,7 @@ class Miao_Form extends Miao_Form_Control
 
 	public function addTextArea( $name, array $attributes = array() )
 	{
-		$obj = new Miao_Form_Control_TextArea( $name, $attributes );
+		$obj = new Miao_Form_Control_Textarea( $name, $attributes );
 		$this->addControl( $obj );
 		return $obj;
 	}
@@ -171,6 +171,13 @@ class Miao_Form extends Miao_Form_Control
 	public function addButton( $name, array $attributes = array() )
 	{
 		$obj = new Miao_Form_Control_Button( $name, $attributes );
+		$this->addControl( $obj );
+		return $obj;
+	}
+
+	public function addReset( $name, array $attributes = array() )
+	{
+		$obj = new Miao_Form_Control_Reset( $name, $attributes );
 		$this->addControl( $obj );
 		return $obj;
 	}

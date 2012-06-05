@@ -146,6 +146,16 @@ class Miao_Form_Test extends PHPUnit_Framework_TestCase
 		$form->addText( 'name' )->setLabel( 'Name:' )->addValidator( new Miao_Form_Validate_Length( 3 ) );
 		$form->isValid( array( 'name' => '123456' ) );
 		$data[] = array( 'simple2', $form, '' );
+
+		$form = new Miao_Form( 'frm_form' );
+		$form->addText( 'name' )->setLabel( 'Name:' )->addValidator( new Miao_Form_Validate_Length( 250 ) )->setRequired();
+		$form->addText( 'email' )->setLabel( 'Email:' )->addValidator( 'email' )->setRequired( 'Please fill your email.' );
+		$form->addTextArea( 'descr' )->setLabel( 'Description:' )->addValidator( new Miao_Form_Validate_Length( 250 ) );
+		$form->addSubmit( 'send' )->setLabel('Send');
+		$form->addReset( 'clear' )->setLabel('Clear');
+		$form->isValid( array( 'email' => '123456' ) );
+		$data[] = array( 'contact', $form, '' );
+
 		return $data;
 	}
 

@@ -1,6 +1,7 @@
 <?php
 abstract class Miao_Office_Resource
 {
+
 	/**
 	 * @var string
 	 */
@@ -45,6 +46,12 @@ abstract class Miao_Office_Resource
 	public function getContent()
 	{
 		return $this->_content;
+	}
+
+	public function sendHeader()
+	{
+		$result = $this->getOffice()->getHeader()->send();
+		return $result;
 	}
 
 	protected function _checkExistsOperationObject()

@@ -13,13 +13,41 @@
  */
 abstract class Miao_Office_ViewBlock
 {
+
 	/**
 	 *
 	 * @var Miao_TemplatesEngine_PhpNative
 	 */
 	protected $_templateEngine = null;
+
 	protected $_templates = array( 'index.tpl' );
+
 	protected $_templatesDir = '';
+
+	/**
+	 *
+	 * @var Miao_Office
+	 */
+	protected $_office;
+
+	/**
+	 *
+	 * @param Miao_Office $office
+	 */
+	public function setOffice( Miao_Office $office )
+	{
+		$this->_office = $office;
+	}
+
+	/**
+	 *
+	 * @return Miao_Office
+	 */
+	public function getOffice()
+	{
+		return $this->_office;
+	}
+
 	/**
 	 * параметры фукнции process()
 	 *

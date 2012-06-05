@@ -1,0 +1,27 @@
+<form name="frm_form" action="/" method="POST"
+	enctype="multipart/form-data">
+	<fieldset>
+		<div class="control-group">
+			Name:
+			<div class="controls">
+				<input name="name" value="" type="text" /> 
+				<span class="help-inline">Invalid type given.String expected, Value is required and can't be empty</span>
+			</div>
+		</div>
+		<div class="control-group">
+			Email:
+			<div class="controls">
+				<input name="email" value="123456" type="text" /> 
+				<span class="help-inline">
+					<ul>
+						<li>'123456' is no valid email address in the basic format local-part@hostname</li>
+					</ul>
+				</span>
+			</div>
+		</div>
+		<div class="form-actions">
+			<input name="send" value="Send" type="submit" />
+			<input name="clear" value="Clear" type="reset" />
+		</div>
+	</fieldset>
+</form>

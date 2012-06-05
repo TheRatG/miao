@@ -1,6 +1,7 @@
 <?php
 class Miao_Form_Label
 {
+
 	/**
 	 *
 	 * @var string
@@ -26,5 +27,10 @@ class Miao_Form_Label
 	public function __construct( $label )
 	{
 		$this->setLabel( $label );
+	}
+
+	public function __toString()
+	{
+		return $this->getLabel();
 	}
 }

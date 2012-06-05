@@ -8,6 +8,8 @@ class Miao_Office_Header
 	 */
 	private $_list = array();
 
+	private $_redirectUrl;
+
 	private $_contentTypeList = array(
 		'html' => 'text/html',
 		'xml' => 'application/xml',
@@ -22,7 +24,12 @@ class Miao_Office_Header
 
 	public function send()
 	{
-
+		$list = $this->getList();
+		foreach ( $list as $item )
+		{
+			header( $item, true );
+		}
+		return headers_list();
 	}
 
 	public function setEncoding( $encoding )
@@ -66,6 +73,25 @@ class Miao_Office_Header
 		}
 		$name = 'Content-type';
 		$this->set( $name, $result );
+	}
+
+	public function setRedirectUrl( $redirectUrl )
+	{
+		$redirectUrl = trim( $redirectUrl );
+
+		if ( empty( $redirectUrl ) )
+		{
+			$message = sprintf( 'Ivalid param redirectUrl: must be not empty' );
+			throw new Miao_Office_Header_Exception( $message );
+		}
+
+		$this->_redirectUrl = trim( $redirectUrl );
+		$this->set( 'location', sprintf( 'Location: %s', $this->_redirectUrl ) );
+	}
+
+	public function getRedirectUrl()
+	{
+		return $this->_redirectUrl;
 	}
 
 	public function set( $name, $value )
