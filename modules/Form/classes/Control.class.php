@@ -17,6 +17,8 @@ abstract class Miao_Form_Control
 	 */
 	protected $_value;
 
+	protected $_isValid = true;
+
 	/**
 	 *
 	 * @var array
@@ -73,6 +75,7 @@ abstract class Miao_Form_Control
 	public function setValue( $value )
 	{
 		$this->_value = $value;
+		$this->_isValid = $this->_validator->isValid( $value );
 	}
 
 	/**
@@ -186,8 +189,7 @@ abstract class Miao_Form_Control
 	 */
 	public function isValid()
 	{
-		$value = $this->getValue();
-		$result = $this->_validator->isValid( $value );
+		$result = $this->_isValid;
 		return $result;
 	}
 

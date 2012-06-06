@@ -115,6 +115,16 @@ class Miao_Form extends Miao_Form_Control
 		}
 	}
 
+	public function getValues()
+	{
+		$result = array();
+		foreach ( $this->_controls as $name => $control )
+		{
+			$result[ $name ] = $control->getValue();
+		}
+		return $result;
+	}
+
 	public function isValid( $data )
 	{
 		$this->load( $data );
