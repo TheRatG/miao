@@ -22,10 +22,13 @@ abstract class Miao_Form_Controller
 	 */
 	protected $_isValid;
 
-	private $_clearNumber = 3;
+	private $_clearNumber = 1;
 
-	private $_loadCnt = 0;
-
+	/**
+	 *
+	 * @param string $className
+	 * @return Miao_Form_Controller
+	 */
 	static protected function _getInstance( $className )
 	{
 		$index = 'frm::' . $className;
@@ -61,6 +64,10 @@ abstract class Miao_Form_Controller
 		if ( !is_null( $val ) )
 		{
 			$this->_isRedirect = ( bool ) $val;
+			if ( $this->_isRedirect )
+			{
+				$this->save();
+			}
 		}
 		$result = $this->_isRedirect;
 		return $result;
@@ -74,8 +81,9 @@ abstract class Miao_Form_Controller
 	public function save()
 	{
 		$session = Miao_Session::getInstance();
-		$this->_loadCnt++;
-		$data = array( 'loadCnt' => $this->_loadCnt, 'form' => $this->_form );
+		$data = array(
+			'isRedirect' => $this->isRedirect(),
+			'form' => $this->_form );
 		$session->saveObject( $this->_fid, $data );
 	}
 
@@ -93,18 +101,11 @@ abstract class Miao_Form_Controller
 		{
 			$form = $res;
 		}
-		else if ( isset( $res[ 'loadCnt' ] ) && isset( $res[ 'form' ] ) )
+		else if ( isset( $res[ 'form' ] ) )
 		{
-			list( $this->_loadCnt, $this->_form ) = $res;
-			$this->_loadCnt = $res[ 'loadCnt' ];
 			$this->_form = $res[ 'form' ];
-			if ( $this->_loadCnt >= $this->_clearNumber )
-			{
-				$this->_form = null;
-				$this->_loadCnt = 0;
-			}
+			$this->_isRedirect = $res[ 'isRedirect' ];
 		}
-		return $form;
 	}
 
 	public function _init()
@@ -119,9 +120,17 @@ abstract class Miao_Form_Controller
 		}
 		else
 		{
-			$request = Miao_Office_Request::getInstance();
-			$data = $request->getVars();
-			$this->_isValid = $this->_form->isValid( $data );
+			if ( $this->isRedirect() )
+			{
+				$this->_isRedirect = false;
+				$this->_isValid = $this->_form->isValid();
+			}
+			else
+			{
+				$request = Miao_Office_Request::getInstance();
+				$data = $request->getVars();
+				$this->_isValid = $this->_form->isValid( $data );
+			}
 		}
 		$this->save();
 	}

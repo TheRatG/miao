@@ -10,6 +10,8 @@ class Miao_Form extends Miao_Form_Control
 
 	protected $_attributes = array();
 
+	protected $_isValid = null;
+
 	/**
 	 *
 	 * @var array Miao_Form_Control
@@ -125,16 +127,22 @@ class Miao_Form extends Miao_Form_Control
 		return $result;
 	}
 
-	public function isValid( $data )
+	/**
+	 * @param array $data
+	 */
+	public function isValid( array $data = array() )
 	{
-		$this->load( $data );
-
-		$result = true;
-		foreach ( $this->_controls as $control )
+		if ( !empty( $data ) )
 		{
-			$result = $control->isValid() && $result;
+			$this->load( $data );
+			$result = true;
+			foreach ( $this->_controls as $control )
+			{
+				$result = $control->isValid() && $result;
+			}
+			$this->_isValid = $result;
 		}
-		return $result;
+		return $this->_isValid;
 	}
 
 	public function begin()
@@ -157,6 +165,12 @@ class Miao_Form extends Miao_Form_Control
 		return $result;
 	}
 
+	/**
+	 *
+	 * @param unknown_type $name
+	 * @param array $attributes
+	 * @return Miao_Form_Control_Text
+	 */
 	public function addText( $name, array $attributes = array() )
 	{
 		$obj = new Miao_Form_Control_Text( $name, $attributes );

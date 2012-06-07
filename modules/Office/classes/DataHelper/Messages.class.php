@@ -68,10 +68,16 @@ class Miao_Office_DataHelper_Messages extends Miao_Office_DataHelper
 		return $result;
 	}
 
-	public function getList()
+	public function getList( $remove = true )
 	{
 		$this->_load();
 		$result = $this->_messages;
+
+		if ( $remove )
+		{
+			$this->clear();
+		}
+
 		return $result;
 	}
 
