@@ -124,12 +124,19 @@ abstract class Miao_Form_Controller
 			{
 				$this->_isRedirect = false;
 				$this->_isValid = $this->_form->isValid();
+				if ( $this->_isValid )
+				{
+					$this->_form->clearValue();
+				}
 			}
 			else
 			{
 				$request = Miao_Office_Request::getInstance();
-				$data = $request->getVars();
-				$this->_isValid = $this->_form->isValid( $data );
+				if ( 'POST' === $request->getMethod() )
+				{
+					$data = $request->getVars();
+					$this->_isValid = $this->_form->isValid( $data );
+				}
 			}
 		}
 		$this->save();

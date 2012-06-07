@@ -130,10 +130,18 @@ class Miao_Config
 				$configData = $this->_getSectionDefault( $className );
 				$configData = $configData[ $pathMain ];
 			}
+			if ( !is_array( $configData ) )
+			{
+				$configData = array( $configData );
+			}
 
 			$base->add( $pathMain, $configData );
 		}
 		$configData = $base->get( $path );
+		if ( !is_array( $configData ) )
+		{
+			$configData = array( $configData );
+		}
 		$result = new Miao_Config_Base( $configData );
 		return $result;
 	}

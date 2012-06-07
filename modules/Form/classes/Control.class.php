@@ -188,9 +188,19 @@ abstract class Miao_Form_Control
 	 */
 	public function isValid()
 	{
-		$this->_isValid = $this->_validator->isValid( $this->getValue() );
 		$result = $this->_isValid;
 		return $result;
+	}
+
+	public function validate()
+	{
+		$this->_isValid = $this->_validator->isValid( $this->getValue() );
+		return $this->_isValid;
+	}
+
+	public function clearValue()
+	{
+		$this->_value = '';
 	}
 
 	abstract public function render();

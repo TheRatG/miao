@@ -10,7 +10,7 @@ class Miao_Form extends Miao_Form_Control
 
 	protected $_attributes = array();
 
-	protected $_isValid = null;
+	protected $_isValid = true;
 
 	/**
 	 *
@@ -127,8 +127,16 @@ class Miao_Form extends Miao_Form_Control
 		return $result;
 	}
 
+	public function clearValue()
+	{
+		foreach ( $this->_controls as $control )
+		{
+			$control->clearValue();
+		}
+	}
+
 	/**
-	 * @param array $data
+	 * @param array $data from data
 	 */
 	public function isValid( array $data = array() )
 	{
@@ -138,7 +146,7 @@ class Miao_Form extends Miao_Form_Control
 			$result = true;
 			foreach ( $this->_controls as $control )
 			{
-				$result = $control->isValid() && $result;
+				$result = $control->validate() && $result;
 			}
 			$this->_isValid = $result;
 		}
@@ -202,6 +210,24 @@ class Miao_Form extends Miao_Form_Control
 	public function addReset( $name, array $attributes = array() )
 	{
 		$obj = new Miao_Form_Control_Reset( $name, $attributes );
+		$this->addControl( $obj );
+		return $obj;
+	}
+
+	/**
+	 *
+	 * @param string $name
+	 * @param array $attributes
+	 * @param Miao_Form_Control $captcha
+	 * @return Ambigous <Miao_Form_Control, Miao_Form_Control_Captcha>
+	 */
+	public function addCaptcha( $name, array $attributes = array(), Miao_Form_Control $captcha = null )
+	{
+		$obj = $captcha;
+		if ( is_null( $obj ) )
+		{
+			$obj = new Miao_Form_Control_Captcha( $name, $attributes );
+		}
 		$this->addControl( $obj );
 		return $obj;
 	}
