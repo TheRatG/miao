@@ -26,3 +26,7 @@ pear install --alldeps pear.phpunit.de/PHPUnit
 -----
 php scripts/test.php -d Miao
 -----
+
+=== TODO
+
+Merge with trunk
