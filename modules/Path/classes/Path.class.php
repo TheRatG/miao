@@ -51,8 +51,8 @@ class Miao_Path
 
 	/**
 	 *
-	 * @param unknown_type $root
-	 * @param unknown_type $mainConfigFilename
+	 * @param string $root
+	 * @param string $mainConfigFilename
 	 * @param array $pathsMap
 	 * @throws Miao_Path_Exception
 	 * @throws Miao_Path_Exception_EmptyMap

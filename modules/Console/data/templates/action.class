@@ -1,0 +1,12 @@
+<?php
+/**
+ * @author %LOGIN%
+ * @date %DATE%
+ */
+class %CLASS% extends %PARENT_CLASS%
+{
+	public function execute()
+	{
+		throw new Miao_Office_Action_Exception( 'That method need realise in child class' );
+	}
+}

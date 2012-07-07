@@ -1,9 +1,9 @@
 <?php
 class Miao_Autoload_Plugin_PHPUnit extends Miao_Autoload_Plugin
 {
-	public function __construct( $libPath )
+	public function __construct( $name, $libPath )
 	{
-		parent::__construct( $libPath );
+		parent::__construct( $name, $libPath );
 		self::addIncludePath( $libPath );
 
 		require_once 'PHPUnit' . DIRECTORY_SEPARATOR . 'Autoload.php';

@@ -1,7 +1,6 @@
 <?php
 abstract class Miao_Office_Resource
 {
-
 	/**
 	 * @var string
 	 */

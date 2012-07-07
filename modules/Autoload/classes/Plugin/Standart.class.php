@@ -5,7 +5,7 @@ class Miao_Autoload_Plugin_Standart extends Miao_Autoload_Plugin
 	{
 		$items = explode( '_', $className );
 		$cntItems = count( $items );
-		if ( count( $items ) < 2 )
+		if ( count( $items ) < 2 || $items[ 0 ] != $this->getName() )
 		{
 			return '';
 		}

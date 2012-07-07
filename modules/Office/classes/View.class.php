@@ -1,9 +1,7 @@
 <?php
 abstract class Miao_Office_View
 {
-
 	protected $_defaultLayout = 'layouts/index.tpl';
-
 	protected $_layout;
 
 	/**
@@ -159,8 +157,7 @@ abstract class Miao_Office_View
 			$block_class_process_params = $className[ 1 ];
 			if ( !is_array( $block_class_process_params ) )
 			{
-				$block_class_process_params = array(
-					$block_class_process_params );
+				$block_class_process_params = array( $block_class_process_params );
 			}
 		}
 

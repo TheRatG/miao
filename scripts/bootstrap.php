@@ -5,7 +5,7 @@
 
 /**
  * Return config data
- * @return unknown
+ * @return array|null
  */
 function getConfig()
 {
@@ -23,7 +23,7 @@ function getConfig()
 /**
  * Register Miao autoload.
  * You can use glue miao in your prod platform
- * @param unknown_type $config
+ * @param array $config
  */
 function autoloadInit( $config )
 {

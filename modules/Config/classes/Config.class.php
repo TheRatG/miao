@@ -160,7 +160,6 @@ class Miao_Config
 
 	private function _getSectionMain()
 	{
-		$pathMain = $path;
 		$configFilename = $this->_file->getFilenameMain();
 		$configData = include $configFilename;
 		return $configData;

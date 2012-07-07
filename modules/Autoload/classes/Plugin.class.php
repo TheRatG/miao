@@ -45,15 +45,17 @@ require_once 'Plugin/Pear.class.php';
 
 abstract class Miao_Autoload_Plugin
 {
+	protected $_name;
 	protected $_libPath;
 
-	public function __construct( $libPath )
+	public function __construct( $name, $libPath )
 	{
 		if ( !file_exists( $libPath ) || !is_readable( $libPath ) )
 		{
 			$message = sprintf( 'Invalid param $libPath (%s): file doesn\'t exists or not readable', $libPath );
 			throw new Miao_Autoload_Exception($message);
 		}
+		$this->_name = $name;
 		$this->_libPath = $libPath;
 	}
 
@@ -63,6 +65,14 @@ abstract class Miao_Autoload_Plugin
 	public function getLibPath()
 	{
 		return $this->_libPath;
+	}
+
+	/**
+	 * @return string the $_name
+	 */
+	public function getName()
+	{
+		return $this->_name;
 	}
 
 	abstract public function getFilenameByClassName( $className );

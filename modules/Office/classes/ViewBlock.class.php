@@ -13,7 +13,6 @@
  */
 abstract class Miao_Office_ViewBlock
 {
-
 	/**
 	 *
 	 * @var Miao_TemplatesEngine_PhpNative

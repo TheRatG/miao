@@ -1,0 +1,16 @@
+<?php
+/**
+ * @author %LOGIN%
+ * @date %DATE%
+ */
+class %CLASS% extends %PARENT_CLASS%
+{
+	public function execute()
+	{
+		$content = '';
+		
+		//todo: make content
+		
+		return $content;
+	}
+}

@@ -1,0 +1,16 @@
+<?php
+/**
+ * @author %LOGIN%
+ * @date %DATE%
+ */
+class %CLASS% extends %PARENT_CLASS%
+{
+	protected function _processData()
+	{
+	}
+
+	protected function _setTemplateVariables()
+	{
+		//$this->_setTmplVar( 'var', $this->_var );
+	}
+}

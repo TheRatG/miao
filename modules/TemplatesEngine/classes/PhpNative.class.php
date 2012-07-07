@@ -47,7 +47,7 @@ class Miao_TemplatesEngine_PhpNative implements Miao_TemplatesEngine_Interface
 		$templatesDir = $config->get( '/TemplatesEngine/templatesDir' );
 		$debugMode = $config->get( '/TemplatesEngine/debugMode' );
 		$result = new self( $templatesDir, $debugMode );
-		$this->_logFilename = $config->get( '/TemplatesEngine/log/filename' );
+		$result->_logFilename = $config->get( '/TemplatesEngine/log/filename' );
 
 		return $result;
 	}

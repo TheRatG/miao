@@ -49,6 +49,10 @@ class Miao_Autoload
 
 	}
 
+	/**
+	 * @static
+	 * @return self
+	 */
 	static public function getInstance()
 	{
 		if ( is_null( self::$_instance ) )
@@ -99,7 +103,7 @@ class Miao_Autoload
 	{
 		$index = $this->_getIndex( $name );
 		$className = 'Miao_Autoload_Plugin_' . $plugin;
-		$plugin = new $className( $libPath );
+		$plugin = new $className( $name, $libPath );
 
 		$this->registerPlugin( $index, $plugin );
 	}
@@ -111,7 +115,7 @@ class Miao_Autoload
 
 	public function autoload( $className )
 	{
-		$filename = $this->getFilenameByClassName( $className );
+		$filename = self::getFilenameByClassName( $className );
 		if ( !empty( $filename ) && file_exists( $filename ) )
 		{
 			require_once $filename;
