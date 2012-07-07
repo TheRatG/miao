@@ -11,5 +11,5 @@ return array(
 			'plugin' => 'Standart' ),
 		1 => array(
 			'name' => 'PHPUnit',
-			'path' => '/usr/local/lib/php/PHPUnit',
+			'path' => '/usr/share/php/PHPUnit',
 			'plugin' => 'PHPUnit' ) ) );
