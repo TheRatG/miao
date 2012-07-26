@@ -1,5 +1,5 @@
 <?php
-require_once '#phing:libs.Kin.deploy.dst#/scripts/bootstrap.php';
+require_once '#phing:libs.Miao.deploy.dst#/scripts/bootstrap.php';
 
 function help()
 {

@@ -104,7 +104,14 @@ class Miao_PHPUnit_Console
 			$message = sprintf( 'File enabled, search filename by class name (%s)', $this->_name );
 			$this->_info( $message );
 
-			$filename = $this->getFilenameByClassName( $this->_name );
+			if ( is_file( $this->_name ) )
+			{
+				$filename = $this->_name;
+			}
+			else
+			{
+				$filename = $this->getFilenameByClassName( $this->_name );
+			}
 			$this->_addTest( $filename );
 		}
 		if ( $this->_isDir )
