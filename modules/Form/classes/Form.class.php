@@ -1,4 +1,11 @@
 <?php
+/**
+ * Miao_From
+ * <code>
+ * $form = new Miao_Form( 'user' );
+ * $form->addText('username');
+ * </code>
+ */
 class Miao_Form extends Miao_Form_Control
 {
 
