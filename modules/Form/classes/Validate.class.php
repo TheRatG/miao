@@ -87,6 +87,11 @@ class Miao_Form_Validate
 		return $result;
 	}
 
+	public function reset()
+	{
+		$this->_messages = array();
+	}
+
 	protected function _addValidator( Miao_Form_Validate_Base $validate, $breakChainOnFailure = false )
 	{
 		$item = array();

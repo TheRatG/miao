@@ -66,7 +66,7 @@ abstract class Miao_Form_Controller
 			$this->_isRedirect = ( bool ) $val;
 			if ( $this->_isRedirect )
 			{
-				$this->save();
+				$this->_save();
 			}
 		}
 		$result = $this->_isRedirect;
@@ -78,7 +78,7 @@ abstract class Miao_Form_Controller
 		return $this->_isValid;
 	}
 
-	public function save()
+	protected function _save()
 	{
 		$session = Miao_Session::getInstance();
 		$data = array(
@@ -87,13 +87,13 @@ abstract class Miao_Form_Controller
 		$session->saveObject( $this->_fid, $data );
 	}
 
-	public function clear()
+	protected function _clear()
 	{
 		$session = Miao_Session::getInstance();
 		$session->saveObject( $this->_fid, null );
 	}
 
-	public function load()
+	protected function _load()
 	{
 		$session = Miao_Session::getInstance();
 		$res = $session->loadObject( $this->_fid, null, true );
@@ -108,16 +108,16 @@ abstract class Miao_Form_Controller
 		}
 	}
 
-	public function _init()
+	protected function _init()
 	{
 		$this->_generateFid();
-		$this->load();
-		$this->clear();
+		$this->_load();
+		$this->_clear();
 
 		if ( is_null( $this->_form ) )
 		{
 			$this->_form = $this->buildForm();
-			$this->save();
+			$this->_save();
 		}
 		else
 		{
@@ -129,7 +129,7 @@ abstract class Miao_Form_Controller
 				{
 					$this->_form->clearValue();
 				}
-				$this->clear();
+				$this->_clear();
 			}
 			else
 			{
@@ -139,7 +139,7 @@ abstract class Miao_Form_Controller
 					$data = $request->getVars();
 					$this->_isValid = $this->_form->isValid( $data );
 				}
-				$this->save();
+				$this->_save();
 			}
 		}
 	}
