@@ -1,36 +1,51 @@
 <?php
 class Miao_Office_Request_Test extends PHPUnit_Framework_TestCase
 {
+
 	public function setUp()
-    {
-    	$_GET = array();
-    	$_SERVER[ 'REQUEST_METHOD' ] = 'get';
+	{
+		$_GET = array();
+		$_SERVER[ 'REQUEST_METHOD' ] = 'get';
 
-    	$_GET[ 'test_var_string' ] = 'тестовая строка';
-    	$_GET[ 'test_var_int' ] = 59;
-    	$_GET[ 'test_var_bool' ] = true;
+		$_GET[ 'test_var_string' ] = 'тестовая строка';
+		$_GET[ 'test_var_int' ] = 59;
+		$_GET[ 'test_var_bool' ] = true;
+		$_GET[ 'test_zero_int' ] = 0;
+		$_GET[ 'test_zero_string' ] = '0';
+		$_GET[ 'test_null' ] = null;
 
-    	Miao_Office_Request::getInstance()->resetVars();
-    }
+		Miao_Office_Request::getInstance()->resetVars();
+	}
 
-    public function tearDown()
-    {
+	public function tearDown()
+	{
+	}
 
-    }
+	public function data4getValueOf()
+	{
+		$data = array();
 
-    public function data4getValueOf()
-    {
-    	return array(
-    			array( 'test_var_string', 'тестовая строка', false, null, false ),
-    			array( 'test_var_int', 59, false, 80, false ),
-    			array( 'test_var_int', 59, false, 80, true ),
-    			array( 'test_var_int2', 80, false, 80, true ),
-    			array( 'test_var_int2', '', true, null, false ),
-    			array( 'test_var_int2', null, false, null, true )
-    			);
-    }
+		$data[] = array(
+			'test_var_string',
+			'тестовая строка',
+			false,
+			null,
+			false );
+		$data[] = array( 'test_var_int', 59, false, 80, false );
+		$data[] = array( 'test_var_int', 59, false, 80, true );
+		$data[] = array( 'test_var_int2', 80, false, 80, true );
+		$data[] = array( 'test_var_int2', '', true, null, false );
+		$data[] = array( 'test_var_int2', null, false, null, true );
 
-    /**
+
+		$data[] = array( 'test_zero_int', 0, false, null, false );
+		$data[] = array( 'test_zero_string', '0', false, null, false );
+		$data[] = array( 'test_null', null, false, null, false );
+
+		return $data;
+	}
+
+	/**
      * @dataProvider data4getValueOf
      *
      */
@@ -52,16 +67,17 @@ class Miao_Office_Request_Test extends PHPUnit_Framework_TestCase
 	 * @param string $allowable_tags указания тэгов, которые не должны удаляться
 	 * @return string
 	 */
-
 	public function data4stripRequestedString()
 	{
-		return  array(
-				array( 'тест', 'тест', '' ),
-				array( 'тест', 'тест', 'a' ),
-				array( '<b>тест</b><i>после</i>', '<b>тест</b>после', '<b>' ),
-				array( '<b>тест</b><i>после</i>', '<b>тест</b><i>после</i>', '<b>,<i>' ),
-				array( '<b>тест</b><i>после</i>', 'тестпосле', '' ),
-					);
+		return array(
+			array( 'тест', 'тест', '' ),
+			array( 'тест', 'тест', 'a' ),
+			array( '<b>тест</b><i>после</i>', '<b>тест</b>после', '<b>' ),
+			array(
+				'<b>тест</b><i>после</i>',
+				'<b>тест</b><i>после</i>',
+				'<b>,<i>' ),
+			array( '<b>тест</b><i>после</i>', 'тестпосле', '' ) );
 	}
 
 	/**
@@ -77,25 +93,22 @@ class Miao_Office_Request_Test extends PHPUnit_Framework_TestCase
 
 	public function data4stripHTMLAttributes()
 	{
-		return  array(
-				array( 'тест', 'тест' ),
-				array( '<b>тест</b><i>после</i>', '<b>тест</b><i>после</i>' ),
-				array( '<b gh="33">тест</b><i>после</i>', '<b>тест</b><i>после</i>' ),
-					);
+		return array(
+			array( 'тест', 'тест' ),
+			array( '<b>тест</b><i>после</i>', '<b>тест</b><i>после</i>' ),
+			array( '<b gh="33">тест</b><i>после</i>', '<b>тест</b><i>после</i>' ) );
 	}
 
 	/**
 	 * @dataProvider data4stripHTMLAttributes
 	 *
 	 */
-
 	public function stripHTMLAttributes( $data, $expected_res )
 	{
 		$request = Miao_Office_Request::getInstance();
 		$res = $request->stripHTMLAttributes( $data );
 		$this->assertEquals( $expected_res, $res );
 	}
-
 
 	public function testGetVars()
 	{
@@ -105,26 +118,25 @@ class Miao_Office_Request_Test extends PHPUnit_Framework_TestCase
 		$this->assertEquals( $request->getVars(), $res );
 	}
 
-
 	public function testGetServerVar()
 	{
-		$_SERVER = array('REQUEST_URI' => '/');
+		$_SERVER = array( 'REQUEST_URI' => '/' );
 		$r = Miao_Office_Request::getInstance();
 
-		$this->assertSame($r->getServerVar('HTTP_HOST'), false);
+		$this->assertSame( $r->getServerVar( 'HTTP_HOST' ), false );
 
-		$_SERVER['HTTP_HOST'] = 'test.rbc.ru';
+		$_SERVER[ 'HTTP_HOST' ] = 'test.rbc.ru';
 
-		$this->assertSame($r->getServerVar('HTTP_HOST'), 'test.rbc.ru');
+		$this->assertSame( $r->getServerVar( 'HTTP_HOST' ), 'test.rbc.ru' );
 
-		$_SERVER['SERVER_NAME'] = 'test2.rbc.ru';
+		$_SERVER[ 'SERVER_NAME' ] = 'test2.rbc.ru';
 
-		$this->assertSame($r->getServerVar('HTTP_HOST'), 'test2.rbc.ru');
-		$this->assertSame($r->getServerVar('SERVER_NAME'), 'test2.rbc.ru');
+		$this->assertSame( $r->getServerVar( 'HTTP_HOST' ), 'test2.rbc.ru' );
+		$this->assertSame( $r->getServerVar( 'SERVER_NAME' ), 'test2.rbc.ru' );
 
-		unset($_SERVER['SERVER_NAME']);
+		unset( $_SERVER[ 'SERVER_NAME' ] );
 
-		$this->assertSame($r->getServerVar('SERVER_NAME'), 'test.rbc.ru');
-		$this->assertSame($r->getServerVar('REQUEST_URI'), '/');
+		$this->assertSame( $r->getServerVar( 'SERVER_NAME' ), 'test.rbc.ru' );
+		$this->assertSame( $r->getServerVar( 'REQUEST_URI' ), '/' );
 	}
 }
