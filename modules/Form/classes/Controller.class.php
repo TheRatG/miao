@@ -117,6 +117,7 @@ abstract class Miao_Form_Controller
 		if ( is_null( $this->_form ) )
 		{
 			$this->_form = $this->buildForm();
+			$this->save();
 		}
 		else
 		{
@@ -128,6 +129,7 @@ abstract class Miao_Form_Controller
 				{
 					$this->_form->clearValue();
 				}
+				$this->clear();
 			}
 			else
 			{
@@ -137,9 +139,9 @@ abstract class Miao_Form_Controller
 					$data = $request->getVars();
 					$this->_isValid = $this->_form->isValid( $data );
 				}
+				$this->save();
 			}
 		}
-		$this->save();
 	}
 
 	protected function _generateFid()
