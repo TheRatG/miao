@@ -31,7 +31,7 @@ class Miao_Form_Control_Select extends Miao_Form_Control
 	{
 		foreach ( $this->_items as $key => $control )
 		{
-			if ( $control->getValue() === $value )
+			if ( $control->getValue() == $value )
 			{
 				$this->_selected = $key;
 				$this->_value = $value;
