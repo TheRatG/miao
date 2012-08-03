@@ -58,9 +58,20 @@ class Miao_Config
 		{
 			$ar[ 0 ] = 'config';
 		}
-		$base = $this->_getBaseByLibName( $libName );
-		$resultData = $base->get( implode( '.', $ar ) );
-		$result = new Miao_Config_Base( $resultData );
+		$result = null;
+		try
+		{
+			$base = $this->_getBaseByLibName( $libName );
+			$resultData = $base->get( implode( '.', $ar ) );
+			$result = new Miao_Config_Base( $resultData );
+		}
+		catch ( Miao_Config_Exception_PathNotFound $e )
+		{
+			if ( $throwException )
+			{
+				throw $e;
+			}
+		}
 		return $result;
 	}
 
