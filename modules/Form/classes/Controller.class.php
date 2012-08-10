@@ -117,6 +117,7 @@ abstract class Miao_Form_Controller
 		if ( is_null( $this->_form ) )
 		{
 			$this->_form = $this->buildForm();
+			$this->_loadData();
 			$this->_save();
 		}
 		else
@@ -133,14 +134,19 @@ abstract class Miao_Form_Controller
 			}
 			else
 			{
-				$request = Miao_Office_Request::getInstance();
-				if ( 'POST' === $request->getMethod() )
-				{
-					$data = $request->getVars();
-					$this->_isValid = $this->_form->isValid( $data );
-				}
+				$this->_loadData();
 				$this->_save();
 			}
+		}
+	}
+
+	protected function _loadData()
+	{
+		$request = Miao_Office_Request::getInstance();
+		if ( 'POST' === $request->getMethod() )
+		{
+			$data = $request->getVars();
+			$this->_isValid = $this->_form->isValid( $data );
 		}
 	}
 
