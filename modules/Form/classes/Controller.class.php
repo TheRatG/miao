@@ -1,7 +1,6 @@
 <?php
 abstract class Miao_Form_Controller
 {
-
 	private $_fid = '';
 
 	/**
@@ -150,10 +149,10 @@ abstract class Miao_Form_Controller
 		}
 	}
 
-	protected function _generateFid()
+	protected function _generateFid( $additionalFid = '' )
 	{
 		$session = Miao_Session::getInstance();
-		$this->_fid = md5( $session->getSessionId() . '_form_' . get_class( $this ) );
+		$this->_fid = md5( $session->getSessionId() . '_form_' . get_class( $this ) . $additionalFid );
 	}
 
 	protected function __construct()
