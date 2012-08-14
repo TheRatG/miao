@@ -507,8 +507,24 @@ class Miao_Console
 	protected function _getTemplatePath( $className )
 	{
 		$parts = explode( '_', $className );
-		$filename = strtolower( array_pop( $parts ) ) . '.tpl';
-		$dir = Miao_Path::getDefaultInstance()->getTemplateDir( implode( '_', $parts ) );
+		if ( $parts[ 2 ] != 'View' )
+		{
+			$filename = ucfirst( array_pop( $parts ) ) . '/index.tpl';
+			$dir = Miao_Path::getDefaultInstance()->getTemplateDir( implode( '_', $parts ) );
+		}
+		else
+		{
+			$filename = strtolower( array_pop( $parts ) ) . '.tpl';
+			$forDir = array_slice( $parts, 0, 3 );
+			$dir = Miao_Path::getDefaultInstance()->getTemplateDir( implode( '_', $forDir ) );
+			$forFile = array_slice( $parts, 3 );
+			$prefixFilename = strtolower( implode( '_', $forFile ) );
+			if ( !empty( $prefixFilename ) )
+			{
+				$prefixFilename .= '_';
+			}
+			$filename = $prefixFilename . $filename;
+		}
 		if ( !empty( $dir ) )
 		{
 			$dir .= DIRECTORY_SEPARATOR;
