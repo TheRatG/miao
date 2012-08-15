@@ -6,6 +6,10 @@ class Miao_Office_Resource_Get extends Miao_Office_Resource
 
 	}
 
+	/**
+	 * (non-PHPdoc)
+	 * @see Miao_Office_Resource::sendResponse()
+	 */
 	public function sendResponse( $sendHeader = true, $sendContent = true )
 	{
 		if ( !$this->_checkExistsOperationObject() )

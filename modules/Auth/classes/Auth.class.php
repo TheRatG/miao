@@ -132,6 +132,7 @@ class Miao_Auth
 	 */
 	protected function __construct()
 	{
+		$this->_storage = new Miao_Auth_Storage_Session();
 	}
 
 	/**

@@ -5,6 +5,7 @@
  */
 class Miao_Auth_Storage_Session
 {
+	const NAMESPACE_DEFAULT = 'Miao_Auth_Storage_Session';
 	/**
 	 * Default session object member name
 	 */
@@ -40,6 +41,7 @@ class Miao_Auth_Storage_Session
 	 */
 	public function __construct( $namespace = self::NAMESPACE_DEFAULT, $member = self::MEMBER_DEFAULT )
 	{
+		$this->_session = Miao_Session::getNamespace( $namespace );
 		$this->_member = $member;
 	}
 
@@ -70,7 +72,7 @@ class Miao_Auth_Storage_Session
 	 */
 	public function isEmpty()
 	{
-		return !isset( Miao_Session::getInstance()->checkVarExistence( $this->_member ) );
+		return !$this->_session->__isset( $this->_member );
 	}
 
 	/**
@@ -80,7 +82,7 @@ class Miao_Auth_Storage_Session
 	 */
 	public function read()
 	{
-		return Miao_Session::getInstance()->loadObject( $this->_member );
+		return $this->_session[ $this->_member ];
 	}
 
 	/**
@@ -91,7 +93,7 @@ class Miao_Auth_Storage_Session
 	 */
 	public function write( $contents )
 	{
-		Miao_Session::getInstance()->saveObject( $this->_member, $contents );
+		$this->_session[ $this->_member ] = $contents;
 	}
 
 	/**
@@ -101,6 +103,6 @@ class Miao_Auth_Storage_Session
 	 */
 	public function clear()
 	{
-		unset( $this->_session->{$this->_member} );
+		unset( $this->_session[ $this->_member ] );
 	}
 }
