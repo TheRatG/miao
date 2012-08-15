@@ -8,6 +8,6 @@
  * @subpackage Miao_Session
  * $Revision$
  */
-class Miao_Session_Exception extends Exception
+class Miao_Session_Exception_UndefinedVar extends Miao_Session_Exception
 {
 }

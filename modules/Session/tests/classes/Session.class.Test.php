@@ -1,151 +1,165 @@
 <?php
 class Miao_Session_Test extends PHPUnit_Framework_TestCase
 {
-	public function testGetSessionId()
+	public function tearDown()
 	{
-		$this->assertEquals( Miao_Session::getInstance()->getSessionId(), session_id() );
-		Miao_Session::getInstance()->destroySession();
-		$this->assertEquals( Miao_Session::getInstance()->getSessionId(), '' );
-	}
-
-	public function data4ScalarOperations()
-	{
-		return array(
-					array( 'new_name', 'name value' ),
-					array( '', 'error value' ),
-					array( '', null, 'default_value' ),
-					array( 'null_name', null, 'default_value' ),
-					array( 'null_name', false, false ),
-					array( 'unexistent_name', '' )
-					);
-	}
-
-	public function data4ObjectOperation()
-	{
-		$obj1 = new TestA( '1' );
-		$obj2 = new TestA( 2 );
-
-		return array(
-					array( 'obj1', $obj1 ),
-					array( 'obj2', $obj2 ),
-					array( null, $obj2 ),
-					);
-	}
-
-	/**
-	 * @dataProvider data4ScalarOperations
-	 *
-	 */
-	public function testSaveScalar( $name, $value )
-	{
-		if ( $name == 'unexistent_name' )
+		if ( session_id() )
 		{
-			return ;
-		}
-		Miao_Session::getInstance()->saveScalar( $name, $value );
-		$this->assertEquals( $_SESSION[ $name ], $value );
-	}
-
-	/**
-	 * @dataProvider data4ScalarOperations
-	 *
-	 */
-	public function testLoadScalar( $name, $res, $default = '' )
-	{
-		if ( $name != 'unexistent_name' )
-		{
-			Miao_Session::getInstance()->saveScalar( $name, $res );
-		}
-		$this->assertEquals( ( !is_null( $res ) || $name == 'unexistent_name' ) ? $res : $default, Miao_Session::getInstance()->loadScalar( $name, $default ) );
-	}
-
-	/**
-	 * @dataProvider data4ObjectOperation
-	 *
-	 */
-	public function testSaveObject( $name, $value )
-	{
-		if ( $name == 'unexistent_name' )
-		{
-			return ;
-		}
-		Miao_Session::getInstance()->saveObject( $name, $value );
-		$this->assertEquals( unserialize( $_SESSION[ $name ] ), $value );
-		if ( is_object( unserialize( $_SESSION[ $name ] ) ) )
-		{
-			$this->assertEquals( unserialize( $_SESSION[ $name ] )->getProperty(), $value->getProperty() );
+			session_destroy();
 		}
 	}
 
 	/**
-	 * @dataProvider data4ObjectOperation
+	 * @dataProvider providerGetInstance
 	 *
+	 * @param $namespace unknown_type
+	 * @param $expected unknown_type
+	 * @param $exceptionName unknown_type
 	 */
-	public function testLoadObject( $name, $res, $default = null, $use_default = false )
+	public function testGetInstance( $namespace, $expected, $exceptionName = '' )
 	{
-		Miao_Session::getInstance()->saveObject( $name, $res, $default, $use_default );
+		if ( !empty( $exceptionName ) )
+		{
+			$this->setExpectedException( $exceptionName );
+		}
+		$session = Miao_Session::getNamespace( $namespace );
 
-		$this->assertEquals( $res, Miao_Session::getInstance()->loadObject( $name ) );
+		$this->assertInstanceOf( $expected, $session );
 	}
 
-	public function testLoadException()
+	public function providerGetInstance()
 	{
-		$this->setExpectedException( 'Miao_Session_Exception_OnVariableNotExists' );
+		$data = array();
 
-		Miao_Session::getInstance()->loadObject( 'unexistningname' );
+		$exceptionName = 'Miao_Session_Exception';
+
+		$data[] = array( '', 'Miao_Session_Namespace' );
+		$data[] = array( 'user', 'Miao_Session_Namespace' );
+		$data[] = array( 'user+', 'Miao_Session_Namespace' );
+		$data[] = array( 'user?', 'Miao_Session_Namespace' );
+
+		return $data;
 	}
 
-	public function testLoadUnexistentName()
+	/**
+	 * @dataProvider providerTestConstruct
+	 *
+	 * @param $options unknown_type
+	 * @param $handler unknown_type
+	 * @param $expectedOptions unknown_type
+	 * @param $expectedHandler unknown_type
+	 */
+	public function testConstruct( $options, $handler, $expectedOptions, $expectedHandler, $exceptionName = '' )
 	{
-		$this->assertEquals(
-			null,
-			Miao_Session::getInstance()->loadScalar( 'unexistningname1', null, true )
-		);
+		if ( !empty( $exceptionName ) )
+		{
+			$this->setExpectedException( $exceptionName );
+		}
 
-		$this->assertEquals(
-			1,
-			Miao_Session::getInstance()->loadScalar( 'unexistningname2', 1, true )
-		);
+		$session = Miao_Session::getInstance();
+		$session->setOptions( $options );
+		$session->setHandler( $handler );
 
-		$obj1 = new TestA( '1' );
+		$actualOptions = $session->getOptions();
 
-		$this->assertEquals(
-			$obj1,
-			Miao_Session::getInstance()->loadObject( 'unexistningname3', $obj1, true )
-		);
+		unset( $expectedOptions[ 'session.save_path' ] );
+		unset( $expectedOptions[ 'session.save_handler' ] );
+		unset( $actualOptions[ 'session.save_path' ] );
+		unset( $actualOptions[ 'session.save_handler' ] );
 
-		$this->assertEquals(
-			null,
-			Miao_Session::getInstance()->loadScalar( 'unexistningname4', null, true )
-		);
+		$this->assertEquals( $expectedOptions, $actualOptions );
+
+		$actualHandler = $session->getHandler();
+		$this->assertEquals( $expectedHandler, $actualHandler );
 	}
 
-	public function testSaveObjectException()
+	public function providerTestConstruct()
 	{
-		$this->setExpectedException( 'Miao_Session_Exception' );
+		$data = array();
 
-		Miao_Session::getInstance()->saveObject( 'non_object', 'non_object' );
-		Miao_Session::getInstance()->saveObject( 'non_object', null );
+		$exceptionName = 'Miao_Session_Exception';
+		$localOptions = array(
+			'session.save_path' => '',
+			'session.name' => 'PHPSESSID',
+			'session.save_handler' => 'files',
+			'session.gc_probability' => '1',
+			'session.gc_divisor' => '1000',
+			'session.gc_maxlifetime' => '1440',
+			'session.serialize_handler' => 'php',
+			'session.cookie_lifetime' => '0',
+			'session.cookie_path' => '/',
+			'session.cookie_domain' => '',
+			'session.cookie_secure' => '',
+			'session.cookie_httponly' => '',
+			'session.use_cookies' => '1',
+			'session.use_only_cookies' => '1',
+			'session.referer_check' => '',
+			'session.entropy_file' => '',
+			'session.entropy_length' => '0',
+			'session.cache_limiter' => 'nocache',
+			'session.cache_expire' => '180',
+			'session.use_trans_sid' => '0',
+			'session.bug_compat_42' => '1',
+			'session.bug_compat_warn' => '1',
+			'session.hash_function' => '0',
+			'session.hash_bits_per_character' => '5' );
+
+		$options = array();
+		$handler = null;
+		$expectedOptions = $localOptions;
+		$expectedHandler = new Miao_Session_Handler_Empty();
+		$data[] = array( $options, $handler, $expectedOptions, $expectedHandler );
+
+		$options = array();
+		$handler = new Miao_Session_Handler_Memcache( 'localhost' );
+		$expectedOptions = $localOptions;
+		$expectedOptions[ 'session.save_handler' ] = 'memcache';
+		$expectedOptions[ 'session.save_path' ] =
+		'tcp://localhost:11211?persistent=1';
+		$expectedHandler = $handler;
+		$data[] = array( $options, $handler, $expectedOptions,
+		$expectedHandler );
+
+		// check options
+		$options = array( 'cache_expire' => '200' );
+		$handler = null;
+		$expectedOptions = $localOptions;
+		$expectedOptions[ 'session.cache_expire' ] = '200';
+		$expectedHandler = new Miao_Session_Handler_Empty();
+		$data[] = array( $options, $handler, $expectedOptions, $expectedHandler );
+
+		$options = array( 'unnamed_option' => '200' );
+		$handler = null;
+		$expectedOptions = $localOptions;
+		$expectedHandler = new Miao_Session_Handler_Empty();
+		$data[] = array(
+			$options,
+			$handler,
+			$expectedOptions,
+			$expectedHandler,
+			$exceptionName );
+
+		// check handler
+		$options = array();
+		$handler = new stdClass();
+		$expectedOptions = $localOptions;
+		$expectedHandler = new Miao_Session_Handler_Empty();
+		$data[] = array(
+			$options,
+			$handler,
+			$expectedOptions,
+			$expectedHandler,
+			$exceptionName );
+
+		return $data;
 	}
-}
 
-
-// класс для тестирования сохране6ния объектов
-class TestA
-{
-	protected $_property;
-
-	public function __construct( $property )
+	public function testSessionVar()
 	{
-		$this->setProperty( $property );
-	}
+		$session = Miao_Session::getInstance();
+		$session->start();
 
-	public function getProperty()
-	{
-		return $this->_property;
-	}
-	public function setProperty( $property )
-	{
-		$this->_property = $property;
+		$_SESSION[ 'var' ] = 'value';
+		$this->assertEquals( 'value', $_SESSION[ 'var' ] );
 	}
 }

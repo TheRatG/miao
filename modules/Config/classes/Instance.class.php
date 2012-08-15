@@ -13,7 +13,10 @@ class Miao_Config_Instance
 	{
 		$configObj = Miao_Config::Libs( $className );
 		$params = $configObj->get( $paramSection );
-
+		if ( is_string( $params ) )
+		{
+			$params = array();
+		}
 		$rc = new ReflectionClass( $className );
 		$result = $rc->newInstanceArgs( $params );
 

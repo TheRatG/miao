@@ -1,162 +1,208 @@
 <?php
 /**
- * Singleton class provides general functionality for working with PHP Sessions.
+ *
  *
  */
 class Miao_Session
 {
-	/**
-	 * instance of Miao_Session
-	 *
-	 * @var Miao_Session
-	 */
-	protected static $_instance;
 
-	/**
-	 *
-	 * @var unknown_type
-	 */
-	private $_handler;
+	protected static $_instance = null;
 
-	/**
-	 * Constructor of Miao_Session
-	 *
-	 * @throws Miao_Session_Exception_OnSessionsNotSupported
-	 */
-	protected function __construct()
+	protected $_optionsMap = array(
+		'save_path',
+		'name',
+		'save_handler',
+		'gc_probability',
+		'gc_divisor',
+		'gc_maxlifetime',
+		'serialize_handler',
+		'cookie_lifetime',
+		'cookie_path',
+		'cookie_domain',
+		'cookie_secure',
+		'cookie_httponly',
+		'use_cookies',
+		'use_only_cookies',
+		'referer_check',
+		'entropy_file',
+		'entropy_length',
+		'cache_limiter',
+		'cache_expire',
+		'use_trans_sid',
+		'bug_compat_42',
+		'bug_compat_warn',
+		'hash_function',
+		'hash_bits_per_character' );
+
+	protected $_handler = null;
+
+	protected $_namespaceList = array();
+
+	protected function __construct( $options, $handler )
 	{
-		$this->_handler = Miao_Session_Handler::factory();
-
-		if ( !session_id() )
-		{
-			session_start();
-		}
-		if ( !isset( $_SESSION ) )
-		{
-			throw new Miao_Session_Exception_OnSessionsNotSupported();
-		}
+		$this->setOptions( $options );
+		$this->setHandler( $handler );
 	}
 
 	/**
-	 * Getting a single instance of Miao_Session
 	 *
+	 * @param $options array
+	 * @param $handler unknown_type
 	 * @return Miao_Session
 	 */
-	static public function getInstance()
+	static public function getInstance( array $options = array(), $handler = null )
 	{
-		if ( !isset( self::$_instance ) )
+		if ( is_null( self::$_instance ) )
 		{
-			self::$_instance = new self();
+			if ( empty( $options ) )
+			{
+				$config = Miao_Config::Libs( 'Miao_Session' );
+				$options = $config->get( 'options', false );
+				if ( !$options )
+				{
+					$options = array();
+				}
+			}
+
+			if ( is_null( $handler ) )
+			{
+				$config = Miao_Config::Libs( 'Miao_Session' );
+				$handlerConfig = $config->get( 'Handler', false );
+				if ( empty( $handlerConfig ) )
+				{
+					$handler = new Miao_Session_Handler_Empty();
+				}
+				else
+				{
+					$handlerClassName = 'Miao_Session_Handler_' . key( $handlerConfig );
+					$handler = Miao_Config_Instance::get( $handlerClassName );
+				}
+			}
+			self::$_instance = new self( $options, $handler );
 		}
 		return self::$_instance;
 	}
 
-	/**
-	 * Method-wrapper for session_destroy() method.
-	 * Destroys all data registered to a session.
-	 */
-	public function destroySession()
+	static public function getNamespace( $namespace )
 	{
-		session_destroy();
+		$session = self::getInstance();
+		$session->start();
+		$result = $session->_getNamespace( $namespace );
+		return $result;
 	}
 
-	/**
-	 * Method-wrapper for session_id() method.
-	 * Get the current session id.
-	 *
-	 * @return string
-	 */
-	public function getSessionId()
+	protected function _getNamespace( $namespace )
 	{
-		return session_id();
-	}
-
-	/**
-	 * Saving scalar variable in $_SESSION
-	 *
-	 * @param string $varName
-	 * @param mixed $value
-	 */
-	public function saveScalar( $varName, $value )
-	{
-		$_SESSION[ $varName ] = $value;
-	}
-
-	/**
-	 * Saving object in $_SESSION
-	 *
-	 * @param string $varName
-	 * @param mixed $value
-	 */
-	public function saveObject( $varName, $value )
-	{
-		if ( !is_scalar( $value ) )
+		if ( array_key_exists( $namespace, $this->_namespaceList ) )
 		{
-			$_SESSION[ $varName ] = serialize( $value );
+			$result = $this->_namespaceList[ $namespace ];
 		}
 		else
 		{
-			throw new Miao_Session_Exception( 'Invalid param $value, must be object' );
+			$this->_namespaceList[ $namespace ] = new Miao_Session_Namespace( $namespace );
+			$result = $this->_namespaceList[ $namespace ];
 		}
+		return $result;
 	}
 
-	/**
-	 * Get scalar variable from $_SESSION
-	 *
-	 * @param string $varName
-	 * @param mixed $default
-	 * @return mixed
-	 */
-	public function loadScalar( $varName, $defaultValue = null, $useNullAsDefault = false )
+	public function getOptions()
 	{
-		$result = null;
-		if ( false === $this->_checkVarExistence( $varName ) )
+		$options = $this->_optionsMap;
+		foreach ( $options as $name )
 		{
-			if ( ( null === $defaultValue ) && ( false === $useNullAsDefault ) )
+			$result[ 'session.' . $name ] = $this->getOption( $name );
+		}
+		return $result;
+	}
+
+	public function getOption( $name )
+	{
+		$varname = 'session.' . strtolower( $name );
+		$result = ini_get( $varname );
+		return $result;
+	}
+
+	public function setOption( $name, $value )
+	{
+		$varname = strtolower( $name );
+		if ( false !== array_search( $name, $this->_optionsMap ) )
+		{
+			$varname = 'session.' . $varname;
+			$res = ini_set( $varname, $value );
+
+			if ( false === $res )
 			{
-				throw new Miao_Session_Exception_OnVariableNotExists( $varName );
+				$message = sprintf( 'Option %s can\'t be change', $name );
+				throw new Miao_Session_Exception( $message );
 			}
-			$result = $defaultValue;
-		}
-		else if ( empty( $_SESSION[ $varName ] ) )
-		{
-			$result = $defaultValue;
 		}
 		else
 		{
-			$result = $_SESSION[ $varName ];
+			$message = sprintf( 'Invalid option name %s', $name );
+			throw new Miao_Session_Exception( $message );
+		}
+
+		return $this;
+	}
+
+	public function setOptions( array $options )
+	{
+		foreach ( $options as $name => $value )
+		{
+			$this->setOption( $name, $value );
+		}
+		return $this;
+	}
+
+	public function getHandler()
+	{
+		return $this->_handler;
+	}
+
+	public function setHandler( $handler )
+	{
+		if ( !is_null( $handler ) )
+		{
+			if ( !$handler instanceof Miao_Session_Handler )
+			{
+				$message = sprintf( 'Invalid param $handler, must be extend Miao_Session_Handler' );
+				throw new Miao_Session_Exception( $message );
+			}
+
+			$this->_handler = $handler;
+		}
+		else
+		{
+			$this->_handler = new Miao_Session_Handler_Empty();
+		}
+
+		$this->_handler->init();
+
+		return $this;
+	}
+
+	public function start()
+	{
+		if ( !$this->isStarted() )
+		{
+			session_start();
+		}
+	}
+
+	public function isStarted()
+	{
+		$res = session_id();
+		$result = true;
+		if ( empty( $res ) )
+		{
+			$result = false;
 		}
 		return $result;
 	}
 
-	/**
-	 * Get object from $_SESSION
-	 *
-	 * @param string $varName
-	 * @return mixed
-	 */
-	public function loadObject( $varName, $defaultValue = null, $useNullAsDefault = false )
+	public function __call( $name, $arguments )
 	{
-		$result = $this->loadScalar( $varName, $defaultValue, $useNullAsDefault );
-		if ( !is_null( $result ) && is_scalar( $result ) )
-		{
-			$result = unserialize( $result );
-		}
-		return $result;
-	}
-
-	/**
-	 * Проверяет наличие перемнной в массиве $_SESSION
-	 *
-	 * @param string $varName
-	 * @return true, если есть, false - в противном случае
-	 */
-	protected function _checkVarExistence( $varName )
-	{
-		if ( !array_key_exists( $varName, $_SESSION ) )
-		{
-			return false;
-		}
-		return true;
+		$callback = 'session_' . $name;
+		return call_user_func_array( $callback, $arguments );
 	}
 }
