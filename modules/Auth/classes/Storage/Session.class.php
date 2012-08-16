@@ -14,7 +14,7 @@ class Miao_Auth_Storage_Session
 	/**
 	 * Object to proxy $_SESSION storage
 	 *
-	 * @var Zend_Session_Namespace
+	 * @var Miao_Session_Namespace
 	 */
 	protected $_session;
 
@@ -66,7 +66,7 @@ class Miao_Auth_Storage_Session
 	}
 
 	/**
-	 * Defined by Zend_Auth_Storage_Interface
+	 * Defined by Miao_Auth_Storage_Interface
 	 *
 	 * @return boolean
 	 */
@@ -76,7 +76,7 @@ class Miao_Auth_Storage_Session
 	}
 
 	/**
-	 * Defined by Zend_Auth_Storage_Interface
+	 * Defined by Miao_Auth_Storage_Interface
 	 *
 	 * @return Miao_Auth_Result
 	 */
@@ -86,7 +86,7 @@ class Miao_Auth_Storage_Session
 	}
 
 	/**
-	 * Defined by Zend_Auth_Storage_Interface
+	 * Defined by Miao_Auth_Storage_Interface
 	 *
 	 * @param  Miao_Auth_Result $contents
 	 * @return void
@@ -97,7 +97,7 @@ class Miao_Auth_Storage_Session
 	}
 
 	/**
-	 * Defined by Zend_Auth_Storage_Interface
+	 * Defined by Miao_Auth_Storage_Interface
 	 *
 	 * @return void
 	 */

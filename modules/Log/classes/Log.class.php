@@ -1,33 +1,4 @@
 <?php
-/**
- * Zend Framework
- *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
- *
- * @category   Zend
- * @package    Miao_Log
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Log.php 22632 2010-07-18 18:30:08Z ramon $
- */
-
-/**
- *
- * @category Zend
- * @package Miao_Log
- * @copyright Copyright (c) 2005-2010 Zend Technologies USA Inc.
- *            (http://www.zend.com)
- * @license http://framework.zend.com/license/new-bsd New BSD License
- * @version $Id: Log.php 22632 2010-07-18 18:30:08Z ramon $
- */
 class Miao_Log
 {
 	const EMERG = 0; // Emergency: system is unusable
@@ -98,7 +69,7 @@ class Miao_Log
 	 * Factory to construct the logger and one or more writers
 	 * based on the configuration array
 	 *
-	 * @param array|Zend_Config Array or instance of Zend_Config
+	 * @param array|Miao_Config Array or instance of Miao_Config
 	 * @return Miao_Log
 	 */
 	static public function factory( $config = array() )
@@ -174,10 +145,10 @@ class Miao_Log
 	}
 
 	/**
-	 * Construct filter object from configuration array or Zend_Config object
+	 * Construct filter object from configuration array or Miao_Config object
 	 *
-	 * @param $config array|Zend_Config
-	 *       	 Zend_Config or Array
+	 * @param $config array|Miao_Config
+	 *       	 Miao_Config or Array
 	 * @return Miao_Log_Filter_Interface
 	 */
 	protected function _constructFilterFromConfig( $config )
@@ -199,7 +170,7 @@ class Miao_Log
 	 * @param $type string
 	 *       	 'writer' of 'filter'
 	 * @param $config mixed
-	 *       	 Zend_Config or Array
+	 *       	 Miao_Config or Array
 	 * @param $namespace string
 	 * @return object
 	 */

@@ -37,7 +37,6 @@ class Miao_Form_Validate_Length extends Miao_Form_Validate_Base
 	/**
 	 * Sets validator options
 	 *
-	 * @param  integer|array|Zend_Config $options
 	 * @return void
 	 */
 	public function __construct( $max, $min = 0 )
