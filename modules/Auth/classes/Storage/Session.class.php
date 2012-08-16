@@ -78,7 +78,7 @@ class Miao_Auth_Storage_Session
 	/**
 	 * Defined by Zend_Auth_Storage_Interface
 	 *
-	 * @return mixed
+	 * @return Miao_Auth_Result
 	 */
 	public function read()
 	{
@@ -88,7 +88,7 @@ class Miao_Auth_Storage_Session
 	/**
 	 * Defined by Zend_Auth_Storage_Interface
 	 *
-	 * @param  mixed $contents
+	 * @param  Miao_Auth_Result $contents
 	 * @return void
 	 */
 	public function write( $contents )

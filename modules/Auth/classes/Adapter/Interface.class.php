@@ -16,15 +16,15 @@ interface Miao_Auth_Adapter_Interface
 
 	/**
 	 *
-	 * @param Miao_Auth_Result $identity
+	 * @param $authResult
 	 * @return bool
 	 */
-	public function logout( Miao_Auth_Result $identity );
+	public function logout( Miao_Auth_Result $authResult );
 
 	/**
 	 *
-	 * @param Miao_Auth_Result $identity
+	 * @param Miao_Auth_Result $authResult
 	 * @return bool
 	 */
-	public function check( Miao_Auth_Result $identity );
+	public function check( Miao_Auth_Result $authResult );
 }

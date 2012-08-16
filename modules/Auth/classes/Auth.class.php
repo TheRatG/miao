@@ -22,6 +22,8 @@ class Miao_Auth
 	 */
 	protected $_adapter = null;
 
+	protected $_check = null;
+
 	/**
 	 * @return Miao_Auth
 	 */
@@ -73,7 +75,13 @@ class Miao_Auth
 	 */
 	public function hasIdentity()
 	{
-		return !$this->getStorage()->isEmpty();
+		$result = false;
+		$identity = $this->getIdentity();
+		if ( $identity )
+		{
+			$result = true;
+		}
+		return $result;
 	}
 
 	/**
@@ -83,13 +91,30 @@ class Miao_Auth
 	 */
 	public function getIdentity()
 	{
-		$storage = $this->getStorage();
+		$result = null;
+		$authRes = $this->getResult();
+		if ( $authRes )
+		{
+			$check = $this->_check( $authRes );
+			if ( $check )
+			{
+				$result = $authRes->getIdentity();
+			}
+		}
+		return $result;
+	}
 
+	/**
+	 *
+	 * @return Miao_Auth_Result|NULL
+	 */
+	public function getResult()
+	{
+		$storage = $this->getStorage();
 		if ( $storage->isEmpty() )
 		{
 			return null;
 		}
-
 		return $storage->read();
 	}
 
@@ -98,9 +123,10 @@ class Miao_Auth
 	 *
 	 * @return void
 	 */
-	public function clearIdentity()
+	public function clearResult()
 	{
 		$this->getStorage()->clear();
+		$this->_check = null;
 	}
 
 	/**
@@ -112,17 +138,33 @@ class Miao_Auth
 	 */
 	public function login( $login, $password, array $options = array() )
 	{
-		return $this->_adapter->login( $login, $password, $options );
+		$result = $this->_adapter->login( $login, $password, $options );
+		if ($this->hasIdentity()) {
+			$this->clearResult();
+		}
+		if ($result->isValid()) {
+			$this->getStorage()->write( $result );
+		}
+		return $result;
 	}
 
 	/**
 	 *
-	 * @param scalar $login
 	 * @return bool
 	 */
-	public function logout( $login )
+	public function logout()
 	{
-		return $this->_adapter->logout( $login );
+		$result = $this->_adapter->logout( $this->getResult() );
+		$this->clearResult();
+	}
+
+	protected function _check( $authResult )
+	{
+		if ( is_null( $this->_check ) )
+		{
+			$this->_check = $this->_adapter->check( $authResult );
+		}
+		return $this->_check;
 	}
 
 	/**

@@ -58,6 +58,10 @@ class Miao_Auth_Result
      */
 	protected $_messages;
 
+	protected $_login;
+
+	protected $_options = array();
+
 	/**
      * Sets the result code, identity, and failure messages
      *
@@ -66,7 +70,7 @@ class Miao_Auth_Result
      * @param  array   $messages
      * @return void
      */
-	public function __construct( $code, $identity, array $messages = array() )
+	public function __construct( $code, $identity, $login, $options, array $messages = array() )
 	{
 		$code = ( int ) $code;
 
@@ -81,6 +85,8 @@ class Miao_Auth_Result
 
 		$this->_code = $code;
 		$this->_identity = $identity;
+		$this->_login = $login;
+		$this->_options = $options;
 		$this->_messages = $messages;
 	}
 
@@ -112,6 +118,22 @@ class Miao_Auth_Result
 	public function getIdentity()
 	{
 		return $this->_identity;
+	}
+
+	/**
+	 * @return the $_login
+	 */
+	public function getLogin()
+	{
+		return $this->_login;
+	}
+
+	/**
+	 * @return the $_options
+	 */
+	public function getOptions()
+	{
+		return $this->_options;
 	}
 
 	/**
