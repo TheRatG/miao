@@ -175,6 +175,13 @@ class Miao_Auth
 	protected function __construct()
 	{
 		$this->_storage = new Miao_Auth_Storage_Session();
+
+		$config = Miao_Config::Libs( __CLASS__, false );
+		if ( $config )
+		{
+			$adapterClassName = $config->get('adapter');
+			$this->_adapter = new $adapterClassName();
+		}
 	}
 
 	/**

@@ -1,7 +1,10 @@
 <?php
 abstract class Miao_Form_Controller
 {
+
 	private $_fid = '';
+
+	private $_session;
 
 	/**
 	 *
@@ -79,23 +82,28 @@ abstract class Miao_Form_Controller
 
 	protected function _save()
 	{
-		$session = Miao_Session::getInstance();
+		$session = $this->_session;
 		$data = array(
 			'isRedirect' => $this->isRedirect(),
 			'form' => $this->_form );
-		$session->saveObject( $this->_fid, $data );
+		$session[ $this->_fid ] = $data;
 	}
 
 	protected function _clear()
 	{
-		$session = Miao_Session::getInstance();
-		$session->saveObject( $this->_fid, null );
+		$session = $this->_session;
+		$session[ $this->_fid ] = null;
 	}
 
 	protected function _load()
 	{
-		$session = Miao_Session::getInstance();
-		$res = $session->loadObject( $this->_fid, null, true );
+		$session = $this->_session;
+		$res = null;
+		if ( $session->offsetExists( $this->_fid ) )
+		{
+			$res = $session[ $this->_fid ];
+		}
+
 		if ( is_null( $res ) )
 		{
 			$form = $res;
@@ -151,12 +159,12 @@ abstract class Miao_Form_Controller
 
 	protected function _generateFid( $additionalFid = '' )
 	{
-		$session = Miao_Session::getInstance();
-		$this->_fid = md5( $session->getSessionId() . '_form_' . get_class( $this ) . $additionalFid );
+		$this->_fid = md5( session_id() . '_form_' . get_class( $this ) . $additionalFid );
 	}
 
 	protected function __construct()
 	{
+		$this->_session = Miao_Session::getNamespace( __CLASS__ );
 		$this->_init();
 	}
 
