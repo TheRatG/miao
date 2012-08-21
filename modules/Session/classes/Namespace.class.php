@@ -1,9 +1,13 @@
 <?php
-class Miao_Session_Namespace implements Iterator, ArrayAccess
+class Miao_Session_Namespace implements ArrayAccess, Iterator
 {
-	private $_data = array();
+
+	private $_container = array();
+
 	private $_namespace = false;
+
 	protected $_position = 0;
+
 	protected $_keys = array();
 
 	static public function getNick( $namespace )
@@ -18,87 +22,101 @@ class Miao_Session_Namespace implements Iterator, ArrayAccess
 		$this->_load();
 	}
 
-	public function __set( $name, $value )
+	public function &get( $offset )
 	{
 		$this->_load();
+		return $this->_container[ $offset ];
+	}
 
-		$this->_data[ $name ] = $value;
-
+	public function set( $offset, &$value )
+	{
+		$this->_load();
+		$this->_container[ $offset ] = &$value;
 		$this->_save();
 	}
 
-	public function __get( $name )
+	public function remove( $offset )
 	{
-		$this->_load();
-		$value = false;
-		if ( !isset( $this->_data[ $name ] ) )
-		{
-			$message = sprintf( 'Undefined var %s', $name );
-			throw new Miao_Session_Exception_UndefinedVar( $message );
-		}
-
-		$value = $this->_data[ $name ];
-
-		return $value;
+		unset( $this->_container[ $offset ] );
 	}
 
-	public function __isset( $name )
+	public function save()
 	{
-		$this->_load();
-		return isset( $this->_data[ $name ] );
-	}
-	public function __unset( $name )
-	{
-		$this->_load();
-		if ( $this->__isset( $name ) )
-		{
-			unset( $this->_data[ $name ] );
-			$this->_save();
-		}
+		$this->_save();
 	}
 
 	public function clear()
 	{
-		$this->_data = array();
+		$this->_container = array();
+		$this->_position = 0;
+		$this->_keys = array();
 		$this->_save();
 	}
 
-	protected function _save()
+	// {{{ magic -------------------------------------
+	public function __isset( $offset )
 	{
-		$nick = self::getNick( $this->_namespace );
-		$_SESSION[ $nick ] = serialize( $this->_data );
+		$this->_load();
+		return isset( $this->_container[ $offset ] );
 	}
 
-	protected function _load()
+	public function __set( $offset, $value )
 	{
-		$nick = self::getNick( $this->_namespace );
-		$this->_data = isset( $_SESSION[ $nick ] ) ? unserialize( $_SESSION[ $nick ] ) : false;
-		if ( !is_array( $this->_data ) )
+		if ( $value instanceof Miao_Session_Namespace_Reference )
 		{
-			$this->_data = array();
-			$this->_save();
+			$this->set( $offset, $value->getReference() );
+		}
+		else
+		{
+			$this->set( $offset, $value );
 		}
 	}
 
-	/**
-	 * (non-PHPdoc)
-	 *
-	 * @see Iterator::rewind()
-	 */
+	public function &__get( $offset )
+	{
+		return $this->get( $offset );
+	}
+
+	public function __unset( $offset )
+	{
+		$this->remove( $offset );
+	}
+	// }}} magic -------------------------------------
+
+	// {{{ ArrayAccess --------------------------
+	public function offsetExists( $offset )
+	{
+		return $this->__isset( $offset );
+	}
+
+	public function &offsetGet( $offset )
+	{
+		return $this->__get( $offset );
+	}
+
+	public function offsetSet( $offset, $value )
+	{
+		$this->__set( $offset, $value );
+	}
+
+	public function offsetUnset( $offset )
+	{
+		$this->__unset( $offset );
+	}
+
+	// }}} ArrayAccess --------------------------
+
+
+	// {{{ Iterator ----------------------------
 	public function rewind()
 	{
 		$this->_position = 0;
 	}
 
-	/**
-	 * (non-PHPdoc)
-	 *
-	 * @see Iterator::current()
-	 */
 	public function current()
 	{
 		$this->_load();
-		$data = $this->_data;
+		$data = $this->_container;
 		$count = count( $data );
 		reset( $data );
 		for( $i = 0; $i < $count; $i++ )
@@ -112,34 +130,20 @@ class Miao_Session_Namespace implements Iterator, ArrayAccess
 		return current( $data );
 	}
 
-	/**
-	 * (non-PHPdoc)
-	 *
-	 * @see Iterator::key()
-	 */
 	public function key()
 	{
-		$keys = array_keys( $this->_data );
+		$keys = array_keys( $this->_container );
 		return $keys[ $this->_position ];
 	}
 
-	/**
-	 * (non-PHPdoc)
-	 *
-	 * @see Iterator::next()
-	 */
 	public function next()
 	{
 		++$this->_position;
 	}
 
-	/**
-	 * (non-PHPdoc)
-	 *
-	 * @see Iterator::valid()
-	 */
 	public function valid()
 	{
+		$this->_load();
 		// проверка на существование по позиции
 		$count = $this->count();
 		if ( $this->_position < $count && $this->_position >= 0 )
@@ -149,33 +153,30 @@ class Miao_Session_Namespace implements Iterator, ArrayAccess
 		return false;
 	}
 
-	/**
-	 * (non-PHPdoc)
-	 *
-	 * @see Countable::count()
-	 */
 	public function count()
 	{
 		$this->_load();
-		$result = count( $this->_data );
+		$result = count( $this->_container );
 		return $result;
 	}
-
-	public function offsetExists( $offset )
+	// }}} Iterator ----------------------------
+	protected function _save()
 	{
-		return $this->__isset( $offset );
-	}
-	public function offsetGet( $offset )
-	{
-		return $this->__get( $offset );
-	}
-	public function offsetSet( $offset, $value )
-	{
-		$this->__set( $offset, $value );
-	}
-	public function offsetUnset( $offset )
-	{
-		$this->__unset( $offset );
+		$nick = self::getNick( $this->_namespace );
+		$_SESSION[ $nick ] = serialize( $this->_container );
 	}
 
+	protected function _load()
+	{
+		$nick = self::getNick( $this->_namespace );
+		if ( empty( $this->_container ) )
+		{
+			$this->_container = isset( $_SESSION[ $nick ] ) ? unserialize( $_SESSION[ $nick ] ) : false;
+			if ( !is_array( $this->_container ) )
+			{
+				$this->_container = array();
+				$this->_save();
+			}
+		}
+	}
 }

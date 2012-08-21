@@ -36,6 +36,9 @@ if ( isset( $_SERVER[ 'argc' ] ) )
 			case '--no-run':
 				$opts[ 'no-run' ] = true;
 				break;
+			case '-i':
+				$opts[ 'processIsolation' ] = true;
+				break;
 			case '--help':
 			case '-h':
 				help();

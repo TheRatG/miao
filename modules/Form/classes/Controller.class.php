@@ -80,6 +80,11 @@ abstract class Miao_Form_Controller
 		return $this->_isValid;
 	}
 
+	public function save()
+	{
+		$this->_save();
+	}
+
 	protected function _save()
 	{
 		$session = $this->_session;

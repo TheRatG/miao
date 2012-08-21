@@ -1,15 +1,20 @@
 <?php
 ini_set( 'memory_limit', '1024M' );
-
 class Miao_PHPUnit_Console
 {
+
 	private $_opts;
+
 	private $_remainingArgs;
 
 	private $_isFile = false;
+
 	private $_isDir = false;
+
 	private $_noRun = false;
+
 	private $_name = '';
+
 	private $_testSuite;
 
 	/**
@@ -159,9 +164,10 @@ class Miao_PHPUnit_Console
 			$message = sprintf( 'Found (%d) tests', $testCnt );
 			$this->_info( $message );
 
+			$processIsolation = isset( $this->_opts[ 'processIsolation' ] ) ? $this->_opts[ 'processIsolation' ] : false;
 			$runner = new PHPUnit_TextUI_TestRunner();
 			$arguments = array(
-				'processIsolation' => false,
+				'processIsolation' => $processIsolation,
 				'backupGlobals' => false );
 			$runner->doRun( $this->_testSuite, $arguments );
 		}

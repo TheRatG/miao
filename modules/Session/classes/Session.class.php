@@ -105,6 +105,36 @@ class Miao_Session
 		return $result;
 	}
 
+	public function load( $varName, $defaultValue = null, $useNullAsDefault = false )
+	{
+		$result = null;
+		$namespace = self::getNamespace( __CLASS__ );
+		if ( false === $namespace->offsetExists( $varName ) )
+		{
+			if ( ( null === $defaultValue ) && ( false === $useNullAsDefault ) )
+			{
+				$message = sprintf( 'Variable with name "%s" was not stored in session', $varName );
+				throw new Miao_Session_Exception_UndefinedVar( $message );
+			}
+			$result = $defaultValue;
+		}
+		else if ( is_null( $namespace[ $varName ] ) )
+		{
+			$result = $defaultValue;
+		}
+		else
+		{
+			$result = $namespace[ $varName ];
+		}
+		return $result;
+	}
+
+	public function save( $varName, $value )
+	{
+		$namespace = self::getNamespace( __CLASS__ );
+		$namespace[ $varName ] = $value;
+	}
+
 	public function getOptions()
 	{
 		$options = $this->_optionsMap;
