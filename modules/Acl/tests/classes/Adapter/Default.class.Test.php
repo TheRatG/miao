@@ -2,6 +2,31 @@
 class Miao_Acl_Adapter_Default_Test extends PHPUnit_Framework_TestCase
 {
 
+	public function testLoadData()
+	{
+		$data = array(
+			'group' => array( 'root', 'guest' ),
+			'resource' => array( "Article", "Foto" ),
+			'allow' => array( array( 'group' => '*', 'resource' => '*' ) ),
+			'deny' => array( array(
+				'group' => 'guest',
+				'resource' => 'Foto',
+				'privileges' => array( 'edit' ) ) ) );
+
+		$adapter = new Miao_Acl_Adapter_Default();
+		$adapter->loadConfig( $data );
+
+		$this->assertTrue( $adapter->isAllowed( 'root', 'Article' ) );
+		$this->assertTrue( $adapter->isAllowed( 'root', 'Article', 'view' ) );
+		$this->assertTrue( $adapter->isAllowed( 'root', 'Article', 'edit' ) );
+		$this->assertTrue( $adapter->isAllowed( 'root', 'Foto' ) );
+
+		$this->assertTrue( $adapter->isAllowed( 'guest', 'Article' ) );
+		$this->assertTrue( $adapter->isAllowed( 'guest', 'Article', 'view' ) );
+		$this->assertTrue( $adapter->isAllowed( 'guest', 'Foto' ) );
+		$this->assertFalse( $adapter->isAllowed( 'guest', 'Foto', 'edit' ) );
+	}
+
 	public function testAllowOne()
 	{
 		$adapter = new Miao_Acl_Adapter_Default();
@@ -66,6 +91,19 @@ class Miao_Acl_Adapter_Default_Test extends PHPUnit_Framework_TestCase
 		$this->assertFalse( $acl->isAllowed( 'guest', 'Article', 'edit' ) );
 		$this->assertTrue( $acl->isAllowed( 'root', 'Article', 'edit' ) );
 		$this->assertTrue( $acl->isAllowed( 'editor', 'Article', 'edit' ) );
+	}
+
+	public function testAllowFive()
+	{
+		$adapter = new Miao_Acl_Adapter_Default();
+		$acl = new Miao_Acl( $adapter );
+
+		$acl->addGroup( 'root' );
+		$acl->addResource( 'Article' );
+
+		$this->assertFalse( $acl->isAllowed( 'root', 'Article' ) );
+		$acl->allow( '*', '*' );
+		$this->assertTrue( $acl->isAllowed( 'root', 'Article' ) );
 	}
 
 	public function testAllowExOne()

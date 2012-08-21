@@ -1,4 +1,19 @@
 <?php
+/**
+ * @example
+ * <code>
+ *  $data = array(
+ * 			'group' => array( 'root', 'guest' ),
+ * 			'resource' => array( "Article", "Foto" ),
+ * 			'allow' => array( array( 'group' => '*', 'resource' => '*' ) ),
+ * 			'deny' => array( array(
+ * 				'group' => 'guest',
+ * 				'resource' => 'Foto',
+ * 				'privileges' => array( 'edit' ) ) ) );
+ * 	$adapter = new Miao_Acl_Adapter_Default();
+ * 	$adapter->loadConfig( $data );
+ * </code>
+ */
 class Miao_Acl_Adapter_Default implements Miao_Acl_Adapter_Interface
 {
 	const ALLOW = 'allow';
@@ -11,6 +26,45 @@ class Miao_Acl_Adapter_Default implements Miao_Acl_Adapter_Interface
 	protected $_allow;
 
 	protected $_deny;
+
+	public function loadConfig( $data )
+	{
+		if ( isset( $data[ 'group' ] ) )
+		{
+			foreach ( $data[ 'group' ] as $item )
+			{
+				$this->addGroup( $item );
+			}
+		}
+		if ( isset( $data[ 'resource' ] ) )
+		{
+			foreach ( $data[ 'resource' ] as $item )
+			{
+				$this->addResource( $item );
+			}
+		}
+		if ( isset( $data[ 'allow' ] ) )
+		{
+			foreach ( $data[ 'allow' ] as $item )
+			{
+				$group = ( isset( $item[ 'group' ] ) ? $item[ 'group' ] : null );
+				$resource = ( isset( $item[ 'resource' ] ) ? $item[ 'resource' ] : null );
+				$privileges = ( isset( $item[ 'privileges' ] ) ? $item[ 'privileges' ] : array() );
+				$this->allow( $group, $resource, $privileges );
+			}
+		}
+		if ( isset( $data[ 'deny' ] ) )
+		{
+			foreach ( $data[ 'deny' ] as $item )
+			{
+				$group = ( isset( $item[ 'group' ] ) ? $item[ 'group' ] : null );
+				$resource = ( isset( $item[ 'resource' ] ) ? $item[ 'resource' ] : null );
+				$privileges = ( isset( $item[ 'privileges' ] ) ? $item[ 'privileges' ] : array() );
+
+				$this->deny( $group, $resource, $privileges );
+			}
+		}
+	}
 
 	public function isAllowed( $group = null, $resource = null, $privilege = '' )
 	{
@@ -35,7 +89,7 @@ class Miao_Acl_Adapter_Default implements Miao_Acl_Adapter_Interface
 		if ( false !== $result )
 		{
 			$permission = $this->_deny;
-			$result = $this->_isDeny( $permission, $group, $resource, $privilege );
+			$result = $this->_check( self::DENY, $permission, $group, $resource, $privilege );
 			if ( true === $result )
 			{
 				$result = false;
@@ -43,7 +97,7 @@ class Miao_Acl_Adapter_Default implements Miao_Acl_Adapter_Interface
 			else
 			{
 				$permission = $this->_allow;
-				$result = $this->_isAllow( $permission, $group, $resource, $privilege );
+				$result = $this->_check( self::ALLOW, $permission, $group, $resource, $privilege );
 			}
 		}
 		return $result;
@@ -75,7 +129,7 @@ class Miao_Acl_Adapter_Default implements Miao_Acl_Adapter_Interface
 
 	protected function _changePermisssion( $type, $group, $resource, $privileges = null )
 	{
-		if ( is_null( $group ) )
+		if ( is_null( $group ) || '*' == $group )
 		{
 			$group = '*';
 		}
@@ -83,7 +137,7 @@ class Miao_Acl_Adapter_Default implements Miao_Acl_Adapter_Interface
 		{
 			$this->_checkGroup( $group, true );
 		}
-		if ( is_null( $resource ) )
+		if ( is_null( $resource ) || '*' == $resource )
 		{
 			$resource = '*';
 		}
@@ -101,34 +155,7 @@ class Miao_Acl_Adapter_Default implements Miao_Acl_Adapter_Interface
 		$permission[ $group ][ $resource ] = $privileges;
 	}
 
-	protected function _isAllow( &$permission, $group, $resource, $privilege )
-	{
-		$result = false;
-		if ( isset( $permission[ $group ] ) )
-		{
-			$resourceList = $permission[ $group ];
-			foreach ( $resourceList as $sResource => $sPrivilege )
-			{
-				if ( '*' == $sResource )
-				{
-					$result = true;
-					break;
-				}
-
-				if ( $resource == $sResource )
-				{
-					$result = true;
-					if ( $privilege && !empty( $sPrivilege ) )
-					{
-						$result = in_array( $privilege, $sPrivilege );
-					}
-				}
-			}
-		}
-		return $result;
-	}
-
-	protected function _isDeny( &$permission, $group, $resource, $privilege )
+	protected function _check( $type, &$permission, $group, $resource, $privilege )
 	{
 		$resourceList = array();
 		if ( isset( $permission[ '*' ] ) )
@@ -139,7 +166,40 @@ class Miao_Acl_Adapter_Default implements Miao_Acl_Adapter_Interface
 		{
 			$resourceList = $permission[ $group ];
 		}
-		$result = $this->_isDenyByResourceList( $resourceList, $resource, $privilege );
+
+		if ( $type == self::ALLOW )
+		{
+			$funcName = '_isAllowByResourceList';
+		}
+		else if ( $type == self::DENY )
+		{
+			$funcName = '_isDenyByResourceList';
+		}
+
+		$result = $this->$funcName( $resourceList, $resource, $privilege );
+		return $result;
+	}
+
+	protected function _isAllowByResourceList( array $resourceList, $resource, $privilege )
+	{
+		$result = false;
+		foreach ( $resourceList as $sResource => $sPrivilege )
+		{
+			if ( '*' == $sResource )
+			{
+				$result = true;
+				break;
+			}
+
+			if ( $resource == $sResource )
+			{
+				$result = true;
+				if ( $privilege && !empty( $sPrivilege ) )
+				{
+					$result = in_array( $privilege, $sPrivilege );
+				}
+			}
+		}
 		return $result;
 	}
 

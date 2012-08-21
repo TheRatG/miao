@@ -6,20 +6,12 @@
 				<Acl>
 					<adapter>Default</adapter>
 					<Default>
-						<group>
-							<item>root</item>
-							<item>guest</item>							
-						</group>
-						<resource>
-							<item></item>
-						</resource>
-						<allow>
-							<item group="root" resource="*" />
-							<item group="guest" resource="*" />
-						</allow>
-						<deny>
-							<item group="guest" resource="Miao_Office_View_Test" />
-						</deny>
+						<group>root</group>
+						<group>guest</group>
+						<resource></resource>
+						<allow group="root" resource="*" />
+						<allow group="guest" resource="*" />
+						<deny group="guest" resource="Miao_Office_View_Test" />
 					</Default>
 				</Acl>
 			</modules>
