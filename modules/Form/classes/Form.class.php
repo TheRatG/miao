@@ -194,6 +194,19 @@ class Miao_Form extends Miao_Form_Control
 		return $obj;
 	}
 
+	/**
+	 *
+	 * @param unknown_type $name
+	 * @param array $attributes
+	 * @return Miao_Form_Control_Text
+	 */
+	public function addPassword( $name, array $attributes = array() )
+	{
+		$obj = new Miao_Form_Control_Password( $name, $attributes );
+		$this->addControl( $obj );
+		return $obj;
+	}
+
 	public function addTextArea( $name, array $attributes = array() )
 	{
 		$obj = new Miao_Form_Control_Textarea( $name, $attributes );
