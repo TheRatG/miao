@@ -201,6 +201,12 @@ class Miao_Form extends Miao_Form_Control
 		return $obj;
 	}
 
+	/**
+	 *
+	 * @param string $name
+	 * @param array $attributes
+	 * @return Miao_Form_Control_Submit
+	 */
 	public function addSubmit( $name, array $attributes = array() )
 	{
 		$obj = new Miao_Form_Control_Submit( $name, $attributes );
