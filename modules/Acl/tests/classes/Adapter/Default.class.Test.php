@@ -106,6 +106,47 @@ class Miao_Acl_Adapter_Default_Test extends PHPUnit_Framework_TestCase
 		$this->assertTrue( $acl->isAllowed( 'root', 'Article' ) );
 	}
 
+	public function testAllowSix()
+	{
+		$adapter = new Miao_Acl_Adapter_Default();
+		$acl = new Miao_Acl( $adapter );
+
+		$acl->addGroup( 'root' );
+		$acl->addResource( 'Article' );
+
+		$acl->allow( 'root', '*' );
+		$this->assertTrue( $acl->isAllowed( 'root', 'Article' ) );
+	}
+
+	public function testAllowSeven()
+	{
+		$adapter = new Miao_Acl_Adapter_Default();
+		$acl = new Miao_Acl( $adapter );
+
+		$acl->addGroup( 'guest' );
+		$acl->addResource( 'Article' );
+
+		$acl->allow( '*', 'Article' );
+		$this->assertTrue( $acl->isAllowed( 'guest', 'Article' ) );
+	}
+
+	public function testAllowEight()
+	{
+		$adapter = new Miao_Acl_Adapter_Default();
+		$acl = new Miao_Acl( $adapter );
+
+		$acl->addGroup( 'root' );
+		$acl->addResource( 'Article' );
+		$acl->addResource( 'Foto' );
+
+		$acl->allow( 'root', '*' );
+		$acl->allow( '*', 'Article' );
+
+		$this->assertTrue( $acl->isAllowed( 'root', 'Foto' ) );
+		$this->assertTrue( $acl->isAllowed( 'root', 'Article' ) );
+	}
+
+
 	public function testAllowExOne()
 	{
 		$exceptionName = 'Miao_Acl_Exception';

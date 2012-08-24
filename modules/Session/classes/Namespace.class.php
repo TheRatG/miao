@@ -38,6 +38,8 @@ class Miao_Session_Namespace implements ArrayAccess, Iterator
 	public function remove( $offset )
 	{
 		unset( $this->_container[ $offset ] );
+		$nick = self::getNick( $this->_namespace );
+		unset( $_SESSION[ $nick ] );
 	}
 
 	public function save()
