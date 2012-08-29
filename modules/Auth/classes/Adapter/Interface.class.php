@@ -27,4 +27,10 @@ interface Miao_Auth_Adapter_Interface
 	 * @return bool
 	 */
 	public function check( Miao_Auth_Result $authResult );
+
+	/**
+	 * Use this method for options remember me
+	 * @return Miao_Auth_Result
+	 */
+	public function restore();
 }

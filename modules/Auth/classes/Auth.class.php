@@ -93,7 +93,15 @@ class Miao_Auth
 	{
 		$result = null;
 		$authRes = $this->getResult();
-		if ( $authRes )
+		if ( !$authRes )
+		{
+			$authRes = $this->_adapter->restore();
+			if ( $authRes && $authRes instanceof Miao_Auth_Result && $authRes->isValid() )
+			{
+				$this->getStorage()->write( $authRes );
+			}
+		}
+		if ( $authRes && $authRes instanceof Miao_Auth_Result )
 		{
 			$check = $this->_check( $authRes );
 			if ( $check )
@@ -139,10 +147,12 @@ class Miao_Auth
 	public function login( $login, $password, array $options = array() )
 	{
 		$result = $this->_adapter->login( $login, $password, $options );
-		if ($this->hasIdentity()) {
+		if ( $this->hasIdentity() )
+		{
 			$this->clearResult();
 		}
-		if ($result->isValid()) {
+		if ( $result->isValid() )
+		{
 			$this->getStorage()->write( $result );
 		}
 		return $result;
@@ -179,8 +189,8 @@ class Miao_Auth
 		$config = Miao_Config::Libs( __CLASS__, false );
 		if ( $config )
 		{
-			$adapterClassName = $config->get('adapter');
-			$this->_adapter = new $adapterClassName();
+			$adapterClassName = $config->get( 'adapter' );
+			$this->setAdapter( new $adapterClassName() );
 		}
 	}
 
