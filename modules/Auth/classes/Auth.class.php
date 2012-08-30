@@ -108,6 +108,10 @@ class Miao_Auth
 			{
 				$result = $authRes->getIdentity();
 			}
+			else
+			{
+				$this->clearResult();
+			}
 		}
 		return $result;
 	}
