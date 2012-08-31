@@ -11,7 +11,7 @@ class Miao_Office_DataHelper_Messages extends Miao_Office_DataHelper
 
 	private $_sessionName;
 
-	private $_messages;
+	private $_messages = array();
 
 	protected function __construct()
 	{

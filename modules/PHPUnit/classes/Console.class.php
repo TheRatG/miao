@@ -168,6 +168,7 @@ class Miao_PHPUnit_Console
 			$runner = new PHPUnit_TextUI_TestRunner();
 			$arguments = array(
 				'processIsolation' => $processIsolation,
+				'colors' => true,
 				'backupGlobals' => false );
 			$runner->doRun( $this->_testSuite, $arguments );
 		}

@@ -39,6 +39,7 @@ abstract class Miao_Office_View
 	public function __construct( Miao_Office_TemplatesEngine_PhpNative $templatesObj )
 	{
 		$this->setTemplateObj( $templatesObj );
+		$this->_init();
 	}
 
 	public function getTemplateObj()
@@ -79,14 +80,14 @@ abstract class Miao_Office_View
 
 	public function fetch( $layout = '' )
 	{
+		$this->_initializeBlock();
+
 		if ( empty( $layout ) )
 		{
 			$layout = $this->getLayout();
 		}
 		$viewTemplate = $this->_makeViewTemplate();
 		$this->_templatesObj->setViewTemplate( $viewTemplate );
-
-		$this->_initializeBlock();
 
 		$result = $this->_templatesObj->fetch( $layout );
 		return $result;
@@ -103,6 +104,11 @@ abstract class Miao_Office_View
 	final public function setTmplVars( $name, $value )
 	{
 		$this->_templatesObj->setValueOf( $name, $value );
+	}
+
+	protected function _init()
+	{
+
 	}
 
 	protected function _makeViewTemplate()

@@ -103,6 +103,6 @@ class Miao_Auth_Storage_Session
 	 */
 	public function clear()
 	{
-		unset( $this->_session[ $this->_member ] );
+		$this->_session->remove( $this->_member );
 	}
 }

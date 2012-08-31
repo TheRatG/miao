@@ -77,19 +77,17 @@ class Miao_Acl_Adapter_Default implements Miao_Acl_Adapter_Interface
 		{
 			$result = $this->_checkGroup( $group );
 		}
+
 		if ( is_null( $resource ) )
 		{
 			$resource = '*';
-		}
-		else
-		{
-			$result = $this->_checkResource( $resource );
 		}
 
 		if ( false !== $result )
 		{
 			$permission = $this->_deny;
 			$result = $this->_check( self::DENY, $permission, $group, $resource, $privilege );
+
 			if ( true === $result )
 			{
 				$result = false;
@@ -160,11 +158,12 @@ class Miao_Acl_Adapter_Default implements Miao_Acl_Adapter_Interface
 		$resourceList = array();
 		if ( isset( $permission[ '*' ] ) )
 		{
-			$resourceList = $permission[ '*' ];
+			$resourceList = array_merge_recursive( $resourceList, $permission[ '*' ] );
 		}
-		else if ( isset( $permission[ $group ] ) )
+
+		if ( isset( $permission[ $group ] ) )
 		{
-			$resourceList = $permission[ $group ];
+			$resourceList = array_merge_recursive( $resourceList, $permission[ $group ] );
 		}
 
 		if ( $type == self::ALLOW )
