@@ -1,6 +1,7 @@
 <?php
 class Miao_Office_Header
 {
+
 	/**
 	 *
 	 * Header list
@@ -24,7 +25,6 @@ class Miao_Office_Header
 
 	public function send()
 	{
-		$list = $this->getList();
 		foreach ( $list as $item )
 		{
 			header( $item, true );
@@ -37,9 +37,7 @@ class Miao_Office_Header
 		$contentType = $this->getContentType();
 		if ( empty( $contentType ) )
 		{
-			$message = sprintf(
-				'You can\'t set encoding (%s), until not set content type',
-				$encoding );
+			$message = sprintf( 'You can\'t set encoding (%s), until not set content type', $encoding );
 			throw new Miao_Office_Header_Exception( $message );
 		}
 		if ( $encoding !== $this->getEncoding() )
@@ -66,12 +64,12 @@ class Miao_Office_Header
 		{
 			$result = $this->_contentTypeList[ $contentType ];
 		}
-		else if ( false !== ( $key = array_search( $contentType,
-			$this->_contentTypeList ) ) )
+		else if ( false !== ( $key = array_search( $contentType, $this->_contentTypeList ) ) )
 		{
 			$result = $this->_contentTypeList[ $key ];
 		}
 		$name = 'Content-type';
+		$result = "Content-type: " . $result;
 		$this->set( $name, $result );
 	}
 
@@ -126,6 +124,12 @@ class Miao_Office_Header
 	public function reset()
 	{
 		$this->_list = array();
+	}
+
+	public function set404()
+	{
+		$this->set( '404', 'HTTP/1.0 404 Not Found' );
+		$this->set( '404_fcgi', 'Status: 404 Not Found' );
 	}
 
 	private function _parseContentType( $contentType )

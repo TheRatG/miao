@@ -40,7 +40,6 @@ class Miao_Office_Resource_Get extends Miao_Office_Resource
 		{
 			$this->setContent( $content );
 		}
-
 		if ( $sendHeader )
 		{
 			$this->sendHeader();
