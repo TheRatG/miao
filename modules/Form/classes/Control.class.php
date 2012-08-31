@@ -52,7 +52,7 @@ abstract class Miao_Form_Control
 	{
 		$this->setName( $name );
 		$this->setAttributes( $attributes );
-		$this->_label = new Miao_Form_Label( '' );
+		$this->_label = new Miao_Form_Label( $name, '' );
 		$this->_validator = new Miao_Form_Validate();
 	}
 
@@ -147,9 +147,9 @@ abstract class Miao_Form_Control
 	 * @param string $label
 	 * @return Miao_Form_Control
 	 */
-	public function setLabel( $label )
+	public function setLabel( $label, array $attributes = array() )
 	{
-		$this->_label->setLabel( $label );
+		$this->_label->setLabel( $label, $attributes );
 		return $this;
 	}
 
