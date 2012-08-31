@@ -25,6 +25,7 @@ class Miao_Office_Header
 
 	public function send()
 	{
+		$list = $this->getList();
 		foreach ( $list as $item )
 		{
 			header( $item, true );
