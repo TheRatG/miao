@@ -24,6 +24,8 @@ abstract class Miao_Form_Controller
 	 */
 	protected $_isValid;
 
+	protected $_isAjax = false;
+
 	private $_clearNumber = 1;
 
 	/**
@@ -51,6 +53,15 @@ abstract class Miao_Form_Controller
 	 * @return Miao_Form_Controller
 	*/
 	abstract static public function getInstance();
+
+	public function isAjax( $flag = NULL )
+	{
+		if ( !is_null( $flag ) )
+		{
+			$this->_isAjax = ( bool ) $flag;
+		}
+		return $this->_isAjax;
+	}
 
 	/**
 	 *
@@ -134,7 +145,7 @@ abstract class Miao_Form_Controller
 		}
 		else
 		{
-			if ( $this->isRedirect() )
+			if ( $this->isRedirect() || $this->isAjax() )
 			{
 				$this->_isRedirect = false;
 				$this->_isValid = $this->_form->isValid();

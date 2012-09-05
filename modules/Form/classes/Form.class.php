@@ -273,6 +273,13 @@ class Miao_Form extends Miao_Form_Control
 		return $obj;
 	}
 
+	public function addFile( $name, array $attributes = array())
+	{
+		$obj = new Miao_Form_Control_File( $name, $attributes );
+		$this->addControl( $obj );
+		return $obj;
+	}
+
 	public function render()
 	{
 		$pieces = array();
