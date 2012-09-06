@@ -112,6 +112,7 @@ class Miao_Office
 	public function setView( $view )
 	{
 		$this->_view = $view;
+		$this->_view->setOffice( $this );
 	}
 
 	/**

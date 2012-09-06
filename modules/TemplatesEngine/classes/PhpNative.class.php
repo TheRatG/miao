@@ -1,10 +1,15 @@
 <?php
 class Miao_TemplatesEngine_PhpNative implements Miao_TemplatesEngine_Interface
 {
+
 	protected $_templatesDir;
+
 	protected $_templateVars = array();
+
 	protected $_debugMode = false;
+
 	protected $_forceExceptionsOnInclude;
+
 	protected $_logFilename = '';
 
 	/**
@@ -39,19 +44,6 @@ class Miao_TemplatesEngine_PhpNative implements Miao_TemplatesEngine_Interface
 		return $this->_log;
 	}
 
-	static public function getDefaultInstance()
-	{
-		$configData = include realpath( dirname( __FILE__ ) . '/../data/config.php' );
-		$config = new Miao_Config( $configData );
-
-		$templatesDir = $config->get( '/TemplatesEngine/templatesDir' );
-		$debugMode = $config->get( '/TemplatesEngine/debugMode' );
-		$result = new self( $templatesDir, $debugMode );
-		$result->_logFilename = $config->get( '/TemplatesEngine/log/filename' );
-
-		return $result;
-	}
-
 	/**
 	 * Class constructor.
 	 * Setter for templates root directory and debug mode switcher.
@@ -59,10 +51,10 @@ class Miao_TemplatesEngine_PhpNative implements Miao_TemplatesEngine_Interface
 	 * @param string $templatesDir
 	 * @param bool $debugMode
 	 */
-	public function __construct( $templatesDir = '', $debugMode = false )
+	public function __construct( $templatesDir = '', $debugMode = null )
 	{
 		$this->setTemplatesDir( $templatesDir );
-		$this->setDebugMode( $debugMode );
+		$this->_initByConfig( $debugMode );
 	}
 
 	/**
@@ -175,6 +167,27 @@ class Miao_TemplatesEngine_PhpNative implements Miao_TemplatesEngine_Interface
 	public function display( $templateName )
 	{
 		echo $this->fetch( $templateName );
+	}
+
+	/**
+	 * Soft apply config param
+	 * @param bool $debugMode
+	 */
+	protected function _initByConfig( $debugMode )
+	{
+		$cDebugMode = null;
+		$cLogFilename = "";
+
+		$config = Miao_Config::Libs( __CLASS__, false );
+		if ( $config )
+		{
+			$cDebugMode = $config->get( 'debug', null );
+			$cLogFilename = $config->get( 'logFilename', "" );
+		}
+
+		$debugMode = is_null( $debugMode ) ? ( is_null( $cDebugMode ) ? false : $cDebugMode ) : $debugMode;
+		$this->setDebugMode( $debugMode );
+		$this->_logFilename = empty( $this->_logFilename ) ? $cLogFilename : $this->_logFilename;
 	}
 
 	/**

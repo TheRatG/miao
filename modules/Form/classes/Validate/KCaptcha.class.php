@@ -18,7 +18,7 @@ class Miao_Form_Validate_KCaptcha extends Miao_Form_Validate_Base
 		}
 
 		$result = false;
-		$valueRight = Miao_Session::getInstance()->loadScalar( Miao_Form_Control_Captcha::SKEY_NAME, null, true );
+		$valueRight = Miao_Session::getInstance()->load( Miao_Form_Control_Captcha::SKEY_NAME, null, true );
 		if ( !empty( $valueRight ) )
 		{
 			if ( $value === $valueRight )

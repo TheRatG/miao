@@ -50,7 +50,7 @@ class Miao_Office_TemplatesEngine_PhpNative extends Miao_TemplatesEngine_PhpNati
 			catch ( Exception $e )
 			{
 				$message = $this->_exceptionToString( $e );
-				//$this->getLogObj()->addMessage( $message, Miao_Tools_Log::LOG_LEVEL_ERROR );
+				$this->getLogObj()->log( $this->_exceptionToString( $e ), Miao_Log::ERR );
 				if ( $this->getDebugMode() )
 				{
 					$result .= $message;

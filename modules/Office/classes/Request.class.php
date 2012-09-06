@@ -87,7 +87,7 @@ class Miao_Office_Request
 			}
 			$this->_vars[ $varName ] = $defaultValue;
 		}
-		else if( empty( $this->_vars[ $varName ] ) )
+		else if( is_null( $this->_vars[ $varName ] ) )
 		{
 			$this->_vars[ $varName ] = $defaultValue;
 		}

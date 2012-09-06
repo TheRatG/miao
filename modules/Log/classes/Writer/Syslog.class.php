@@ -1,87 +1,57 @@
 <?php
-/**
- * Zend Framework
- *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
- *
- * @category   Zend
- * @package    Miao_Log
- * @subpackage Writer
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Syslog.php 22632 2010-07-18 18:30:08Z ramon $
- */
-
-/**
- * Writes log messages to syslog
- *
- * @category   Zend
- * @package    Miao_Log
- * @subpackage Writer
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- */
 class Miao_Log_Writer_Syslog extends Miao_Log_Writer_Abstract
 {
 	/**
 	 * Maps Miao_Log priorities to PHP's syslog priorities
 	 * @var array
 	 */
-	protected $_priorities = array( 
-		Miao_Log::EMERG => LOG_EMERG, 
-		Miao_Log::ALERT => LOG_ALERT, 
-		Miao_Log::CRIT => LOG_CRIT, 
-		Miao_Log::ERR => LOG_ERR, 
-		Miao_Log::WARN => LOG_WARNING, 
-		Miao_Log::NOTICE => LOG_NOTICE, 
-		Miao_Log::INFO => LOG_INFO, 
+	protected $_priorities = array(
+		Miao_Log::EMERG => LOG_EMERG,
+		Miao_Log::ALERT => LOG_ALERT,
+		Miao_Log::CRIT => LOG_CRIT,
+		Miao_Log::ERR => LOG_ERR,
+		Miao_Log::WARN => LOG_WARNING,
+		Miao_Log::NOTICE => LOG_NOTICE,
+		Miao_Log::INFO => LOG_INFO,
 		Miao_Log::DEBUG => LOG_DEBUG );
-	
+
 	/**
 	 * The default log priority - for unmapped custom priorities
 	 * @var string
 	 */
 	protected $_defaultPriority = LOG_NOTICE;
-	
+
 	/**
 	 * Last application name set by a syslog-writer instance
 	 * @var string
 	 */
 	protected static $_lastApplication;
-	
+
 	/**
 	 * Last facility name set by a syslog-writer instance
 	 * @var string
 	 */
 	protected static $_lastFacility;
-	
+
 	/**
 	 * Application name used by this syslog-writer instance
 	 * @var string
 	 */
 	protected $_application = 'Miao_Log';
-	
+
 	/**
 	 * Facility used by this syslog-writer instance
 	 * @var int
 	 */
 	protected $_facility = LOG_USER;
-	
+
 	/**
 	 * _validFacilities
 	 *
 	 * @var array
 	 */
 	protected $_validFacilities = array();
-	
+
 	/**
 	 * Class constructor
 	 *
@@ -94,24 +64,24 @@ class Miao_Log_Writer_Syslog extends Miao_Log_Writer_Abstract
 		{
 			$this->_application = $params[ 'application' ];
 		}
-		
+
 		$runInitializeSyslog = true;
 		if ( isset( $params[ 'facility' ] ) )
 		{
 			$this->_facility = $this->setFacility( $params[ 'facility' ] );
 			$runInitializeSyslog = false;
 		}
-		
+
 		if ( $runInitializeSyslog )
 		{
 			$this->_initializeSyslog();
 		}
 	}
-	
+
 	/**
 	 * Create a new instance of Miao_Log_Writer_Syslog
 	 *
-	 * @param  array|Zend_Config $config
+	 * @param  array|Miao_Config $config
 	 * @return Miao_Log_Writer_Syslog
 	 * @throws Miao_Log_Exception
 	 */
@@ -119,7 +89,7 @@ class Miao_Log_Writer_Syslog extends Miao_Log_Writer_Abstract
 	{
 		return new self( self::_parseConfig( $config ) );
 	}
-	
+
 	/**
 	 * Initialize values facilities
 	 *
@@ -127,27 +97,27 @@ class Miao_Log_Writer_Syslog extends Miao_Log_Writer_Abstract
 	 */
 	protected function _initializeValidFacilities()
 	{
-		$constants = array( 
-			'LOG_AUTH', 
-			'LOG_AUTHPRIV', 
-			'LOG_CRON', 
-			'LOG_DAEMON', 
-			'LOG_KERN', 
-			'LOG_LOCAL0', 
-			'LOG_LOCAL1', 
-			'LOG_LOCAL2', 
-			'LOG_LOCAL3', 
-			'LOG_LOCAL4', 
-			'LOG_LOCAL5', 
-			'LOG_LOCAL6', 
-			'LOG_LOCAL7', 
-			'LOG_LPR', 
-			'LOG_MAIL', 
-			'LOG_NEWS', 
-			'LOG_SYSLOG', 
-			'LOG_USER', 
+		$constants = array(
+			'LOG_AUTH',
+			'LOG_AUTHPRIV',
+			'LOG_CRON',
+			'LOG_DAEMON',
+			'LOG_KERN',
+			'LOG_LOCAL0',
+			'LOG_LOCAL1',
+			'LOG_LOCAL2',
+			'LOG_LOCAL3',
+			'LOG_LOCAL4',
+			'LOG_LOCAL5',
+			'LOG_LOCAL6',
+			'LOG_LOCAL7',
+			'LOG_LPR',
+			'LOG_MAIL',
+			'LOG_NEWS',
+			'LOG_SYSLOG',
+			'LOG_USER',
 			'LOG_UUCP' );
-		
+
 		foreach ( $constants as $constant )
 		{
 			if ( defined( $constant ) )
@@ -156,7 +126,7 @@ class Miao_Log_Writer_Syslog extends Miao_Log_Writer_Abstract
 			}
 		}
 	}
-	
+
 	/**
 	 * Initialize syslog / set application name and facility
 	 *
@@ -168,7 +138,7 @@ class Miao_Log_Writer_Syslog extends Miao_Log_Writer_Abstract
 		self::$_lastFacility = $this->_facility;
 		openlog( $this->_application, LOG_PID, $this->_facility );
 	}
-	
+
 	/**
 	 * Set syslog facility
 	 *
@@ -182,26 +152,26 @@ class Miao_Log_Writer_Syslog extends Miao_Log_Writer_Abstract
 		{
 			return;
 		}
-		
+
 		if ( !count( $this->_validFacilities ) )
 		{
 			$this->_initializeValidFacilities();
 		}
-		
+
 		if ( !in_array( $facility, $this->_validFacilities ) )
 		{
 			throw new Miao_Log_Exception( 'Invalid log facility provided; please see http://php.net/openlog for a list of valid facility values' );
 		}
-		
+
 		if ( 'WIN' == strtoupper( substr( PHP_OS, 0, 3 ) ) && ( $facility !== LOG_USER ) )
 		{
 			throw new Miao_Log_Exception( 'Only LOG_USER is a valid log facility on Windows' );
 		}
-		
+
 		$this->_facility = $facility;
 		$this->_initializeSyslog();
 	}
-	
+
 	/**
 	 * Set application name
 	 *
@@ -217,7 +187,7 @@ class Miao_Log_Writer_Syslog extends Miao_Log_Writer_Abstract
 		$this->_application = $application;
 		$this->_initializeSyslog();
 	}
-	
+
 	/**
 	 * Close syslog.
 	 *
@@ -227,7 +197,7 @@ class Miao_Log_Writer_Syslog extends Miao_Log_Writer_Abstract
 	{
 		closelog();
 	}
-	
+
 	/**
 	 * Write a message to syslog.
 	 *
@@ -244,12 +214,12 @@ class Miao_Log_Writer_Syslog extends Miao_Log_Writer_Abstract
 		{
 			$priority = $this->_defaultPriority;
 		}
-		
+
 		if ( $this->_application !== self::$_lastApplication || $this->_facility !== self::$_lastFacility )
 		{
 			$this->_initializeSyslog();
 		}
-		
+
 		syslog( $priority, $event[ 'message' ] );
 	}
 }

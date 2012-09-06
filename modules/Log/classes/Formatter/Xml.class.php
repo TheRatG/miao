@@ -1,50 +1,21 @@
 <?php
-/**
- * Zend Framework
- *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
- *
- * @category   Zend
- * @package    Miao_Log
- * @subpackage Formatter
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Xml.php 20104 2010-01-06 21:26:01Z matthew $
- */
-
-/**
- * @category   Zend
- * @package    Miao_Log
- * @subpackage Formatter
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Xml.php 20104 2010-01-06 21:26:01Z matthew $
- */
 class Miao_Log_Formatter_Xml implements Miao_Log_Formatter_Interface
 {
 	/**
 	 * @var Relates XML elements to log data field keys.
 	 */
 	protected $_rootElement;
-	
+
 	/**
 	 * @var Relates XML elements to log data field keys.
 	 */
 	protected $_elementMap;
-	
+
 	/**
 	 * @var string Encoding to use in XML
 	 */
 	protected $_encoding;
-	
+
 	/**
 	 * Class constructor
 	 *
@@ -58,7 +29,7 @@ class Miao_Log_Formatter_Xml implements Miao_Log_Formatter_Interface
 		$this->_elementMap = $elementMap;
 		$this->setEncoding( $encoding );
 	}
-	
+
 	/**
 	 * Get encoding
 	 *
@@ -68,7 +39,7 @@ class Miao_Log_Formatter_Xml implements Miao_Log_Formatter_Interface
 	{
 		return $this->_encoding;
 	}
-	
+
 	/**
 	 * Set encoding
 	 *
@@ -80,7 +51,7 @@ class Miao_Log_Formatter_Xml implements Miao_Log_Formatter_Interface
 		$this->_encoding = ( string ) $value;
 		return $this;
 	}
-	
+
 	/**
 	 * Formats data into a single line to be written by the writer.
 	 *
@@ -101,11 +72,11 @@ class Miao_Log_Formatter_Xml implements Miao_Log_Formatter_Interface
 				$dataToInsert[ $elementName ] = $event[ $fieldKey ];
 			}
 		}
-		
+
 		$enc = $this->getEncoding();
 		$dom = new DOMDocument( '1.0', $enc );
 		$elt = $dom->appendChild( new DOMElement( $this->_rootElement ) );
-		
+
 		foreach ( $dataToInsert as $key => $value )
 		{
 			if ( $key == "message" )
@@ -114,10 +85,10 @@ class Miao_Log_Formatter_Xml implements Miao_Log_Formatter_Interface
 			}
 			$elt->appendChild( new DOMElement( $key, $value ) );
 		}
-		
+
 		$xml = $dom->saveXML();
 		$xml = preg_replace( '/<\?xml version="1.0"( encoding="[^\"]*")?\?>\n/u', '', $xml );
-		
+
 		return $xml . PHP_EOL;
 	}
 

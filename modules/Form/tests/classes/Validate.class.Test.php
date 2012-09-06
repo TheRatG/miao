@@ -7,6 +7,11 @@ class Miao_Form_Validate_Test extends PHPUnit_Framework_TestCase
 	 */
 	public function testAddValidator( $mixed, $actual, $exceptionName = '' )
 	{
+		if ( !empty( $exceptionName ) )
+		{
+			$this->setExpectedException( $exceptionName );
+		}
+
 		$validator = new Miao_Form_Validate();
 		$validator->addValidator( $mixed );
 
@@ -24,6 +29,16 @@ class Miao_Form_Validate_Test extends PHPUnit_Framework_TestCase
 				array(
 					'instance' => new Miao_Form_Validate_Require(),
 					'breakChainOnFailure' => false ) ) );
+
+		$data[] = array(
+			'NoClassValidate',
+			'',
+			'Miao_Autoload_Exception_FileNotFound' );
+
+		$data[] = array(
+			array( 'NoClassValidate', array() ),
+			'',
+			'Miao_Autoload_Exception_FileNotFound' );
 
 		return $data;
 	}

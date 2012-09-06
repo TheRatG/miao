@@ -139,6 +139,7 @@ class Miao_Form extends Miao_Form_Control
 		foreach ( $this->_controls as $control )
 		{
 			$control->clearValue();
+			$control->error()->reset();
 		}
 	}
 
@@ -193,6 +194,19 @@ class Miao_Form extends Miao_Form_Control
 		return $obj;
 	}
 
+	/**
+	 *
+	 * @param unknown_type $name
+	 * @param array $attributes
+	 * @return Miao_Form_Control_Text
+	 */
+	public function addPassword( $name, array $attributes = array() )
+	{
+		$obj = new Miao_Form_Control_Password( $name, $attributes );
+		$this->addControl( $obj );
+		return $obj;
+	}
+
 	public function addTextArea( $name, array $attributes = array() )
 	{
 		$obj = new Miao_Form_Control_Textarea( $name, $attributes );
@@ -200,6 +214,12 @@ class Miao_Form extends Miao_Form_Control
 		return $obj;
 	}
 
+	/**
+	 *
+	 * @param string $name
+	 * @param array $attributes
+	 * @return Miao_Form_Control_Submit
+	 */
 	public function addSubmit( $name, array $attributes = array() )
 	{
 		$obj = new Miao_Form_Control_Submit( $name, $attributes );
@@ -220,14 +240,14 @@ class Miao_Form extends Miao_Form_Control
 		$this->addControl( $obj );
 		return $obj;
 	}
-	
+
 	public function addHidden( $name, array $attributes = array())
 	{
 		$obj = new Miao_Form_Control_Hidden( $name, $attributes );
 		$this->addControl( $obj );
 		return $obj;
 	}
-	
+
 	public function addSelect( $name, array $attributes = array(),$items = array())
 	{
 		$obj = new Miao_Form_Control_Select( $name, $attributes,$items );
@@ -249,6 +269,13 @@ class Miao_Form extends Miao_Form_Control
 		{
 			$obj = new Miao_Form_Control_Captcha( $name, $attributes );
 		}
+		$this->addControl( $obj );
+		return $obj;
+	}
+
+	public function addFile( $name, array $attributes = array())
+	{
+		$obj = new Miao_Form_Control_File( $name, $attributes );
 		$this->addControl( $obj );
 		return $obj;
 	}

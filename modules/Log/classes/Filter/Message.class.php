@@ -1,40 +1,11 @@
 <?php
-/**
- * Zend Framework
- *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
- *
- * @category   Zend
- * @package    Miao_Log
- * @subpackage Filter
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Message.php 20982 2010-02-08 15:51:36Z matthew $
- */
-
-/**
- * @category   Zend
- * @package    Miao_Log
- * @subpackage Filter
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Message.php 20982 2010-02-08 15:51:36Z matthew $
- */
 class Miao_Log_Filter_Message extends Miao_Log_Filter_Abstract
 {
 	/**
 	 * @var string
 	 */
 	protected $_regexp;
-	
+
 	/**
 	 * Filter out any log messages not matching $regexp.
 	 *
@@ -49,11 +20,11 @@ class Miao_Log_Filter_Message extends Miao_Log_Filter_Abstract
 		}
 		$this->_regexp = $regexp;
 	}
-	
+
 	/**
 	 * Create a new instance of Miao_Log_Filter_Message
-	 * 
-	 * @param  array|Zend_Config $config
+	 *
+	 * @param  array|Miao_Config $config
 	 * @return Miao_Log_Filter_Message
 	 * @throws Miao_Log_Exception
 	 */
@@ -61,10 +32,10 @@ class Miao_Log_Filter_Message extends Miao_Log_Filter_Abstract
 	{
 		$config = self::_parseConfig( $config );
 		$config = array_merge( array( 'regexp' => null ), $config );
-		
+
 		return new self( $config[ 'regexp' ] );
 	}
-	
+
 	/**
 	 * Returns TRUE to accept the message, FALSE to block it.
 	 *

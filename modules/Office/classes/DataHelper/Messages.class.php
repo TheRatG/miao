@@ -1,17 +1,22 @@
 <?php
 class Miao_Office_DataHelper_Messages extends Miao_Office_DataHelper
 {
+	const SESSION_NAMESPACE = 'Office_DataHelper_Messages';
+
 	const INFO = 'info';
 	const ERROR = 'error';
 	const SUCCESS = 'success';
 
+	private $_session;
+
 	private $_sessionName;
 
-	private $_messages;
+	private $_messages = array();
 
 	protected function __construct()
 	{
-		$this->_sessionName = 'Miao_Office_DataHelper_Messages';
+		$this->_sessionName = __CLASS__;
+		$this->_session = Miao_Session::getNamespace( __CLASS__ );
 	}
 
 	/**
@@ -89,14 +94,15 @@ class Miao_Office_DataHelper_Messages extends Miao_Office_DataHelper
 
 	protected function _save()
 	{
-		$session = Miao_Session::getInstance();
-		$session->saveObject( $this->_sessionName, $this->_messages );
+		$this->_session->{$this->_sessionName} = $this->_messages;
 	}
 
 	protected function _load()
 	{
-		$session = Miao_Session::getInstance();
-		$this->_messages = $session->loadObject( $this->_sessionName, array() );
+		if (  $this->_session->offsetExists( $this->_sessionName ) )
+		{
+			$this->_messages = $this->_session[ $this->_sessionName ];
+		}
 	}
 
 	protected function _createMessage( $message, $type )

@@ -1,16 +1,27 @@
 <?php
-ini_set( 'memory_limit', '256M' );
-
+ini_set( 'memory_limit', '1024M' );
 class Miao_PHPUnit_Console
 {
+
 	private $_opts;
+
 	private $_remainingArgs;
 
 	private $_isFile = false;
+
 	private $_isDir = false;
+
 	private $_noRun = false;
+
 	private $_name = '';
+
 	private $_testSuite;
+
+	/**
+	 *
+	 * @var Miao_Log
+	 */
+	private $_log;
 
 	public function __construct( array $opts, array $remainingArgs )
 	{
@@ -20,8 +31,8 @@ class Miao_PHPUnit_Console
 		$this->_init();
 		$this->_testSuite = new PHPUnit_Framework_TestSuite();
 
-		//can't isolate session
-		Miao_Session::getInstance();
+		Miao_Session::getInstance()->start();
+		$this->_log = Miao_Log::easyFactory( '', true, 7 );
 	}
 
 	public function getListFileListByModuleName( $moduleName )
@@ -153,9 +164,11 @@ class Miao_PHPUnit_Console
 			$message = sprintf( 'Found (%d) tests', $testCnt );
 			$this->_info( $message );
 
+			$processIsolation = isset( $this->_opts[ 'processIsolation' ] ) ? $this->_opts[ 'processIsolation' ] : false;
 			$runner = new PHPUnit_TextUI_TestRunner();
 			$arguments = array(
-				'processIsolation' => false,
+				'processIsolation' => $processIsolation,
+				'colors' => true,
 				'backupGlobals' => false );
 			$runner->doRun( $this->_testSuite, $arguments );
 		}
@@ -168,7 +181,7 @@ class Miao_PHPUnit_Console
 
 	private function _info( $message )
 	{
-		echo $message . "\n";
+		$this->_log->debug( $message );
 	}
 
 	private function _getFileList( $dir )

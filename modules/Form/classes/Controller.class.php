@@ -4,6 +4,8 @@ abstract class Miao_Form_Controller
 
 	private $_fid = '';
 
+	private $_session;
+
 	/**
 	 *
 	 * @var Miao_Form
@@ -21,6 +23,8 @@ abstract class Miao_Form_Controller
 	 * @var bool
 	 */
 	protected $_isValid;
+
+	protected $_isAjax = false;
 
 	private $_clearNumber = 1;
 
@@ -50,6 +54,15 @@ abstract class Miao_Form_Controller
 	*/
 	abstract static public function getInstance();
 
+	public function isAjax( $flag = NULL )
+	{
+		if ( !is_null( $flag ) )
+		{
+			$this->_isAjax = ( bool ) $flag;
+		}
+		return $this->_isAjax;
+	}
+
 	/**
 	 *
 	 * @return Miao_Form
@@ -66,7 +79,7 @@ abstract class Miao_Form_Controller
 			$this->_isRedirect = ( bool ) $val;
 			if ( $this->_isRedirect )
 			{
-				$this->save();
+				$this->_save();
 			}
 		}
 		$result = $this->_isRedirect;
@@ -80,23 +93,33 @@ abstract class Miao_Form_Controller
 
 	public function save()
 	{
-		$session = Miao_Session::getInstance();
+		$this->_save();
+	}
+
+	protected function _save()
+	{
+		$session = $this->_session;
 		$data = array(
 			'isRedirect' => $this->isRedirect(),
 			'form' => $this->_form );
-		$session->saveObject( $this->_fid, $data );
+		$session[ $this->_fid ] = $data;
 	}
 
-	public function clear()
+	protected function _clear()
 	{
-		$session = Miao_Session::getInstance();
-		$session->saveObject( $this->_fid, null );
+		$session = $this->_session;
+		$session[ $this->_fid ] = null;
 	}
 
-	public function load()
+	protected function _load()
 	{
-		$session = Miao_Session::getInstance();
-		$res = $session->loadObject( $this->_fid, null, true );
+		$session = $this->_session;
+		$res = null;
+		if ( $session->offsetExists( $this->_fid ) )
+		{
+			$res = $session[ $this->_fid ];
+		}
+
 		if ( is_null( $res ) )
 		{
 			$form = $res;
@@ -108,19 +131,21 @@ abstract class Miao_Form_Controller
 		}
 	}
 
-	public function _init()
+	protected function _init()
 	{
 		$this->_generateFid();
-		$this->load();
-		$this->clear();
+		$this->_load();
+		$this->_clear();
 
 		if ( is_null( $this->_form ) )
 		{
 			$this->_form = $this->buildForm();
+			$this->_loadData();
+			$this->_save();
 		}
 		else
 		{
-			if ( $this->isRedirect() )
+			if ( $this->isRedirect() || $this->isAjax() )
 			{
 				$this->_isRedirect = false;
 				$this->_isValid = $this->_form->isValid();
@@ -128,28 +153,34 @@ abstract class Miao_Form_Controller
 				{
 					$this->_form->clearValue();
 				}
+				$this->_clear();
 			}
 			else
 			{
-				$request = Miao_Office_Request::getInstance();
-				if ( 'POST' === $request->getMethod() )
-				{
-					$data = $request->getVars();
-					$this->_isValid = $this->_form->isValid( $data );
-				}
+				$this->_loadData();
+				$this->_save();
 			}
 		}
-		$this->save();
 	}
 
-	protected function _generateFid()
+	protected function _loadData()
 	{
-		$session = Miao_Session::getInstance();
-		$this->_fid = md5( $session->getSessionId() . '_form_' . get_class( $this ) );
+		$request = Miao_Office_Request::getInstance();
+		if ( 'POST' === $request->getMethod() )
+		{
+			$data = $request->getVars();
+			$this->_isValid = $this->_form->isValid( $data );
+		}
+	}
+
+	protected function _generateFid( $additionalFid = '' )
+	{
+		$this->_fid = md5( session_id() . '_form_' . get_class( $this ) . $additionalFid );
 	}
 
 	protected function __construct()
 	{
+		$this->_session = Miao_Session::getNamespace( __CLASS__ );
 		$this->_init();
 	}
 

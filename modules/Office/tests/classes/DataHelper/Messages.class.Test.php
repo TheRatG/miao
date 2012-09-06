@@ -1,5 +1,5 @@
 <?php
-class Miao_OfficeOffice_DataHelper_Messages_Test extends PHPUnit_Framework_TestCase
+class Miao_Office_DataHelper_Messages_Test extends PHPUnit_Framework_TestCase
 {
 
 	/**
