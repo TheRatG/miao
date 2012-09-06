@@ -9,7 +9,7 @@ class Miao_Autoload_Plugin_Zend extends Miao_Autoload_Plugin
 
 	public function getFilenameByClassName( $className )
 	{
-		$items = explode( '_', $className );
+		$items = preg_split( '![_\\\\]!', $className );
 		if ( count( $items ) < 2 || $items[ 0 ] != 'Zend' )
 		{
 			return '';
