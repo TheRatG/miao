@@ -57,6 +57,11 @@ class Miao_Auth
 	 */
 	public function getAdapter()
 	{
+		if ( is_null( $this->_adapter ) )
+		{
+			$message = 'Adapter was not define. Check your "miao.xml" section Auth';
+			throw new Miao_Auth_Adapter_Exception( $message );
+		}
 		return $this->_adapter;
 	}
 
@@ -95,7 +100,7 @@ class Miao_Auth
 		$authRes = $this->getResult();
 		if ( !$authRes )
 		{
-			$authRes = $this->_adapter->restore();
+			$authRes = $this->getAdapter()->restore();
 			if ( $authRes && $authRes instanceof Miao_Auth_Result && $authRes->isValid() )
 			{
 				$this->getStorage()->write( $authRes );

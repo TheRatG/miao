@@ -102,9 +102,13 @@ class Miao_Autoload
 	public function registerItem( $name, $plugin, $libPath )
 	{
 		$index = $this->_getIndex( $name );
-		$className = 'Miao_Autoload_Plugin_' . $plugin;
+		$className = $plugin;
+		//if you'll use your plugin
+		if ( !class_exists( $plugin, false ) )
+		{
+			$className = 'Miao_Autoload_Plugin_' . $plugin;
+		}
 		$plugin = new $className( $name, $libPath );
-
 		$this->registerPlugin( $index, $plugin );
 	}
 
