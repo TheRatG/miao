@@ -62,6 +62,8 @@ class Miao_Auth_Result
 
 	protected $_options = array();
 
+	protected $_createTime = null;
+
 	/**
      * Sets the result code, identity, and failure messages
      *
@@ -88,6 +90,7 @@ class Miao_Auth_Result
 		$this->_login = $login;
 		$this->_options = $options;
 		$this->_messages = $messages;
+		$this->_createTime = time();
 	}
 
 	/**
@@ -134,6 +137,24 @@ class Miao_Auth_Result
 	public function getOptions()
 	{
 		return $this->_options;
+	}
+
+	/**
+	 *
+	 * @param array $options
+	 */
+	public function setOptions( $options )
+	{
+		$this->_options = $options;
+	}
+
+	/**
+	 *
+	 * @return timestamp Create object time
+	 */
+	public function getCreateTime()
+	{
+		return $this->_createTime;
 	}
 
 	/**
