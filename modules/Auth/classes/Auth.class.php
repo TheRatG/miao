@@ -1,14 +1,6 @@
 <?php
 class Miao_Auth
 {
-
-	/**
-	 * instance of Miao_Auth
-	 *
-	 * @var Miao_Auth
-	 */
-	protected static $_instance;
-
 	/**
 	 * Persistent storage handler
 	 *
@@ -21,20 +13,7 @@ class Miao_Auth
 	 * @var Miao_Auth_Adapter_Interface
 	 */
 	protected $_adapter = null;
-
 	protected $_check = null;
-
-	/**
-	 * @return Miao_Auth
-	 */
-	static public function getInstance()
-	{
-		if ( !isset( self::$_instance ) )
-		{
-			self::$_instance = new self();
-		}
-		return self::$_instance;
-	}
 
 	/**
 	 * @return the $storage
@@ -187,28 +166,15 @@ class Miao_Auth
 	}
 
 	/**
-	 * Singleton pattern implementation makes "new" unavailable
 	 *
 	 * @return void
 	 */
-	protected function __construct()
+	public function __construct( Miao_Auth_Adapter_Interface $adapter, $storage = null )
 	{
-		$this->_storage = new Miao_Auth_Storage_Session();
-
-		$config = Miao_Config::Libs( __CLASS__, false );
-		if ( $config )
+		if ( is_null( $storage ) )
 		{
-			$adapterClassName = $config->get( 'adapter' );
-			$this->setAdapter( new $adapterClassName() );
+			$this->_storage = new Miao_Auth_Storage_Session();
 		}
-	}
-
-	/**
-	 * Singleton pattern implementation makes "clone" unavailable
-	 *
-	 * @return void
-	 */
-	protected function __clone()
-	{
+		$this->setAdapter( $adapter );
 	}
 }
