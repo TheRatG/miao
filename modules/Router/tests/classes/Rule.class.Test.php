@@ -172,6 +172,51 @@ class Miao_Router_Rule_Test extends PHPUnit_Framework_TestCase
 			'',
 			'Miao_Router_Rule_Exception' );
 
+		$config = array(
+			'prefix' => 'Miao_TestOffice',
+			'type' => Miao_Router_Rule::TYPE_VIEW,
+			'name' => 'Article_Item',
+			'rule' => '/article/:section',
+			'validators' => array(
+				array(
+					'id' => 'section',
+					'type' => 'In',
+					'variants' => 'lifestyle,finance' ) ) );
+		$data[] = array(
+			$config,
+			array( 'section' => '' ),
+			'',
+			'Miao_Router_Rule_Exception' );
+		$data[] = array(
+			$config,
+			array( 'section' => 'finance' ),
+			'article/finance' );
+		$data[] = array(
+			$config,
+			array( 'section' => 'focus' ),
+			'',
+			'Miao_Router_Rule_Exception' );
+
+		$config = array(
+			'prefix' => 'Miao_TestOffice',
+			'type' => Miao_Router_Rule::TYPE_VIEW,
+			'name' => 'Article_Item',
+			'rule' => '/article/:section',
+			'validators' => array(
+				array(
+					'id' => 'section',
+					'type' => 'In',
+					'variants' => 'lifestyle,finance' ),
+				array(
+					'id' => 'section2',
+					'type' => 'In',
+					'variants' => 'lifestyle,finance' ) ) );
+		$data[] = array(
+			$config,
+			array( 'section' => '' ),
+			'',
+			'Miao_Router_Rule_Exception' );
+
 		return $data;
 	}
 }

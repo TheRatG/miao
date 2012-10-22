@@ -225,6 +225,12 @@ class Miao_Router_Rule
 			$this->_validators[] = $validator;
 		}
 		$this->_parts = $parts;
+
+		if ( count( $validators ) )
+		{
+			$message = sprintf( "Some validators did not find his part of uri.\n %s", $validators );
+			throw new Miao_Router_Rule_Exception( $message );
+		}
 	}
 
 	protected function _searchValidatorConfigById( $id, &$validators )

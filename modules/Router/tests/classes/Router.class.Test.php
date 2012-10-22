@@ -40,7 +40,7 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 
 		$router = Miao_Router::factory( $config );
 		$expected = $router->view( 'Article_Item', array( 'id' => '123' ) );
-		$actual = '/article/123';
+		$actual = 'article/123';
 
 		$this->assertEquals( $expected, $actual );
 	}

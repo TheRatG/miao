@@ -99,7 +99,7 @@ class Miao_Router
 			throw new Miao_Router_Exception( $message );
 		}
 		$rule = $this->_rules[ $index ];
-		$result = $rule->makeUrl( Miao_Router_Rule::TYPE_VIEW, $params );
+		$result = $rule->makeUrl( $params );
 		return $result;
 	}
 
