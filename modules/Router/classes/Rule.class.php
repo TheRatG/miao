@@ -73,7 +73,6 @@ class Miao_Router_Rule
 					$result = $check;
 					break;
 				}
-
 				$paramIndex = $validator->getId();
 				if ( $paramIndex )
 				{
@@ -159,8 +158,39 @@ class Miao_Router_Rule
 		return $this->_validators;
 	}
 
-	public function makeUrl( $type, array $params = array() )
+	public function makeUrl( array $params = array() )
 	{
+		$uri = array();
+		foreach ( $this->_parts as $paramName )
+		{
+			if ( ':' == $paramName[ 0 ] )
+			{
+				$index = substr( $paramName, 1 );
+				if ( isset( $params[ $index ] ) )
+				{
+					$uri[] = $params[ $index ];
+				}
+				else
+				{
+					$message = sprintf(
+						'Require param (%s) does not exists in $params', $index );
+					throw new Miao_Router_Rule_Exception( $message );
+				}
+			}
+			else
+			{
+				$uri[] = $paramName;
+			}
+		}
+
+		$uri = implode( '/', $uri );
+		$check = $this->match( $uri );
+		if ( false === $check )
+		{
+			$message = sprintf( 'Uri maked (%s) but did not validate', $uri );
+			throw new Miao_Router_Rule_Exception( $message );
+		}
+		return $uri;
 	}
 
 	protected function _getOfficeTypeParamName()
@@ -206,7 +236,7 @@ class Miao_Router_Rule
 			{
 				throw new Miao_Router_Rule_Exception( 'Invalid validator config item: must content attribute "id"' );
 			}
-			if ( $config[ 'id ' ] == $id )
+			if ( $config[ 'id' ] == $id )
 			{
 				$result = $config;
 				unset( $validators[ $key ] );

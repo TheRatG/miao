@@ -1,5 +1,6 @@
 <?php
 /**
+ * TODO: min, max param
  * @author vpak
  * @date 2012-10-18 10:39:03
  */

@@ -1,5 +1,6 @@
 <?php
 /**
+ * System validator
  * @author vpak
  * @date 2012-10-17 18:29:44
  */

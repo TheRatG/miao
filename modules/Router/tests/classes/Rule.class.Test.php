@@ -131,4 +131,47 @@ class Miao_Router_Rule_Test extends PHPUnit_Framework_TestCase
 
 		return $data;
 	}
+
+	/**
+	 * @dataProvider dataProviderTestMakeUrl
+	 */
+	public function testMakeUrl( array $config, array $params, $actual, $exceptionName = '' )
+	{
+		if ( $exceptionName )
+		{
+			$this->setExpectedException( $exceptionName );
+		}
+		$route = Miao_Router_Rule::factory( $config );
+		$expected = $route->makeUrl( $params );
+		$this->assertEquals( $expected, $actual );
+	}
+
+	public function dataProviderTestMakeUrl()
+	{
+		$data = array();
+
+		$config = array(
+			'prefix' => 'Miao_TestOffice',
+			'type' => Miao_Router_Rule::TYPE_VIEW,
+			'name' => 'Article_Item',
+			'rule' => '/article/:id',
+			'validators' => array() );
+		$data[] = array( $config, array( 'id' => 123 ), 'article/123' );
+
+		$config = array(
+			'prefix' => 'Miao_TestOffice',
+			'type' => Miao_Router_Rule::TYPE_VIEW,
+			'name' => 'Article_Item',
+			'rule' => '/article/:id',
+			'validators' => array( array( 'id' => 'id', 'type' => 'Numeric' ) ) );
+		$data[] = array( $config, array( 'id' => 123 ), 'article/123' );
+
+		$data[] = array(
+			$config,
+			array( 'id' => 'not numeric' ),
+			'',
+			'Miao_Router_Rule_Exception' );
+
+		return $data;
+	}
 }
