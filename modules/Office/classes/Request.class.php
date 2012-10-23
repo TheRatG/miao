@@ -12,8 +12,7 @@
  */
 class Miao_Office_Request
 {
-	static protected $_instance;
-
+	protected static $_instance;
 	protected $_varname_request_data_store;
 
 	/**
@@ -28,7 +27,6 @@ class Miao_Office_Request
 	 * @var string
 	 */
 	protected $_method;
-
 
 	/**
 	 * Конструктор класса.
@@ -58,7 +56,7 @@ class Miao_Office_Request
 
 	static public function getServerHttpHost()
 	{
-		$result = $_SERVER['HTTP_HOST'];
+		$result = $_SERVER[ 'HTTP_HOST' ];
 		return $result;
 	}
 
@@ -87,15 +85,25 @@ class Miao_Office_Request
 			}
 			$this->_vars[ $varName ] = $defaultValue;
 		}
-		else if( is_null( $this->_vars[ $varName ] ) )
+		else if ( is_null( $this->_vars[ $varName ] ) )
 		{
 			$this->_vars[ $varName ] = $defaultValue;
 		}
 		return $this->_vars[ $varName ];
 	}
 
+	public function setValuesOf( array $data )
+	{
+		foreach ( $data as $varName => $value )
+		{
+			$this->setValueOf( $varName, $value );
+		}
+	}
+
 	public function setValueOf( $varName, $value )
 	{
+		assert( is_scalar( $varName ) );
+
 		$this->_vars[ $varName ] = $value;
 	}
 
@@ -118,9 +126,8 @@ class Miao_Office_Request
 	 */
 	public function getDataStoreValue( $varName )
 	{
-		if ( isset( $this->_vars[ $this->_varname_request_data_store ] )
-			&& array_key_exists( $varName, $this->_vars[ $this->_varname_request_data_store ] )
-		)
+		if ( isset( $this->_vars[ $this->_varname_request_data_store ] ) && array_key_exists(
+			$varName, $this->_vars[ $this->_varname_request_data_store ] ) )
 		{
 			return $this->_vars[ $this->_varname_request_data_store ][ $varName ];
 		}
@@ -148,6 +155,7 @@ class Miao_Office_Request
 	{
 		return $this->_vars;
 	}
+
 	/**
 	 * Переинициализация данных
 	 */
@@ -177,16 +185,17 @@ class Miao_Office_Request
 	/*
 	 * Получение значений серверных переменных. В основном для HTTP_HOST/SERVER_NAME.
 	 * */
-	public function getServerVar($key)
+	public function getServerVar( $key )
 	{
 		$result = false;
-		if (in_array($key, array('HTTP_HOST', 'SERVER_NAME')))
+		if ( in_array( $key, array( 'HTTP_HOST', 'SERVER_NAME' ) ) )
 		{
-			$result = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : false);
+			$result = isset( $_SERVER[ 'SERVER_NAME' ] ) ? $_SERVER[ 'SERVER_NAME' ] : ( isset(
+				$_SERVER[ 'HTTP_HOST' ] ) ? $_SERVER[ 'HTTP_HOST' ] : false );
 		}
 		else
 		{
-			$result = isset($_SERVER[$key]) ? $_SERVER[$key] : false;
+			$result = isset( $_SERVER[ $key ] ) ? $_SERVER[ $key ] : false;
 		}
 
 		return $result;
