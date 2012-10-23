@@ -31,6 +31,15 @@ class Miao_Router_Rule_Validator_Numeric_Test extends PHPUnit_Framework_TestCase
 		$data[] = array( $config, '', false );
 		$data[] = array( $config, 'asd', false );
 
+		$config = array( 'id' => 'objectid', 'min' => 2 );
+		$data[] = array( $config, '1', false );
+		$data[] = array( $config, '12345', true );
+
+		$config = array( 'id' => 'objectid', 'min' => 2, 'max' => 5 );
+		$data[] = array( $config, '1', false );
+		$data[] = array( $config, '12345', true );
+		$data[] = array( $config, '123456', false );
+
 		return $data;
 	}
 }

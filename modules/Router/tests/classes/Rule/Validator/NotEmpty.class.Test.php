@@ -33,6 +33,13 @@ class Miao_Router_Rule_Validator_NotEmpty_Test extends PHPUnit_Framework_TestCas
 			'',
 			false );
 
+		$config = array( 'id' => 'section', 'min' => 2 );
+		$data[] = array( $config, 'work', true );
+		$data[] = array( $config, 'a', false );
+
+		$config = array( 'id' => 'section', 'max' => 3 );
+		$data[] = array( $config, 'work', false );
+
 		return $data;
 	}
 }
