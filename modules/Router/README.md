@@ -19,34 +19,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
   <libs>
-		<Daily>
-			<modules>
-				<BackOffice>
-					<Router>
-						<main>Main</main>
-						<error>404</error>
-						<defaultPrefix>Daily_BackOffice</defaultPrefix>
-						<route>
-							<rule>/news/list/:id</rule>
-							<view>News_List</view>
-							<validator param="id" type="Numeric" min="0" />
-						</route>
-						<route>
-							<rule>/publisher/list/:id</rule>
-							<view>Publisher_List</view>
-							<validator param="id" type="Numeric" min="0" />
-						</route>
-						<route>
-							<rule>/article/edit/main/:id</rule>
-							<view>Article_EditMain</view>
-							<validator param="id" type="Numeric" min="5" />
-						</route>
+	<Daily>
+		<modules>
+			<BackOffice>
+				<Router>
+					<main>Main</main>
+					<error>404</error>
+					<defaultPrefix>Daily_BackOffice</defaultPrefix>
+					<route>
+						<rule>/news/list/:id</rule>
+						<view>News_List</view>
+						<validator param="id" type="Numeric" min="0" />
+					</route>
+					<route>
+						<rule>/publisher/list/:id</rule>
+						<view>Publisher_List</view>
+						<validator param="id" type="Numeric" min="0" />
+					</route>
+					<route>
+						<rule>/article/edit/main/:id</rule>
+						<view>Article_EditMain</view>
+						<validator param="id" type="Numeric" min="5" />
+					</route>
             ...
-					</Router>
-				</BackOffice>
-			</modules>
-		</Daily>
-	</libs>
 </config>
 ```
 
