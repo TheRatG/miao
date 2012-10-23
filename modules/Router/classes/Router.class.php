@@ -1,4 +1,47 @@
 <?php
+/**
+ *
+ * @example XML
+ *
+ * <Router>
+ * 	<main>Main</main>
+ * 	<error>404</error>
+ *	<defaultPrefix>Daily_BackOffice</defaultPrefix>
+ *	<route>
+ *		<rule>/news/list/:id</rule>
+ *		<view>News_List</view>
+ *		<validator param="id" type="Numeric" min="0" />
+ *	</route>
+ *	<route>
+ *		<rule>/publisher/list/:id</rule>
+ *		<view>Publisher_List</view>
+ *		<validator param="id" type="Numeric" min="0" />
+ *	</route>
+ *	<route>
+ *		<rule>/article/edit/main/:id</rule>
+ *		<view>Article_EditMain</view>
+ *		<validator param="id" type="Numeric" min="5" />
+ *	</route>
+ *	<route>
+ *		<rule>/article/edit/additional/:id</rule>
+ *		<view>Article_EditAdditional</view>
+ *		<validator param="id" type="Numeric" min="5" />
+ *	</route>
+ *	<route>
+ *		<rule>/photo/edit/:id</rule>
+ *		<view>Photo_Edit</view>
+ *		<validator param="id" type="Numeric" min="5" />
+ *	</route>
+ *	<route>
+ *		<rule>/video/edit/:id</rule>
+ *		<view>Video_Edit</view>
+ *		<validator param="id" type="Numeric" min="5" />
+ *	</route>
+ * </Router>
+ *
+ * @author vpak
+ *
+ */
 class Miao_Router
 {
 	private $_main = 'Main';
@@ -18,7 +61,7 @@ class Miao_Router
 		$defaultPrefix = self::checkAndReturnParam( $config, 'defaultPrefix',
 			'' );
 
-		$rulesConfig = self::checkAndReturnParam( $config, 'rules', array() );
+		$rulesConfig = self::checkAndReturnParam( $config, 'route', array() );
 
 		$rules = array();
 		foreach ( $rulesConfig as $ruleConfig )
@@ -91,24 +134,22 @@ class Miao_Router
 
 	public function view( $name, array $params = array() )
 	{
-		$index = $this->_makeRuleIndex( Miao_Router_Rule::TYPE_VIEW, $name );
-		if ( !array_key_exists( $index, $this->_rules ) )
-		{
-			$message = sprintf(
-				'Rule with name (%s) didn\'t define. Check your config.', $name );
-			throw new Miao_Router_Exception( $message );
-		}
-		$rule = $this->_rules[ $index ];
-		$result = $rule->makeUrl( $params );
+		$result = $this->_makeUrl( $name, Miao_Router_Rule::TYPE_VIEW, $params );
 		return $result;
 	}
 
 	public function action( $name, array $params )
 	{
+		$result = $this->_makeUrl( $name, Miao_Router_Rule::TYPE_ACTION,
+			$params );
+		return $result;
 	}
 
 	public function viewBlock( $name, array $params )
 	{
+		$result = $this->_makeUrl( $name, Miao_Router_Rule::TYPE_VIEWBLOCK,
+			$params );
+		return $result;
 	}
 
 	/**
@@ -133,17 +174,24 @@ class Miao_Router
 		$validator = $ruleConfig[ 'validator' ];
 		if ( array_key_exists( 'type', $validator ) )
 		{
-			$validator[ 'id' ] = $validator[ 'param' ];
 			$result[ 'validators' ] = array( $validator );
 		}
 		else
 		{
 			$result[ 'validators' ] = $validator;
+		}
 
-			foreach ( $result[ 'validators' ] as &$valItem )
+		foreach ( $result[ 'validators' ] as &$valItem )
+		{
+			if ( !array_key_exists( 'param', $valItem ) )
 			{
-				$valItem[ 'id' ] = $valItem[ 'param' ];
+				$message = sprintf(
+					'Invalid validator config, key "param" does not exists. Dump: (%s)',
+					print_r( $valItem, true ) );
+				throw new Miao_Router_Exception( $message );
 			}
+
+			$valItem[ 'id' ] = $valItem[ 'param' ];
 		}
 
 		$type = '';
@@ -172,6 +220,20 @@ class Miao_Router
 	protected function _makeRuleIndex( $type, $name )
 	{
 		$result = $type . '::' . $name;
+		return $result;
+	}
+
+	protected function _makeUrl( $name, $type, array $params )
+	{
+		$index = $this->_makeRuleIndex( Miao_Router_Rule::TYPE_VIEW, $name );
+		if ( !array_key_exists( $index, $this->_rules ) )
+		{
+			$message = sprintf(
+				'Rule with name (%s) didn\'t define. Check your config.', $name );
+			throw new Miao_Router_Exception( $message );
+		}
+		$rule = $this->_rules[ $index ];
+		$result = $rule->makeUrl( $params );
 		return $result;
 	}
 }

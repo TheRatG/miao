@@ -32,7 +32,6 @@ class Miao_Router_Rule
 		$this->setPrefix( $prefix );
 		$this->setType( $type );
 		$this->setName( $name );
-
 		$this->setRule( $rule );
 		$this->_init( $validators );
 	}
@@ -225,10 +224,11 @@ class Miao_Router_Rule
 			$this->_validators[] = $validator;
 		}
 		$this->_parts = $parts;
-
 		if ( count( $validators ) )
 		{
-			$message = sprintf( "Some validators did not find his part of uri.\n %s", $validators );
+			$message = sprintf(
+				"Some validators did not find his part of uri (%s). Validators: %s",
+				implode( '/', $this->_parts ), print_r( $validators, true ) );
 			throw new Miao_Router_Rule_Exception( $message );
 		}
 	}

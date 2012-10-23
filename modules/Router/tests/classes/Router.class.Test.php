@@ -32,7 +32,7 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 			'main' => 'Main',
 			'error' => '404',
 			'defaultPrefix' => 'Test_Office',
-			'rules' => array(
+			'route' => array(
 				array(
 					'view' => 'Article_Item',
 					'rule' => 'article/:id',
@@ -45,7 +45,7 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 		$this->assertEquals( $expected, $actual );
 	}
 
-	public function atestConstruct()
+	public function testConstruct()
 	{
 		$obj = new Miao_Router( 'Main', '404', array() );
 		$this->assertTrue( $obj instanceof Miao_Router );
@@ -54,7 +54,7 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 	/**
 	 * @dataProvider dataProviderTestGetRoute
 	 */
-	public function atestGetRoute( $config, $url, $actual )
+	public function testGetRoute( $config, $url, $actual )
 	{
 		$router = Miao_Router::factory( $config );
 		$expected = $router->route( $url );
@@ -70,7 +70,7 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 			'main' => 'Main',
 			'defaultPrefix' => '',
 			'error' => '404',
-			'rules' => array(
+			'route' => array(
 				array(
 					'rule' => '/news/:id',
 					'view' => 'News_Item',
@@ -84,7 +84,7 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 			'main' => 'Main',
 			'defaultPrefix' => 'Daily_FrontOffice',
 			'error' => '404',
-			'rules' => array(
+			'route' => array(
 				array(
 					'rule' => '/news/:id',
 					'view' => 'News_Item',
@@ -105,7 +105,7 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 			'main' => 'Main',
 			'defaultPrefix' => 'Daily_FrontOffice',
 			'error' => '404',
-			'rules' => array(
+			'route' => array(
 				array(
 					'rule' => '/news/:section/:id',
 					'view' => 'News_Item',
@@ -113,7 +113,7 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 						array(
 							'type' => 'in',
 							'param' => 'section',
-							'values' => array( 'social', 'finance' ) ),
+							'variants' => 'social,finance' ),
 						array( 'type' => 'numeric', 'param' => 'id' ) ) ) ) );
 		$data[] = array(
 			$config,
