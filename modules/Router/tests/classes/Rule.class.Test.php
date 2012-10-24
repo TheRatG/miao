@@ -131,6 +131,10 @@ class Miao_Router_Rule_Test extends PHPUnit_Framework_TestCase
 
 		return $data;
 	}
+    
+    
+	
+
 
 	/**
 	 * @dataProvider dataProviderTestMakeUrl
@@ -145,8 +149,8 @@ class Miao_Router_Rule_Test extends PHPUnit_Framework_TestCase
 		$expected = $route->makeUrl( $params );
 		$this->assertEquals( $expected, $actual );
 	}
-
-	public function dataProviderTestMakeUrl()
+    
+    public function dataProviderTestMakeUrl()
 	{
 		$data = array();
 
@@ -219,4 +223,58 @@ class Miao_Router_Rule_Test extends PHPUnit_Framework_TestCase
 
 		return $data;
 	}
+    
+    /**
+	 * @dataProvider dataProviderTestMakeRewrite
+	 */
+	public function testMakeRewrite( array $config, $actual )
+	{
+       // try
+        {
+            $route = Miao_Router_Rule::factory( $config );
+            $expected = $route->makeRewrite();
+            $this->assertEquals( $actual, $expected );
+        }
+        //catch (Exception $e)
+        {
+            
+        }
+	}
+    
+    public function dataProviderTestMakeRewrite()
+	{
+		$data = array();
+
+		$config = array(
+			'prefix' => 'Miao_TestOffice2',
+			'type' => Miao_Router_Rule::TYPE_VIEW,
+			'name' => 'Article_Item',
+			'rule' => '/article/:id',
+			'validators' => array() );
+		$data[] = array( $config, 'RewriteRule ^article/([^/]+)$ index.php?id=$1&_view=Article_Item [L]' );
+
+		$config = array(
+			'prefix' => 'Miao_TestOffice',
+			'type' => Miao_Router_Rule::TYPE_VIEW,
+			'name' => 'Article_Item',
+			'rule' => '/article/:id',
+			'validators' => array( array( 'id' => 'id', 'type' => 'Numeric' ) ) );
+		$data[] = array( $config, 'RewriteRule ^article/([0-9]+)$ index.php?id=$1&_view=Article_Item [L]' );
+
+		$config = array(
+			'prefix' => 'Miao_TestOffice',
+			'type' => Miao_Router_Rule::TYPE_ACTION,
+			'name' => 'Article_Item',
+			'rule' => '/article/:section',
+			'validators' => array(
+				array(
+					'id' => 'section',
+					'type' => 'In',
+					'variants' => 'lifestyle,finance' ) ) );
+		
+		$data[] = array( $config, 'RewriteRule ^article/(lifestyle|finance)$ index.php?section=$1&_action=Article_Item [L]' );
+        
+		return $data;
+	}
+
 }

@@ -26,4 +26,9 @@ class Miao_Router_Rule_Validator_Compare extends Miao_Router_Rule_Validator
 		}
 		return $result;
 	}
+    
+    public function getPattern()
+    {
+        return $this->_str;
+    }
 }

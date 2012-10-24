@@ -53,8 +53,10 @@ class Miao_Router
 	 * @var  array Miao_Router_Rule $rules
 	 */
 	private $_rules = array();
+    
+    private $_skipedRules = array();
 
-	static public function factory( array $config )
+	static public function factory( array $config, $skipBadRules = false )
 	{
 		$main = self::checkAndReturnParam( $config, 'main' );
 		$error = self::checkAndReturnParam( $config, 'error' );
@@ -64,13 +66,28 @@ class Miao_Router
 		$rulesConfig = self::checkAndReturnParam( $config, 'route', array() );
 
 		$rules = array();
+        $skippedRules = array();
+
 		foreach ( $rulesConfig as $ruleConfig )
 		{
 			$ruleConfig = self::_convertConfig( $ruleConfig );
-			$rule = Miao_Router_Rule::factory( $ruleConfig );
-			$rules[] = $rule;
+            try
+            {
+                $rule = Miao_Router_Rule::factory( $ruleConfig );
+                $rules[] = $rule;
+            }
+            catch(Miao_Router_Rule_Exception $e)
+            {
+                if ( !$skipBadRules )
+                {
+                    //throw new Miao_Router_Exception( $e->getMessage() );
+                    throw $e;
+                }
+                $skippedRules[] = $ruleConfig;
+            }
 		}
-		$result = new Miao_Router( $main, $error, $rules, $defaultPrefix );
+        
+		$result = new Miao_Router( $main, $error, $rules, $defaultPrefix, $skippedRules );
 		return $result;
 	}
 
@@ -81,11 +98,13 @@ class Miao_Router
 	 * @param array Miao_Router_Rule $rules
 	 * @param string $defaultPrefix
 	 */
-	public function __construct( $main, $error, array $rules, $defaultPrefix = '' )
+	public function __construct( $main, $error, array $rules, $defaultPrefix = '', array $skippedRules = array() )
 	{
 		$this->_main = $main;
 		$this->_error = $error;
 		$this->_defaultPrefix = $defaultPrefix;
+        
+        $this->_skipedRules = $skippedRules;
 
 		$this->_rules = array();
 		foreach ( $rules as $key => $rule )
@@ -167,6 +186,27 @@ class Miao_Router
 		$result = $config[ $param ];
 		return $result;
 	}
+    
+    public function makeRewrite( $mode = 'apache' )
+    {
+        $s = array();
+
+        foreach ($this->_rules as $r)
+        {
+            $s[] = $r->makeRewrite( $mode );
+        }
+        
+        foreach ( $this->_skipedRules as $r )
+        {
+            $s[] = '# error happened while generating rewrite for ' . $r['rule'];
+        }
+        
+        $s = implode("\n", $s);
+        
+        return $s;
+    }
+    
+    
 
 	static protected function _convertConfig( array $ruleConfig )
 	{

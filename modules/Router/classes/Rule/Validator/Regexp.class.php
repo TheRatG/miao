@@ -21,4 +21,9 @@ class Miao_Router_Rule_Validator_Regexp extends Miao_Router_Rule_Validator
 		$result = preg_match( $this->_pattern, $value );
 		return $result;
 	}
+    
+    public function getPattern()
+    {
+        return $this->getPattern();
+    }
 }

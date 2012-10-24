@@ -42,4 +42,9 @@ class Miao_Router_Rule_Validator_In extends Miao_Router_Rule_Validator
 			}
 		}
 	}
+    
+    public function getPattern()
+    {
+        return implode('|', $this->_variants);
+    }
 }

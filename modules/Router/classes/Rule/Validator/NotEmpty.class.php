@@ -12,4 +12,9 @@ class Miao_Router_Rule_Validator_NotEmpty extends Miao_Router_Rule_Validator
 		$result = ( '' !== $value );
 		return $result;
 	}
+    
+    public function getPattern()
+    {
+        return '[^/]+';
+    }
 }

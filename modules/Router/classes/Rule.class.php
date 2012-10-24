@@ -162,7 +162,7 @@ class Miao_Router_Rule
 		$uri = array();
 		foreach ( $this->_parts as $paramName )
 		{
-			if ( ':' == $paramName[ 0 ] )
+			if ( $this->_isParam( $paramName ) )
 			{
 				$index = substr( $paramName, 1 );
 				if ( isset( $params[ $index ] ) )
@@ -191,6 +191,75 @@ class Miao_Router_Rule
 		}
 		return $uri;
 	}
+    
+    protected static $_rewriteRuleModeMasks = array(
+      'apache' => array(
+        'mask' => '^%s%s$'
+        ,'rewrite' => '%s?%s'
+        , 'start' => 'RewriteRule'
+        , 'flags' => '[L]'
+        , 'index' => 'index.php'
+      )
+      ,'nginx' => array(
+         'mask' => '^/?%s%s$'
+        ,'rewrite' => '/%s?%s'
+        , 'start' => 'rewrite'
+        , 'flags' => 'break;'
+        , 'index' => 'index.php'
+      )
+    );
+    
+    public function makeRewrite( $mode = 'apache' )
+    {
+        if ( !in_array( $mode, array_keys( self::$_rewriteRuleModeMasks ) ) )
+        {
+            throw new Miao_Router_Rule_Exception( sprintf( 'Bad rewrite mode: %s', $mode ) );
+        }
+        
+        $validators = $this->getValidators();
+        $url = array();
+        $params = array();
+        
+        foreach( $this->_parts as $k => $part )
+        {
+            $pattern = $validators[$k]->getPattern();
+            if ( $this->_isParam( $part ) && !empty( $pattern ) )
+            {
+                $part = substr( $part, 1 );
+                $params[ $part ] = '$' . $k;
+                $url[] = '(' . $pattern . ')'; 
+            }
+            else
+            {
+                $url[] = $part;
+            }
+        }
+        
+        if ( $mode == 'nginx' && count($params) > 9 )
+        {
+            $rule = sprintf('# error happened while generating rewrite for /%s (too many params)', $this->_rule );   
+        }
+        else
+        {
+            $params[ $this->_magicMap[$this->_type] ] = $this->_name;
+            
+            /** @fixme */
+            $suffix = substr( $this->_rule, -1 ) == '/' ? '/' : '';
+            
+            $mask = sprintf( self::$_rewriteRuleModeMasks[ $mode ]['mask'], implode( '/', $url ), $suffix );
+            $rewrite = sprintf( self::$_rewriteRuleModeMasks[ $mode ]['rewrite'], self::$_rewriteRuleModeMasks[ $mode ]['index'], str_replace('%24', '$', http_build_query($params) ) );
+            $start = self::$_rewriteRuleModeMasks[ $mode ]['start'];
+            $flags = self::$_rewriteRuleModeMasks[ $mode ]['flags'];
+            
+            $rule = sprintf( '%s %s %s %s', $start, $mask, $rewrite, $flags );
+        }
+        return $rule;
+    }
+    
+    protected function _isParam( $str )
+    {
+        return ':' == $str[0];
+    }
 
 	protected function _getOfficeTypeParamName()
 	{
@@ -224,6 +293,7 @@ class Miao_Router_Rule
 			$this->_validators[] = $validator;
 		}
 		$this->_parts = $parts;
+        
 		if ( count( $validators ) )
 		{
 			$message = sprintf(

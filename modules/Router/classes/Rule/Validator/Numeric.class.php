@@ -12,4 +12,10 @@ class Miao_Router_Rule_Validator_Numeric extends Miao_Router_Rule_Validator
 		$result = is_numeric( $value );
 		return $result;
 	}
+    
+    public function getPattern()
+    {
+        return '[0-9]+';
+    }
+    
 }

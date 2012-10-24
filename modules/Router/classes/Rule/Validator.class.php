@@ -26,7 +26,16 @@ abstract class Miao_Router_Rule_Validator
 		{
 			$className = 'Miao_Router_Rule_Validator_' . ucfirst( $type );
 		}
-		$result = new $className( $config );
+        
+        try
+        {
+            $result = new $className( $config );    
+        }
+        catch (Miao_Autoload_Exception_FileNotFound $e)
+        {
+            throw new Miao_Router_Rule_Exception(sprintf('Validator %s not found.', $className));
+        }
+		
 
 		if ( !$result instanceof self )
 		{
@@ -51,4 +60,6 @@ abstract class Miao_Router_Rule_Validator
 	{
 		$this->_id = $id;
 	}
+    
+    abstract public function getPattern();
 }
