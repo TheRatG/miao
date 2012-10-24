@@ -49,7 +49,20 @@ class Miao_Router_Rule_Validator_Numeric extends Miao_Router_Rule_Validator
     
     public function getPattern()
     {
-        return '[0-9]+';
+        $len = '+';
+        $min = intval( $this->_min );
+        $max = intval( $this->_max );
+        
+        if ( $min && $max )
+        {
+            $len = $min == $max ? sprintf( '{%s}', $min ) : sprintf( '{%s,%s}', $min, $max );
+        }
+        else if ( $min > 1 )
+        {
+            $len = sprintf( '{%s,}', $min );
+        }
+        
+        return '[0-9]' . $len;
     }
     
 }

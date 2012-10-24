@@ -207,7 +207,7 @@ class Miao_Router_Rule
         , 'index' => 'index.php'
       )
       ,'nginx' => array(
-         'mask' => '^/?%s%s$'
+         'mask' => '"^/?%s%s$"'
         ,'rewrite' => '/%s?%s'
         , 'start' => 'rewrite'
         , 'flags' => 'break;'
@@ -225,14 +225,14 @@ class Miao_Router_Rule
         $validators = $this->getValidators();
         $url = array();
         $params = array();
-        
+        $j = 1 ;
         foreach( $this->_parts as $k => $part )
         {
             $pattern = $validators[$k]->getPattern();
             if ( $this->_isParam( $part ) && !empty( $pattern ) )
             {
                 $part = substr( $part, 1 );
-                $params[ $part ] = '$' . $k;
+                $params[ $part ] = '$' . $j++;
                 $url[] = '(' . $pattern . ')'; 
             }
             else

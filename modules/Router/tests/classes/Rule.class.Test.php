@@ -274,6 +274,23 @@ class Miao_Router_Rule_Test extends PHPUnit_Framework_TestCase
 		
 		$data[] = array( $config, 'RewriteRule ^article/(lifestyle|finance)$ index.php?section=$1&_action=Article_Item [L]' );
         
+        $config = array(
+			'prefix' => 'Miao_TestOffice',
+			'type' => Miao_Router_Rule::TYPE_VIEW,
+			'name' => 'Article_Item',
+			'rule' => '/:page/:id/:part/:user/:mode/:param',
+			'validators' => array(
+                    array( 'id' => 'id', 'type' => 'Numeric' )
+                    , array( 'id' => 'part', 'type' => 'Numeric', 'max' => 5, 'min' => 0 )
+                    , array( 'id' => 'user', 'type' => 'Numeric', 'min' => 32, 'max' => 32 )
+                    , array( 'id' => 'page', 'type' => 'Numeric', 'min' => 1 )
+                    , array( 'id' => 'mode', 'type' => 'Numeric', 'min' => 2 )
+                    , array( 'id' => 'param', 'type' => 'Numeric', 'min' => 3, 'max' => 5 )
+                    
+                )
+            );
+		$data[] = array( $config, 'RewriteRule ^([0-9]+)/([0-9]+)/([0-9]+)/([0-9]{32})/([0-9]{2,})/([0-9]{3,5})$ index.php?page=$1&id=$2&part=$3&user=$4&mode=$5&param=$6&_view=Article_Item [L]' );
+        
 		return $data;
 	}
 
