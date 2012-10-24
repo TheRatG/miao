@@ -26,8 +26,20 @@
 class Miao_Router_Test extends PHPUnit_Framework_TestCase
 {
 
-	public function testView()
+	/**
+	 * @dataProvider dataProviderTestView
+	 */
+	public function testView( $config, $funcName, $param, $actual, $exceptionName = '' )
 	{
+		$router = Miao_Router::factory( $config );
+		$expected = call_user_func_array( array( $router, $funcName ), $param );
+		$this->assertEquals( $expected, $actual );
+	}
+
+	public function dataProviderTestView()
+	{
+		$data = array();
+
 		$config = array(
 			'main' => 'Main',
 			'error' => '404',
@@ -38,11 +50,25 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 					'rule' => 'article/:id',
 					'validator' => array( 'type' => 'numeric', 'param' => 'id' ) ) ) );
 
-		$router = Miao_Router::factory( $config );
-		$expected = $router->view( 'Article_Item', array( 'id' => '123' ) );
-		$actual = 'article/123';
+		$data[] = array(
+			$config,
+			'view',
+			array( 'Article_Item', array( 'id' => '123' ) ),
+			'/article/123' );
+		$data[] = array(
+			$config,
+			'view',
+			array( 'Article_Item', array( 'id' => '123', 'flag' => '1' ) ),
+			'/article/123?flag=1' );
+		$data[] = array(
+			$config,
+			'view',
+			array(
+				'Article_Item',
+				array( 'id' => '123', 'flag' => '1', 'map' => 'google' ) ),
+			'/article/123?flag=1&map=google' );
 
-		$this->assertEquals( $expected, $actual );
+		return $data;
 	}
 
 	public function testConstruct()

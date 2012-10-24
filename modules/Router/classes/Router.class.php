@@ -114,6 +114,21 @@ class Miao_Router
 		}
 	}
 
+	public function getCurrentRoute()
+	{
+		$uri = '/';
+		if ( !empty( $_SERVER[ 'REQUEST_URI' ] ) )
+		{
+			list( $uri ) = explode( '?', $_SERVER[ 'REQUEST_URI' ] );
+		}
+		else
+		{
+			throw new Miao_Router_Exception( 'Param $_SERVER[\'REQUEST_URI\'] is undefined' );
+		}
+		$result = $this->route( $uri );
+		return $result;
+	}
+
 	public function route( $uri, $throwException = true )
 	{
 		$uri = trim( $uri, '/' );
@@ -273,7 +288,7 @@ class Miao_Router
 			throw new Miao_Router_Exception( $message );
 		}
 		$rule = $this->_rules[ $index ];
-		$result = $rule->makeUrl( $params );
+		$result = '/' . $rule->makeUrl( $params );
 		return $result;
 	}
 }

@@ -160,7 +160,8 @@ class Miao_Router_Rule
 	public function makeUrl( array $params = array() )
 	{
 		$uri = array();
-		foreach ( $this->_parts as $paramName )
+		$parts = $this->_parts;
+		foreach ( $parts as $key => $paramName )
 		{
 			if ( $this->_isParam( $paramName ) )
 			{
@@ -168,6 +169,7 @@ class Miao_Router_Rule
 				if ( isset( $params[ $index ] ) )
 				{
 					$uri[] = $params[ $index ];
+					unset( $params[ $index ] );
 				}
 				else
 				{
@@ -181,13 +183,17 @@ class Miao_Router_Rule
 				$uri[] = $paramName;
 			}
 		}
-
 		$uri = implode( '/', $uri );
 		$check = $this->match( $uri );
 		if ( false === $check )
 		{
 			$message = sprintf( 'Uri maked (%s) but did not validate', $uri );
 			throw new Miao_Router_Rule_Exception( $message );
+		}
+		$query = http_build_query( $params );
+		if ( !empty( $query ) )
+		{
+			$uri .= '?' . http_build_query( $params );
 		}
 		return $uri;
 	}
