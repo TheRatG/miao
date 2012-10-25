@@ -57,11 +57,8 @@ class Miao_Auth_Result
      * @var array
      */
 	protected $_messages;
-
 	protected $_login;
-
 	protected $_options = array();
-
 	protected $_createTime = null;
 
 	/**
@@ -129,6 +126,16 @@ class Miao_Auth_Result
 	public function getLogin()
 	{
 		return $this->_login;
+	}
+
+	public function getOption( $key )
+	{
+		$result = null;
+		if ( array_key_exists( $key, $this->_options ) )
+		{
+			$result = $this->_options[ $key ];
+		}
+		return $result;
 	}
 
 	/**

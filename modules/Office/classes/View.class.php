@@ -2,6 +2,7 @@
 abstract class Miao_Office_View
 {
 	protected $_defaultLayout = 'layouts/index.tpl';
+	protected $_defaultViewBlockPrefix;
 	protected $_layout;
 
 	/**
@@ -108,7 +109,6 @@ abstract class Miao_Office_View
 
 	protected function _init()
 	{
-
 	}
 
 	protected function _makeViewTemplate()
@@ -134,6 +134,15 @@ abstract class Miao_Office_View
 	}
 
 	/**
+	 *
+	 * @deprecated
+	 */
+	protected function _addBlock( $name, $className = '', $templates = array( 'index.tpl' ) )
+	{
+		$this->_initBlock( $name, $className, $templates );
+	}
+
+	/**
 	 * Добавить описание создаваемого блока
 	 *
 	 * @param string $name
@@ -146,16 +155,22 @@ abstract class Miao_Office_View
 	 * @param array $templates
 	 *        	Шаблоны блока
 	 */
-	protected function _addBlock( $name, $className, $templates = array('index.tpl') )
+	protected function _initBlock( $name, $className = '', $templates = array( 'index.tpl' ) )
 	{
 		$block_class_process_params = array();
 		if ( empty( $className ) )
 		{
-			$block_class_name = 'Miao_Office_ViewBlock_SharedBlocks';
+			$className = $name;
 		}
-		else if ( is_string( $className ) )
+
+		if ( is_string( $className ) )
 		{
 			$block_class_name = $className;
+
+			if ( !Miao_Autoload::getFilenameByClassName( $block_class_name ) )
+			{
+				$block_class_name = $this->_defaultViewBlockPrefix . '_ViewBlock_' . $className;
+			}
 		}
 		else if ( is_array( $className ) )
 		{
@@ -163,10 +178,10 @@ abstract class Miao_Office_View
 			$block_class_process_params = $className[ 1 ];
 			if ( !is_array( $block_class_process_params ) )
 			{
-				$block_class_process_params = array( $block_class_process_params );
+				$block_class_process_params = array(
+					$block_class_process_params );
 			}
 		}
-
 		$viewBlock = new $block_class_name( $name, $templates, $block_class_process_params );
 		$viewBlock->setTemplates( $templates );
 		$viewBlock->setProcessParams( $block_class_process_params );
