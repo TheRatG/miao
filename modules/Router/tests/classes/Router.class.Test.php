@@ -80,8 +80,12 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 	/**
 	 * @dataProvider dataProviderTestGetRoute
 	 */
-	public function testGetRoute( $config, $url, $actual )
+	public function testGetRoute( $config, $url, $actual, $exceptionName = '' )
 	{
+		if ( $exceptionName )
+		{
+			$this->setExpectedException( $exceptionName );
+		}
 		$router = Miao_Router::factory( $config );
 		$expected = $router->route( $url );
 
@@ -127,7 +131,7 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 			'/',
 			array( '_view' => 'Main', '_prefix' => 'Daily_FrontOffice' ) );
 
-		$config = $config = array(
+		$config = array(
 			'main' => 'Main',
 			'defaultPrefix' => 'Daily_FrontOffice',
 			'error' => '404',
@@ -150,10 +154,35 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 				'id' => '123',
 				'_prefix' => 'Daily_FrontOffice' ) );
 
+		$config = array(
+			'main' => 'Main',
+			'defaultPrefix' => 'Daily_FrontOffice',
+			'error' => '404',
+			'route' => array(
+				array(
+					'rule' => '/:pubDate',
+					'view' => 'News_Item',
+					'validator' => array(
+						array(
+							'type' => 'regexp',
+							'param' => 'pubDate',
+							'pattern' => '\d{4}/\d{2}/\d{2}' ) ) ) ) );
+
+		$data[] = array( $config, '/2012/10/29', array(), 'Miao_Router_Exception' );
+
+		$config[ 'route' ][ 0 ][ 'validator' ][ 0 ][ 'slash' ] = 2;
+		$data[] = array(
+			$config,
+			'/2012/10/29',
+			array(
+				'_view' => 'News_Item',
+				'pubDate' => '2012/10/29',
+				'_prefix' => 'Daily_FrontOffice' ) );
+
 		return $data;
 	}
-    
-    /**
+
+	/**
 	 * @dataProvider dataProviderTestMakeRewriteApache
 	 */
 	public function testMakeRewriteApache( $config, $actual )
@@ -163,8 +192,8 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 
 		$this->assertEquals( $actual, $expected );
 	}
-    
-    public function dataProviderTestMakeRewriteApache()
+
+	public function dataProviderTestMakeRewriteApache()
 	{
 		$data = array();
 
@@ -181,7 +210,6 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 			$config,
 			'RewriteRule ^news/([0-9]+)$ index.php?id=$1&_view=News_Item [L]' );
 
-		
 		$config = array(
 			'main' => 'Main',
 			'defaultPrefix' => 'Daily_FrontOffice',
@@ -194,10 +222,9 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 						array(
 							'type' => 'in',
 							'param' => 'section',
-							'variants' => 'social,finance' ),
-                    ) )
-                
-                , array(
+							'variants' => 'social,finance' ) ) ),
+
+				array(
 					'rule' => '/news/:section/:id3',
 					'view' => 'News_Bad_Item2',
 					'validator' => array(
@@ -205,9 +232,9 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 							'type' => 'bad_validator',
 							'param' => 'section',
 							'variants' => 'social,finance' ),
-						array( 'type' => 'numeric', 'param' => 'id2' ) ) )
-                
-                , array(
+						array( 'type' => 'numeric', 'param' => 'id2' ) ) ),
+
+				array(
 					'rule' => '/news/:section/:id',
 					'view' => 'News_Item',
 					'validator' => array(
@@ -215,8 +242,8 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 							'type' => 'in',
 							'param' => 'section',
 							'variants' => 'social,finance' ),
-						array( 'type' => 'numeric', 'param' => 'id' ) ) )
-                , array(
+						array( 'type' => 'numeric', 'param' => 'id' ) ) ),
+				array(
 					'rule' => '/news/:section/:id2',
 					'view' => 'News_Bad_Item',
 					'validator' => array(
@@ -224,28 +251,19 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 							'type' => 'bad_validator',
 							'param' => 'section',
 							'variants' => 'social,finance' ),
-						array( 'type' => 'numeric', 'param' => 'id2' ) ) )
-            ) );
-		
-        
-        $data[] = array(
+						array( 'type' => 'numeric', 'param' => 'id2' ) ) ) ) );
+
+		$data[] = array(
 			$config,
-            'RewriteRule ^news/(social|finance)$ index.php?section=$1&_view=News_List [L]'
-            . "\n" .
-            'RewriteRule ^news/(social|finance)/([0-9]+)$ index.php?section=$1&id=$2&_view=News_Item [L]'
-            . "\n" .
-            '# error happened while generating rewrite for /news/:section/:id3'
-            . "\n" .
-            '# error happened while generating rewrite for /news/:section/:id2'
-			 );
-            
+			'RewriteRule ^news/(social|finance)$ index.php?section=$1&_view=News_List [L]' . "\n" . 'RewriteRule ^news/(social|finance)/([0-9]+)$ index.php?section=$1&id=$2&_view=News_Item [L]' . "\n" . '# error happened while generating rewrite for /news/:section/:id3' . "\n" . '# error happened while generating rewrite for /news/:section/:id2' );
+
 		return $data;
 	}
-    
+
 	public function testMakeRewriteBadMode()
 	{
-        $this->setExpectedException( 'Miao_Router_Rule_Exception' );
-        $config = array(
+		$this->setExpectedException( 'Miao_Router_Rule_Exception' );
+		$config = array(
 			'main' => 'Main',
 			'defaultPrefix' => '',
 			'error' => '404',
@@ -254,12 +272,12 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 					'rule' => '/news/:id',
 					'view' => 'News_Item',
 					'validator' => array( 'type' => 'numeric', 'param' => 'id' ) ) ) );
-        
+
 		$router = Miao_Router::factory( $config, true );
-        $expected = $router->makeRewrite( 'bad_mode' );
+		$expected = $router->makeRewrite( 'bad_mode' );
 	}
-    
-    /**
+
+	/**
 	 * @dataProvider dataProviderTestMakeRewriteNginx
 	 */
 	public function testMakeRewriteNginx( $config, $actual )
@@ -269,8 +287,8 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 
 		$this->assertEquals( $actual, $expected );
 	}
-    
-    public function dataProviderTestMakeRewriteNginx()
+
+	public function dataProviderTestMakeRewriteNginx()
 	{
 		$data = array();
 
@@ -287,7 +305,6 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 			$config,
 			'rewrite "^/?news/([0-9]+)$" /index.php?id=$1&_view=News_Item break;' );
 
-		
 		$config = array(
 			'main' => 'Main',
 			'defaultPrefix' => 'Daily_FrontOffice',
@@ -300,10 +317,9 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 						array(
 							'type' => 'in',
 							'param' => 'section',
-							'variants' => 'social,finance' ),
-                    ) )
-                
-                , array(
+							'variants' => 'social,finance' ) ) ),
+
+				array(
 					'rule' => '/news/:section/:id3',
 					'view' => 'News_Bad_Item2',
 					'validator' => array(
@@ -311,9 +327,9 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 							'type' => 'bad_validator',
 							'param' => 'section',
 							'variants' => 'social,finance' ),
-						array( 'type' => 'numeric', 'param' => 'id2' ) ) )
-                
-                , array(
+						array( 'type' => 'numeric', 'param' => 'id2' ) ) ),
+
+				array(
 					'rule' => '/news/:section/:id',
 					'view' => 'News_Item',
 					'validator' => array(
@@ -321,8 +337,8 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 							'type' => 'in',
 							'param' => 'section',
 							'variants' => 'social,finance' ),
-						array( 'type' => 'numeric', 'param' => 'id' ) ) )
-                , array(
+						array( 'type' => 'numeric', 'param' => 'id' ) ) ),
+				array(
 					'rule' => '/news/:section/:id2',
 					'view' => 'News_Bad_Item',
 					'validator' => array(
@@ -330,29 +346,17 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 							'type' => 'bad_validator',
 							'param' => 'section',
 							'variants' => 'social,finance' ),
-						array( 'type' => 'numeric', 'param' => 'id2' ) ) )
-                
-                , array(
+						array( 'type' => 'numeric', 'param' => 'id2' ) ) ),
+
+				array(
 					'rule' => '/news/:p1/:p2/:p3/:p4/:p5/:p6/:p7/:p8/:p9/:p10',
 					'view' => 'Many_Params',
-					'validator' => array()
-                )
-            ) );
-		
-        
-        $data[] = array(
+					'validator' => array() ) ) );
+
+		$data[] = array(
 			$config,
-            'rewrite "^/?news/(social|finance)$" /index.php?section=$1&_view=News_List break;'
-            . "\n" .
-            'rewrite "^/?news/(social|finance)/([0-9]+)$" /index.php?section=$1&id=$2&_view=News_Item break;'
-            . "\n" .
-            '# error happened while generating rewrite for /news/:p1/:p2/:p3/:p4/:p5/:p6/:p7/:p8/:p9/:p10 (too many params)'
-            . "\n" .
-            '# error happened while generating rewrite for /news/:section/:id3'
-            . "\n" .
-            '# error happened while generating rewrite for /news/:section/:id2'
-			 );
-            
+			'rewrite "^/?news/(social|finance)$" /index.php?section=$1&_view=News_List break;' . "\n" . 'rewrite "^/?news/(social|finance)/([0-9]+)$" /index.php?section=$1&id=$2&_view=News_Item break;' . "\n" . '# error happened while generating rewrite for /news/:p1/:p2/:p3/:p4/:p5/:p6/:p7/:p8/:p9/:p10 (too many params)' . "\n" . '# error happened while generating rewrite for /news/:section/:id3' . "\n" . '# error happened while generating rewrite for /news/:section/:id2' );
+
 		return $data;
 	}
 }

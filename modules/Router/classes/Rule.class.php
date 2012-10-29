@@ -57,26 +57,35 @@ class Miao_Router_Rule
 	{
 		$result = false;
 		$parts = explode( '/', trim( $uri, '/' ) );
-		$cnt = count( $parts );
-		if ( $cnt === count( $this->_parts ) )
+		$result = array(
+			$this->_getOfficeTypeParamName() => $this->getName() );
+
+		$cnt = count( $this->_validators );
+		$partsIterator = 0;
+		for( $i = 0; $i < $cnt; $i++ )
 		{
-			$result = array(
-				$this->_getOfficeTypeParamName() => $this->getName() );
-			for( $i = 0; $i < $cnt; $i++ )
+			$validator = $this->_validators[ $i ];
+			if ( $validator instanceof Miao_Router_Rule_Validator_Regexp )
 			{
-				$part = $parts[ $i ];
-				$validator = $this->_validators[ $i ];
-				$check = $validator->test( $part );
-				if ( false == $check )
-				{
-					$result = $check;
-					break;
-				}
-				$paramIndex = $validator->getId();
-				if ( $paramIndex )
-				{
-					$result[ $paramIndex ] = $part;
-				}
+				$slash = $validator->getSlash();
+				$part = implode( '/', array_slice( $parts, $partsIterator, $slash+1 ) );
+				$partsIterator += $slash+1;
+			}
+			else
+			{
+				$part = $parts[ $partsIterator ];
+				$partsIterator++;
+			}
+			$check = $validator->test( $part );
+			if ( false == $check )
+			{
+				$result = $check;
+				break;
+			}
+			$paramIndex = $validator->getId();
+			if ( $paramIndex )
+			{
+				$result[ $paramIndex ] = $part;
 			}
 		}
 		return $result;
@@ -197,75 +206,78 @@ class Miao_Router_Rule
 		}
 		return $uri;
 	}
-    
-    protected static $_rewriteRuleModeMasks = array(
-      'apache' => array(
-        'mask' => '^%s%s$'
-        ,'rewrite' => '%s?%s'
-        , 'start' => 'RewriteRule'
-        , 'flags' => '[L]'
-        , 'index' => 'index.php'
-      )
-      ,'nginx' => array(
-         'mask' => '"^/?%s%s$"'
-        ,'rewrite' => '/%s?%s'
-        , 'start' => 'rewrite'
-        , 'flags' => 'break;'
-        , 'index' => 'index.php'
-      )
-    );
-    
-    public function makeRewrite( $mode = 'apache' )
-    {
-        if ( !in_array( $mode, array_keys( self::$_rewriteRuleModeMasks ) ) )
-        {
-            throw new Miao_Router_Rule_Exception( sprintf( 'Bad rewrite mode: %s', $mode ) );
-        }
-        
-        $validators = $this->getValidators();
-        $url = array();
-        $params = array();
-        $j = 1 ;
-        foreach( $this->_parts as $k => $part )
-        {
-            $pattern = $validators[$k]->getPattern();
-            if ( $this->_isParam( $part ) && !empty( $pattern ) )
-            {
-                $part = substr( $part, 1 );
-                $params[ $part ] = '$' . $j++;
-                $url[] = '(' . $pattern . ')'; 
-            }
-            else
-            {
-                $url[] = $part;
-            }
-        }
-        
-        if ( $mode == 'nginx' && count($params) > 9 )
-        {
-            $rule = sprintf('# error happened while generating rewrite for /%s (too many params)', $this->_rule );   
-        }
-        else
-        {
-            $params[ $this->_magicMap[$this->_type] ] = $this->_name;
-            
-            /** @fixme */
-            $suffix = substr( $this->_rule, -1 ) == '/' ? '/' : '';
-            
-            $mask = sprintf( self::$_rewriteRuleModeMasks[ $mode ]['mask'], implode( '/', $url ), $suffix );
-            $rewrite = sprintf( self::$_rewriteRuleModeMasks[ $mode ]['rewrite'], self::$_rewriteRuleModeMasks[ $mode ]['index'], str_replace('%24', '$', http_build_query($params) ) );
-            $start = self::$_rewriteRuleModeMasks[ $mode ]['start'];
-            $flags = self::$_rewriteRuleModeMasks[ $mode ]['flags'];
-            
-            $rule = sprintf( '%s %s %s %s', $start, $mask, $rewrite, $flags );
-        }
-        return $rule;
-    }
-    
-    protected function _isParam( $str )
-    {
-        return ':' == $str[0];
-    }
+	protected static $_rewriteRuleModeMasks = array(
+		'apache' => array(
+			'mask' => '^%s%s$',
+			'rewrite' => '%s?%s',
+			'start' => 'RewriteRule',
+			'flags' => '[L]',
+			'index' => 'index.php' ),
+		'nginx' => array(
+			'mask' => '"^/?%s%s$"',
+			'rewrite' => '/%s?%s',
+			'start' => 'rewrite',
+			'flags' => 'break;',
+			'index' => 'index.php' ) );
+
+	public function makeRewrite( $mode = 'apache' )
+	{
+		if ( !in_array( $mode, array_keys( self::$_rewriteRuleModeMasks ) ) )
+		{
+			throw new Miao_Router_Rule_Exception( sprintf(
+				'Bad rewrite mode: %s', $mode ) );
+		}
+
+		$validators = $this->getValidators();
+		$url = array();
+		$params = array();
+		$j = 1;
+		foreach ( $this->_parts as $k => $part )
+		{
+			$pattern = $validators[ $k ]->getPattern();
+			if ( $this->_isParam( $part ) && !empty( $pattern ) )
+			{
+				$part = substr( $part, 1 );
+				$params[ $part ] = '$' . $j++;
+				$url[] = '(' . $pattern . ')';
+			}
+			else
+			{
+				$url[] = $part;
+			}
+		}
+
+		if ( $mode == 'nginx' && count( $params ) > 9 )
+		{
+			$rule = sprintf(
+				'# error happened while generating rewrite for /%s (too many params)',
+				$this->_rule );
+		}
+		else
+		{
+			$params[ $this->_magicMap[ $this->_type ] ] = $this->_name;
+
+			/** @fixme */
+			$suffix = substr( $this->_rule, -1 ) == '/' ? '/' : '';
+
+			$mask = sprintf( self::$_rewriteRuleModeMasks[ $mode ][ 'mask' ],
+				implode( '/', $url ), $suffix );
+			$rewrite = sprintf(
+				self::$_rewriteRuleModeMasks[ $mode ][ 'rewrite' ],
+				self::$_rewriteRuleModeMasks[ $mode ][ 'index' ],
+				str_replace( '%24', '$', http_build_query( $params ) ) );
+			$start = self::$_rewriteRuleModeMasks[ $mode ][ 'start' ];
+			$flags = self::$_rewriteRuleModeMasks[ $mode ][ 'flags' ];
+
+			$rule = sprintf( '%s %s %s %s', $start, $mask, $rewrite, $flags );
+		}
+		return $rule;
+	}
+
+	protected function _isParam( $str )
+	{
+		return ':' == $str[ 0 ];
+	}
 
 	protected function _getOfficeTypeParamName()
 	{
@@ -299,7 +311,7 @@ class Miao_Router_Rule
 			$this->_validators[] = $validator;
 		}
 		$this->_parts = $parts;
-        
+
 		if ( count( $validators ) )
 		{
 			$message = sprintf(
