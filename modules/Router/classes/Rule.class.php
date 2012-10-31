@@ -288,8 +288,6 @@ class Miao_Router_Rule
 			$start = self::$_rewriteRuleModeMasks[ $mode ][ 'start' ];
 			$flags = self::$_rewriteRuleModeMasks[ $mode ][ 'flags' ];
 
-            //var_dump( $this->getDesc() );
-            
             $desc = $addDesc ? sprintf( "# %s:%s%s\n", $this->_type, $this->_name, $this->getDesc() ? ' ' . $this->getDesc() : '' ) : '';
 			$rule = sprintf( '%s%s %s %s %s', $desc, $start, $mask, $rewrite, $flags );
 		}
