@@ -208,7 +208,8 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 					'validator' => array( 'type' => 'numeric', 'param' => 'id' ) ) ) );
 		$data[] = array(
 			$config,
-			'RewriteRule ^news/([0-9]+)$ index.php?id=$1&_view=News_Item [L]' );
+            '# view:News_Item' . "\n" . 
+			'RewriteRule ^news/([0-9]+)$ index.php?id=$1&_view=News_Item [L,QSA]' );
 
 		$config = array(
 			'main' => 'Main',
@@ -255,7 +256,17 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 
 		$data[] = array(
 			$config,
-			'RewriteRule ^news/(social|finance)$ index.php?section=$1&_view=News_List [L]' . "\n" . 'RewriteRule ^news/(social|finance)/([0-9]+)$ index.php?section=$1&id=$2&_view=News_Item [L]' . "\n" . '# error happened while generating rewrite for /news/:section/:id3' . "\n" . '# error happened while generating rewrite for /news/:section/:id2' );
+            '# view:News_List'
+            . "\n"
+            . 'RewriteRule ^news/(social|finance)$ index.php?section=$1&_view=News_List [L,QSA]'
+            . "\n"
+            . '# view:News_Item'
+            . "\n"
+            . 'RewriteRule ^news/(social|finance)/([0-9]+)$ index.php?section=$1&id=$2&_view=News_Item [L,QSA]'
+            . "\n"
+            . '# error happened while generating rewrite for /news/:section/:id3'
+            . "\n"
+            . '# error happened while generating rewrite for /news/:section/:id2' );
 
 		return $data;
 	}
@@ -303,7 +314,9 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 					'validator' => array( 'type' => 'numeric', 'param' => 'id' ) ) ) );
 		$data[] = array(
 			$config,
-			'rewrite "^/?news/([0-9]+)$" /index.php?id=$1&_view=News_Item break;' );
+            '# view:News_Item'
+            . "\n"
+			. 'rewrite "^/?news/([0-9]+)$" /index.php?id=$1&_view=News_Item break;' );
 
 		$config = array(
 			'main' => 'Main',
@@ -355,7 +368,19 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 
 		$data[] = array(
 			$config,
-			'rewrite "^/?news/(social|finance)$" /index.php?section=$1&_view=News_List break;' . "\n" . 'rewrite "^/?news/(social|finance)/([0-9]+)$" /index.php?section=$1&id=$2&_view=News_Item break;' . "\n" . '# error happened while generating rewrite for /news/:p1/:p2/:p3/:p4/:p5/:p6/:p7/:p8/:p9/:p10 (too many params)' . "\n" . '# error happened while generating rewrite for /news/:section/:id3' . "\n" . '# error happened while generating rewrite for /news/:section/:id2' );
+            '# view:News_List'
+            . "\n"
+			. 'rewrite "^/?news/(social|finance)$" /index.php?section=$1&_view=News_List break;'
+            . "\n"
+            . '# view:News_Item'
+            . "\n"
+            . 'rewrite "^/?news/(social|finance)/([0-9]+)$" /index.php?section=$1&id=$2&_view=News_Item break;'
+            . "\n"
+            . '# error happened while generating rewrite for /news/:p1/:p2/:p3/:p4/:p5/:p6/:p7/:p8/:p9/:p10 (too many params)'
+            . "\n"
+            . '# error happened while generating rewrite for /news/:section/:id3'
+            . "\n"
+            . '# error happened while generating rewrite for /news/:section/:id2' );
 
 		return $data;
 	}

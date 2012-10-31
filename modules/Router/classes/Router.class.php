@@ -197,7 +197,7 @@ class Miao_Router
 			$message = sprintf( 'Invalid config: need "%s" param', $param );
 			throw new Miao_Router_Exception( $message );
 		}
-		$result = $config[ $param ];
+		$result = !empty( $config[ $param ] ) ? $config[ $param ] : $default;
 		return $result;
 	}
 

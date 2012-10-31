@@ -12,6 +12,7 @@ class Miao_Router_Rule
 	private $_name;
 	private $_rule;
 	private $_prefix;
+    private $_desc;
 
 	/**
 	 *
@@ -27,12 +28,13 @@ class Miao_Router_Rule
 	 * @param string $rule
 	 * @param array $validators
 	 */
-	public function __construct( $prefix, $type, $name, $rule, array $validators = array() )
+	public function __construct( $prefix, $type, $name, $rule, array $validators = array(), $desc = '' )
 	{
 		$this->setPrefix( $prefix );
 		$this->setType( $type );
 		$this->setName( $name );
 		$this->setRule( $rule );
+        $this->setDesc( $desc );
 		$this->_init( $validators );
 	}
 
@@ -47,9 +49,10 @@ class Miao_Router_Rule
 		$type = Miao_Router::checkAndReturnParam( $config, 'type' );
 		$name = Miao_Router::checkAndReturnParam( $config, 'name' );
 		$rule = Miao_Router::checkAndReturnParam( $config, 'rule' );
+        $desc = Miao_Router::checkAndReturnParam( $config, 'desc', '' );
 		$validators = Miao_Router::checkAndReturnParam( $config, 'validators',
 			array() );
-		$result = new self( $prefix, $type, $name, $rule, $validators );
+		$result = new self( $prefix, $type, $name, $rule, $validators, $desc );
 		return $result;
 	}
 
@@ -105,6 +108,22 @@ class Miao_Router_Rule
 	public function setPrefix( $prefix )
 	{
 		$this->_prefix = $prefix;
+	}
+    
+    /**
+	 * @return the $_prefix
+	 */
+	public function getDesc()
+	{
+		return $this->_desc;
+	}
+
+	/**
+	 * @param field_type $prefix
+	 */
+	public function setDesc( $desc )
+	{
+		$this->_desc = $desc;
 	}
 
 	/**
@@ -211,7 +230,7 @@ class Miao_Router_Rule
 			'mask' => '^%s%s$',
 			'rewrite' => '%s?%s',
 			'start' => 'RewriteRule',
-			'flags' => '[L]',
+			'flags' => '[L,QSA]',
 			'index' => 'index.php' ),
 		'nginx' => array(
 			'mask' => '"^/?%s%s$"',
@@ -220,7 +239,7 @@ class Miao_Router_Rule
 			'flags' => 'break;',
 			'index' => 'index.php' ) );
 
-	public function makeRewrite( $mode = 'apache' )
+	public function makeRewrite( $mode = 'apache', $addDesc = true )
 	{
 		if ( !in_array( $mode, array_keys( self::$_rewriteRuleModeMasks ) ) )
 		{
@@ -269,7 +288,10 @@ class Miao_Router_Rule
 			$start = self::$_rewriteRuleModeMasks[ $mode ][ 'start' ];
 			$flags = self::$_rewriteRuleModeMasks[ $mode ][ 'flags' ];
 
-			$rule = sprintf( '%s %s %s %s', $start, $mask, $rewrite, $flags );
+            //var_dump( $this->getDesc() );
+            
+            $desc = $addDesc ? sprintf( "# %s:%s%s\n", $this->_type, $this->_name, $this->getDesc() ? ' ' . $this->getDesc() : '' ) : '';
+			$rule = sprintf( '%s%s %s %s %s', $desc, $start, $mask, $rewrite, $flags );
 		}
 		return $rule;
 	}
