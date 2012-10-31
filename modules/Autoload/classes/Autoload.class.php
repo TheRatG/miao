@@ -99,6 +99,11 @@ class Miao_Autoload
 		return $result;
 	}
 
+	public function getHistory()
+	{
+		return $this->_history;
+	}
+
 	public function registerItem( $name, $plugin, $libPath )
 	{
 		$index = $this->_getIndex( $name );

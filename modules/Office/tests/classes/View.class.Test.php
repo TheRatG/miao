@@ -15,8 +15,6 @@ class Miao_Office_View_Test extends PHPUnit_Framework_TestCase
 		Miao_PHPUnit::copyr( $sourceDir, $moduleRoot );
 
 		$this->_moduleRoot = $moduleRoot;
-
-		$path = Miao_Path::getDefaultInstance();
 		$templatesDir = $path->getModuleRoot( 'Miao_TestOffice_View_Main' ) . '/templates/layouts';
 
 		$debugMode = true;
