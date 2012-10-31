@@ -91,7 +91,6 @@ class Miao_Log_Writer_Stream extends Miao_Log_Writer_Abstract
 	protected function _write( $event )
 	{
 		$line = $this->_formatter->format( $event );
-
 		if ( false === @fwrite( $this->_stream, $line ) )
 		{
 			throw new Miao_Log_Exception( "Unable to write to stream" );

@@ -48,7 +48,6 @@ abstract class Miao_Log_Writer_Abstract implements Miao_Log_FactoryInterface
 				return;
 			}
 		}
-
 		// exception occurs on error
 		$this->_write( $event );
 	}
