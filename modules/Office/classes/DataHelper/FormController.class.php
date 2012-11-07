@@ -1,4 +1,16 @@
 <?php
+/**
+ * Constraint
+ * 	session
+ * 	redirect
+ *
+ * Bugs
+ * 	switch page
+ * 	rebuild (problem with dicts)
+ *
+ * @author vpak
+ *
+ */
 abstract class Miao_Office_DataHelper_FormController
 {
 
