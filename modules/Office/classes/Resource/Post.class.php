@@ -14,10 +14,23 @@ class Miao_Office_Resource_Post extends Miao_Office_Resource
 		}
 
 		$content = '';
+
 		$action = $this->getOffice()->getAction();
+		$view = $this->getOffice()->getView();
+		$viewBlock = $this->getOffice()->getViewBlock();
+
 		if ( !empty( $action ) )
 		{
 			$content = $action->execute();
+		}
+		else if ( !empty( $view ) )
+		{
+			$content = $view->fetch();
+		}
+		else if ( !empty( $viewBlock ) )
+		{
+			$viewBlock->process();
+			$content = $viewBlock->fetch();
 		}
 
 		if ( !empty( $content ) && !$this->getContent() )

@@ -50,7 +50,7 @@ class Miao_Router
 
 	/**
 	 *
-	 * @var  array Miao_Router_Rule $rules
+	 * @var array Miao_Router_Rule $rules
 	 */
 	private $_rules = array();
 	private $_skipedRules = array();
@@ -66,7 +66,6 @@ class Miao_Router
 
 		$rules = array();
 		$skippedRules = array();
-
 		foreach ( $rulesConfig as $ruleConfig )
 		{
 			$ruleConfig = self::_convertConfig( $ruleConfig );
@@ -79,7 +78,7 @@ class Miao_Router
 			{
 				if ( !$skipBadRules )
 				{
-					//throw new Miao_Router_Exception( $e->getMessage() );
+					throw new Miao_Router_Exception( $e->getMessage() );
 					throw $e;
 				}
 				$skippedRules[] = $ruleConfig;
@@ -104,13 +103,7 @@ class Miao_Router
 		$this->_defaultPrefix = $defaultPrefix;
 
 		$this->_skipedRules = $skippedRules;
-
-		$this->_rules = array();
-		foreach ( $rules as $key => $rule )
-		{
-			$index = $this->_makeRuleIndex( $rule->getType(), $rule->getName() );
-			$this->_rules[ $index ] = $rule;
-		}
+		$this->_rules = $rules;
 	}
 
 	public function getCurrentRoute()
@@ -128,8 +121,13 @@ class Miao_Router
 		return $result;
 	}
 
-	public function route( $uri, $throwException = true )
+	public function route( $uri, $method = null, $throwException = true )
 	{
+		if ( empty( $method ) )
+		{
+			$method = self::getRequestMethod();
+		}
+
 		$uri = trim( $uri, '/' );
 
 		$result = false;
@@ -143,7 +141,7 @@ class Miao_Router
 		{
 			foreach ( $this->_rules as $rule )
 			{
-				$params = $rule->match( $uri );
+				$params = $rule->match( $uri, $method );
 				if ( is_array( $params ) )
 				{
 					if ( !array_key_exists( 'prefix', $params ) && $this->_defaultPrefix )
@@ -167,20 +165,20 @@ class Miao_Router
 
 	public function view( $name, array $params = array() )
 	{
-		$result = $this->_makeUrl( $name, Miao_Router_Rule::TYPE_VIEW, $params );
+		$result = $this->makeUrl( $name, Miao_Router_Rule::TYPE_VIEW, $params );
 		return $result;
 	}
 
 	public function action( $name, array $params )
 	{
-		$result = $this->_makeUrl( $name, Miao_Router_Rule::TYPE_ACTION,
+		$result = $this->makeUrl( $name, Miao_Router_Rule::TYPE_ACTION,
 			$params );
 		return $result;
 	}
 
 	public function viewBlock( $name, array $params )
 	{
-		$result = $this->_makeUrl( $name, Miao_Router_Rule::TYPE_VIEWBLOCK,
+		$result = $this->makeUrl( $name, Miao_Router_Rule::TYPE_VIEWBLOCK,
 			$params );
 		return $result;
 	}
@@ -273,6 +271,10 @@ class Miao_Router
 		$result[ 'name' ] = $name;
 		$result[ 'type' ] = $type;
 		$result[ 'rule' ] = $ruleConfig[ 'rule' ];
+		if ( array_key_exists( 'method', $ruleConfig ) )
+		{
+			$result[ 'method' ] = $ruleConfig[ 'method' ];
+		}
 		return $result;
 	}
 
@@ -282,17 +284,59 @@ class Miao_Router
 		return $result;
 	}
 
-	protected function _makeUrl( $name, $type, array $params )
+	public function makeUrl( $name, $type, array $params, $method = 'GET' )
 	{
-		$index = $this->_makeRuleIndex( Miao_Router_Rule::TYPE_VIEW, $name );
-		if ( !array_key_exists( $index, $this->_rules ) )
+		$candidates = array();
+		foreach ( $this->_rules as $key => $rule )
+		{
+			$baseCheck = ( $name == $rule->getName() && $type == $rule->getType() && $method == $rule->getMethod() );
+			if ( $baseCheck )
+			{
+				$candidate = array();
+				$candidate[ 'index' ] = $key;
+
+				$keys = array_keys( $params );
+				$ruleParams = $rule->getParams();
+
+				$int = array_intersect( $keys, $ruleParams );
+				$candidate[ 'cnt' ] = count( $int );
+
+				if ( count( $params ) >= count( $ruleParams ) )
+				{
+					$candidates[] = $candidate;
+				}
+			}
+		}
+
+		if ( empty( $candidates ) )
 		{
 			$message = sprintf(
 				'Rule with name (%s) didn\'t define. Check your config.', $name );
 			throw new Miao_Router_Exception( $message );
 		}
+
+		$candidate = array_shift( $candidates );
+		foreach ( $candidates as $item )
+		{
+			if ( $item[ 'cnt' ] > $candidate[ 'cnt' ] )
+			{
+				$candidate = $item;
+			}
+			else if ( $item[ 'cnt' ] == $candidate[ 'cnt' ] )
+			{
+				$message = sprintf( 'Rule dublicate detected, name: %s', $name );
+				throw new Miao_Router_Exception( $message );
+			}
+		}
+		$index = $candidate[ 'index' ];
 		$rule = $this->_rules[ $index ];
-		$result = '/' . $rule->makeUrl( $params );
+		$result = '/' . $rule->makeUrl( $params, $method );
+		return $result;
+	}
+
+	static public function getRequestMethod()
+	{
+		$result = ( isset( $_SERVER[ 'REQUEST_METHOD' ] ) ) ? $_SERVER[ 'REQUEST_METHOD' ] : 'GET';
 		return $result;
 	}
 }

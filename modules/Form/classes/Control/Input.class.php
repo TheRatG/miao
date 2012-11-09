@@ -2,7 +2,7 @@
 abstract class Miao_Form_Control_Input extends Miao_Form_Control
 {
 	const TYPE_BUTTON = 'button';
-	const TYPE_checkbox = 'checkbox';
+	const TYPE_CHECKBOX = 'checkbox';
 	const TYPE_FILE = 'file';
 	const TYPE_HIDDEN = 'hidden';
 	const TYPE_IMAGE = 'image';
@@ -19,7 +19,11 @@ abstract class Miao_Form_Control_Input extends Miao_Form_Control
 		$pieces = array();
 		$pieces[] = '<input';
 		$pieces[] = sprintf( 'name="%s"', htmlspecialchars( $this->getName() ) );
-		$pieces[] = sprintf( 'value="%s"', htmlspecialchars( $this->getValue() ) );
+		$value = $this->getValue();
+		if ( is_scalar( $value ) )
+		{
+			$pieces[] = sprintf( 'value="%s"', htmlspecialchars( $value ) );
+		}
 		$pieces[] = $this->_renderType();
 		$pieces[] = $this->_renderAttributes();
 		$result = trim( implode( ' ', $pieces ) ) . ' />';

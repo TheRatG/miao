@@ -167,7 +167,7 @@ abstract class Miao_Form_Control
 
 	/**
 	 *
-	 * @param unknown_type $msg
+	 * @param string $msg
 	 * @return Miao_Form_Control
 	 */
 	public function setRequired( $msg = '' )

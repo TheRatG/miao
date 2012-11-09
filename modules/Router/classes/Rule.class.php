@@ -1,4 +1,8 @@
 <?php
+/**
+ * @author vpak
+ *
+ */
 class Miao_Router_Rule
 {
 	const TYPE_VIEW = 'view';
@@ -12,7 +16,8 @@ class Miao_Router_Rule
 	private $_name;
 	private $_rule;
 	private $_prefix;
-    private $_desc;
+	private $_desc;
+	private $_method = 'GET';
 
 	/**
 	 *
@@ -20,6 +25,7 @@ class Miao_Router_Rule
 	 */
 	private $_validators;
 	private $_parts;
+	private $_params = array();
 
 	/**
 	 *
@@ -28,13 +34,14 @@ class Miao_Router_Rule
 	 * @param string $rule
 	 * @param array $validators
 	 */
-	public function __construct( $prefix, $type, $name, $rule, array $validators = array(), $desc = '' )
+	public function __construct( $prefix, $type, $name, $rule, $method = '', array $validators = array(), $desc = '' )
 	{
 		$this->setPrefix( $prefix );
 		$this->setType( $type );
 		$this->setName( $name );
+		$this->setMethod( $method );
 		$this->setRule( $rule );
-        $this->setDesc( $desc );
+		$this->setDesc( $desc );
 		$this->_init( $validators );
 	}
 
@@ -49,46 +56,60 @@ class Miao_Router_Rule
 		$type = Miao_Router::checkAndReturnParam( $config, 'type' );
 		$name = Miao_Router::checkAndReturnParam( $config, 'name' );
 		$rule = Miao_Router::checkAndReturnParam( $config, 'rule' );
-        $desc = Miao_Router::checkAndReturnParam( $config, 'desc', '' );
+		$method = Miao_Router::checkAndReturnParam( $config, 'method', '' );
+		$desc = Miao_Router::checkAndReturnParam( $config, 'desc', '' );
 		$validators = Miao_Router::checkAndReturnParam( $config, 'validators',
 			array() );
-		$result = new self( $prefix, $type, $name, $rule, $validators, $desc );
+		$result = new self( $prefix, $type, $name, $rule, $method, $validators, $desc );
 		return $result;
 	}
 
-	public function match( $uri )
+	public function match( $uri, $method = null )
 	{
-		$result = false;
-		$parts = explode( '/', trim( $uri, '/' ) );
-		$result = array(
-			$this->_getOfficeTypeParamName() => $this->getName() );
-
-		$cnt = count( $this->_validators );
-		$partsIterator = 0;
-		for( $i = 0; $i < $cnt; $i++ )
+		if ( empty( $method ) )
 		{
-			$validator = $this->_validators[ $i ];
-			if ( $validator instanceof Miao_Router_Rule_Validator_Regexp )
+			$method = Miao_Router::getRequestMethod();
+		}
+
+		$result = false;
+		if ( $method == $this->getMethod() )
+		{
+			$parts = explode( '/', trim( $uri, '/' ) );
+			$result = array(
+				$this->_getOfficeTypeParamName() => $this->getName() );
+
+			$cnt = count( $this->_validators );
+			$partsIterator = 0;
+			for( $i = 0; $i < $cnt; $i++ )
 			{
-				$slash = $validator->getSlash();
-				$part = implode( '/', array_slice( $parts, $partsIterator, $slash+1 ) );
-				$partsIterator += $slash+1;
-			}
-			else
-			{
-				$part = $parts[ $partsIterator ];
+				$validator = $this->_validators[ $i ];
+				if ( $validator instanceof Miao_Router_Rule_Validator_Regexp )
+				{
+					$slash = $validator->getSlash();
+					$part = implode( '/',
+						array_slice( $parts, $partsIterator, $slash + 1 ) );
+					$partsIterator += $slash + 1;
+				}
+				else
+				{
+					$part = isset( $parts[ $partsIterator ] ) ? $parts[ $partsIterator ] : '';
+				}
+				$check = $validator->test( $part );
+				if ( false == $check )
+				{
+					$result = $check;
+					break;
+				}
 				$partsIterator++;
+				$paramIndex = $validator->getId();
+				if ( $paramIndex )
+				{
+					$result[ $paramIndex ] = $part;
+				}
 			}
-			$check = $validator->test( $part );
-			if ( false == $check )
+			if ( count( $parts ) > $partsIterator )
 			{
-				$result = $check;
-				break;
-			}
-			$paramIndex = $validator->getId();
-			if ( $paramIndex )
-			{
-				$result[ $paramIndex ] = $part;
+				$result = false;
 			}
 		}
 		return $result;
@@ -103,14 +124,14 @@ class Miao_Router_Rule
 	}
 
 	/**
-	 * @param field_type $prefix
+	 * @param string $prefix
 	 */
 	public function setPrefix( $prefix )
 	{
 		$this->_prefix = $prefix;
 	}
-    
-    /**
+
+	/**
 	 * @return the $_prefix
 	 */
 	public function getDesc()
@@ -119,7 +140,7 @@ class Miao_Router_Rule
 	}
 
 	/**
-	 * @param field_type $prefix
+	 * @param string $prefix
 	 */
 	public function setDesc( $desc )
 	{
@@ -135,7 +156,7 @@ class Miao_Router_Rule
 	}
 
 	/**
-	 * @param field_type $type
+	 * @param string $type
 	 */
 	public function setType( $type )
 	{
@@ -157,7 +178,7 @@ class Miao_Router_Rule
 	}
 
 	/**
-	 * @param field_type $name
+	 * @param string $name
 	 */
 	public function setName( $name )
 	{
@@ -180,13 +201,50 @@ class Miao_Router_Rule
 		$this->_rule = trim( $rule, '/' );
 	}
 
+	/**
+	 * @return the $_method
+	 */
+	public function getMethod()
+	{
+		if ( empty( $this->_method ) )
+		{
+			$this->_method = 'GET';
+			if ( self::TYPE_ACTION == $this->getType() )
+			{
+				$this->_method = 'POST';
+			}
+		}
+		return $this->_method;
+	}
+
+	/**
+	 * @param string $method
+	 */
+	public function setMethod( $method )
+	{
+		$this->_method = $method;
+	}
+
+	/**
+	 * @return the $_params
+	 */
+	public function getParams()
+	{
+		return $this->_params;
+	}
+
 	public function getValidators()
 	{
 		return $this->_validators;
 	}
 
-	public function makeUrl( array $params = array() )
+	public function makeUrl( array $params = array(), $method = null )
 	{
+		if ( empty( $method ) )
+		{
+			$metod = Miao_Router::getRequestMethod();
+		}
+
 		$uri = array();
 		$parts = $this->_parts;
 		foreach ( $parts as $key => $paramName )
@@ -212,7 +270,7 @@ class Miao_Router_Rule
 			}
 		}
 		$uri = implode( '/', $uri );
-		$check = $this->match( $uri );
+		$check = $this->match( $uri, $method );
 		if ( false === $check )
 		{
 			$message = sprintf( 'Uri maked (%s) but did not validate', $uri );
@@ -288,8 +346,10 @@ class Miao_Router_Rule
 			$start = self::$_rewriteRuleModeMasks[ $mode ][ 'start' ];
 			$flags = self::$_rewriteRuleModeMasks[ $mode ][ 'flags' ];
 
-            $desc = $addDesc ? sprintf( "# %s:%s%s\n", $this->_type, $this->_name, $this->getDesc() ? ' ' . $this->getDesc() : '' ) : '';
-			$rule = sprintf( '%s%s %s %s %s', $desc, $start, $mask, $rewrite, $flags );
+			$desc = $addDesc ? sprintf( "# %s:%s%s\n", $this->_type,
+				$this->_name, $this->getDesc() ? ' ' . $this->getDesc() : '' ) : '';
+			$rule = sprintf( '%s%s %s %s %s', $desc, $start, $mask, $rewrite,
+				$flags );
 		}
 		return $rule;
 	}
@@ -319,6 +379,7 @@ class Miao_Router_Rule
 				{
 					$config = array( 'id' => $id, 'type' => 'NotEmpty' );
 				}
+				$this->_params[] = $id;
 			}
 			else
 			{

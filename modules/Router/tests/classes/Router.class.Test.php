@@ -208,8 +208,7 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 					'validator' => array( 'type' => 'numeric', 'param' => 'id' ) ) ) );
 		$data[] = array(
 			$config,
-            '# view:News_Item' . "\n" . 
-			'RewriteRule ^news/([0-9]+)$ index.php?id=$1&_view=News_Item [L,QSA]' );
+			'# view:News_Item' . "\n" . 'RewriteRule ^news/([0-9]+)$ index.php?id=$1&_view=News_Item [L,QSA]' );
 
 		$config = array(
 			'main' => 'Main',
@@ -256,17 +255,7 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 
 		$data[] = array(
 			$config,
-            '# view:News_List'
-            . "\n"
-            . 'RewriteRule ^news/(social|finance)$ index.php?section=$1&_view=News_List [L,QSA]'
-            . "\n"
-            . '# view:News_Item'
-            . "\n"
-            . 'RewriteRule ^news/(social|finance)/([0-9]+)$ index.php?section=$1&id=$2&_view=News_Item [L,QSA]'
-            . "\n"
-            . '# error happened while generating rewrite for /news/:section/:id3'
-            . "\n"
-            . '# error happened while generating rewrite for /news/:section/:id2' );
+			'# view:News_List' . "\n" . 'RewriteRule ^news/(social|finance)$ index.php?section=$1&_view=News_List [L,QSA]' . "\n" . '# view:News_Item' . "\n" . 'RewriteRule ^news/(social|finance)/([0-9]+)$ index.php?section=$1&id=$2&_view=News_Item [L,QSA]' . "\n" . '# error happened while generating rewrite for /news/:section/:id3' . "\n" . '# error happened while generating rewrite for /news/:section/:id2' );
 
 		return $data;
 	}
@@ -314,9 +303,7 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 					'validator' => array( 'type' => 'numeric', 'param' => 'id' ) ) ) );
 		$data[] = array(
 			$config,
-            '# view:News_Item'
-            . "\n"
-			. 'rewrite "^/?news/([0-9]+)$" /index.php?id=$1&_view=News_Item break;' );
+			'# view:News_Item' . "\n" . 'rewrite "^/?news/([0-9]+)$" /index.php?id=$1&_view=News_Item break;' );
 
 		$config = array(
 			'main' => 'Main',
@@ -368,19 +355,207 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 
 		$data[] = array(
 			$config,
-            '# view:News_List'
-            . "\n"
-			. 'rewrite "^/?news/(social|finance)$" /index.php?section=$1&_view=News_List break;'
-            . "\n"
-            . '# view:News_Item'
-            . "\n"
-            . 'rewrite "^/?news/(social|finance)/([0-9]+)$" /index.php?section=$1&id=$2&_view=News_Item break;'
-            . "\n"
-            . '# error happened while generating rewrite for /news/:p1/:p2/:p3/:p4/:p5/:p6/:p7/:p8/:p9/:p10 (too many params)'
-            . "\n"
-            . '# error happened while generating rewrite for /news/:section/:id3'
-            . "\n"
-            . '# error happened while generating rewrite for /news/:section/:id2' );
+			'# view:News_List' . "\n" . 'rewrite "^/?news/(social|finance)$" /index.php?section=$1&_view=News_List break;' . "\n" . '# view:News_Item' . "\n" . 'rewrite "^/?news/(social|finance)/([0-9]+)$" /index.php?section=$1&id=$2&_view=News_Item break;' . "\n" . '# error happened while generating rewrite for /news/:p1/:p2/:p3/:p4/:p5/:p6/:p7/:p8/:p9/:p10 (too many params)' . "\n" . '# error happened while generating rewrite for /news/:section/:id3' . "\n" . '# error happened while generating rewrite for /news/:section/:id2' );
+
+		return $data;
+	}
+
+	/**
+	 * Вызов разных типов с одинаковым шаблоном, но разным типом METHOD_REQUEST
+	 * @dataProvider dataProviderTestGetRouteWithAddParams
+	 */
+	public function testGetRouteWithAddParams( $config, $uri, $method, $actual, $exceptionName = '' )
+	{
+		if ( $exceptionName )
+		{
+			$this->setExpectedException( $exceptionName );
+		}
+		$router = Miao_Router::factory( $config );
+		$expected = $router->route( $uri, $method );
+
+		$this->assertEquals( $expected, $actual );
+	}
+
+	public function dataProviderTestGetRouteWithAddParams()
+	{
+		$data = array();
+
+		$config = array(
+			'main' => 'Main',
+			'defaultPrefix' => '',
+			'error' => '404',
+			'route' => array(
+				array(
+					'rule' => '/article/edit/:id',
+					'view' => 'Article_Edit',
+					'validator' => array( 'type' => 'Numeric', 'param' => 'id' ) ),
+				array(
+					'rule' => '/article/edit/:id',
+					'action' => 'Article_Edit',
+					'method' => 'POST',
+					'validator' => array( 'type' => 'Numeric', 'param' => 'id' ) ) ) );
+
+		$data[] = array(
+				$config,
+				'/article/edit/555',
+				'GET',
+				array( '_view' => 'Article_Edit', 'id' => '555' ) );
+		$data[] = array(
+				$config,
+				'/article/edit/555',
+				'POST',
+				array( '_action' => 'Article_Edit', 'id' => '555' ) );
+
+		return $data;
+	}
+
+	/**
+	 * @dataProvider dataProviderTestMakeUrl
+	 */
+	public function testMakeUrl( $config, $type, $name, array $params, $method, $actual, $exceptionName = '' )
+	{
+		if ( $exceptionName )
+		{
+			$this->setExpectedException( $exceptionName );
+		}
+		$router = Miao_Router::factory( $config, true );
+		$expected = $router->makeUrl( $name, $type, $params, $method );
+
+		$this->assertEquals( $actual, $expected );
+	}
+
+	public function dataProviderTestMakeUrl()
+	{
+		$data = array();
+
+		$config = array(
+			'main' => 'Main',
+			'defaultPrefix' => '',
+			'error' => '404',
+			'route' => array(
+				array(
+					'rule' => '/article/edit/:id',
+					'view' => 'Article_Edit',
+					'validator' => array( 'type' => 'Numeric', 'param' => 'id' ) ),
+				array(
+					'rule' => '/article/edit/:id',
+					'action' => 'Article_Edit',
+					'method' => 'POST',
+					'validator' => array( 'type' => 'Numeric', 'param' => 'id' ) ) ) );
+
+		$data[] = array(
+			$config,
+			Miao_Router_Rule::TYPE_VIEW,
+			'Article_Edit',
+			array(),
+			'GET',
+			'',
+			'Miao_Router_Exception' );
+
+		$data[] = array(
+			$config,
+			Miao_Router_Rule::TYPE_VIEW,
+			'Article_Edit',
+			array( 'id' => '123' ),
+			'GET',
+			'/article/edit/123' );
+
+		$data[] = array(
+			$config,
+			Miao_Router_Rule::TYPE_ACTION,
+			'Article_Edit',
+			array( 'id' => '123' ),
+			'POST',
+			'/article/edit/123' );
+
+		$data[] = array(
+			$config,
+			Miao_Router_Rule::TYPE_ACTION,
+			'Article_Edit',
+			array( 'id' => '123', 'flag' => '1' ),
+			'POST',
+			'/article/edit/123?flag=1' );
+
+		$config = array(
+			'main' => 'Main',
+			'defaultPrefix' => '',
+			'error' => '404',
+			'route' => array(
+				array(
+					'rule' => '/news/:page',
+					'view' => 'News_List',
+					'validator' => array(
+						'type' => 'Regexp',
+						'param' => 'page',
+						'pattern' => 'p[0-9]+' ) ),
+				array(
+					'rule' => '/news',
+					'view' => 'News_List',
+					'validator' => array() ) ) );
+		$data[] = array(
+			$config,
+			Miao_Router_Rule::TYPE_VIEW,
+			'News_List',
+			array( 'page' => 'p1' ),
+			'GET',
+			'/news/p1' );
+
+		$data[] = array(
+			$config,
+			Miao_Router_Rule::TYPE_VIEW,
+			'News_List',
+			array(),
+			'GET',
+			'/news' );
+
+		return $data;
+	}
+
+	/**
+	 * Вызов разных uri с одинаковым типом rule (View,Action,ViewBlock)
+	 * @dataProvider dataProviderTestGetRouteWithSimilarRuleType
+	 */
+	public function testGetRouteWithSimilarRuleType( $config, $url, $actual, $exceptionName = '' )
+	{
+		if ( $exceptionName )
+		{
+			$this->setExpectedException( $exceptionName );
+		}
+		$router = Miao_Router::factory( $config );
+		$expected = $router->route( $url );
+
+		$this->assertEquals( $expected, $actual );
+	}
+
+	public function dataProviderTestGetRouteWithSimilarRuleType()
+	{
+		$data = array();
+
+		$config = array(
+			'main' => 'Main',
+			'defaultPrefix' => '',
+			'error' => '404',
+			'route' => array(
+				array(
+					'rule' => '/news/:page',
+					'view' => 'News_List',
+					'validator' => array(
+						'type' => 'Regexp',
+						'param' => 'page',
+						'pattern' => 'p[0-9]+' ) ),
+				array(
+					'rule' => '/news',
+					'view' => 'News_List',
+					'validator' => array() ) ) );
+
+		$data[] = array( $config, '/news/123', array(), 'Miao_Router_Exception' );
+
+		$data[] = array(
+			$config,
+			'/news/p1',
+			array( '_view' => 'News_List', 'page' => 'p1' ) );
+
+		$data[] = array( $config, '/news', array( '_view' => 'News_List' ) );
 
 		return $data;
 	}

@@ -8,15 +8,10 @@
  */
 class Miao_Form extends Miao_Form_Control
 {
-
 	protected $_action = '/';
-
 	protected $_method = 'POST';
-
 	protected $_enctype = 'multipart/form-data';
-
 	protected $_attributes = array();
-
 	protected $_isValid = true;
 
 	/**
@@ -96,7 +91,6 @@ class Miao_Form extends Miao_Form_Control
 	{
 		$this->_exceptAttrMap = array( 'id', 'method', 'action', 'enctype' );
 		$this->setAction( $action );
-
 		parent::__construct( $id, $attributes );
 	}
 
@@ -104,7 +98,8 @@ class Miao_Form extends Miao_Form_Control
 	{
 		if ( !array_key_exists( $name, $this->_controls ) )
 		{
-			$msg = sprintf( 'Ivalid control name (%s), control does not exists', $name );
+			$msg = sprintf(
+				'Ivalid control name (%s), control does not exists', $name );
 			throw new Miao_Form_Exception( $msg );
 		}
 		$result = $this->_controls[ $name ];
@@ -115,11 +110,16 @@ class Miao_Form extends Miao_Form_Control
 	{
 		$data = self::getHtmlName( $data );
 
-		foreach ( $data as $key => $value )
+		foreach ( $this->_controls as $key => $control )
 		{
-			if ( array_key_exists( $key, $this->_controls ) )
+			if ( array_key_exists( $key, $data ) )
 			{
-				$this->_controls[ $key ]->setValue( $value );
+				$this->_controls[ $key ]->setValue( $data[ $key ] );
+			}
+			if ( $control instanceof Miao_Form_Control_File && array_key_exists(
+				$key, $_FILES ) )
+			{
+				$this->_controls[ $key ]->setValue( $_FILES[ $key ] );
 			}
 		}
 	}
@@ -241,16 +241,23 @@ class Miao_Form extends Miao_Form_Control
 		return $obj;
 	}
 
-	public function addHidden( $name, array $attributes = array())
+	public function addHidden( $name, array $attributes = array() )
 	{
 		$obj = new Miao_Form_Control_Hidden( $name, $attributes );
 		$this->addControl( $obj );
 		return $obj;
 	}
 
-	public function addSelect( $name, array $attributes = array(),$items = array())
+	public function addSelect( $name, array $attributes = array(), $items = array() )
 	{
-		$obj = new Miao_Form_Control_Select( $name, $attributes,$items );
+		$obj = new Miao_Form_Control_Select( $name, $attributes, $items );
+		$this->addControl( $obj );
+		return $obj;
+	}
+
+	public function addCheckbox( $name, array $attributes = array() )
+	{
+		$obj = new Miao_Form_Control_Checkbox( $name, $attributes );
 		$this->addControl( $obj );
 		return $obj;
 	}
@@ -273,7 +280,13 @@ class Miao_Form extends Miao_Form_Control
 		return $obj;
 	}
 
-	public function addFile( $name, array $attributes = array())
+	/**
+	 *
+	 * @param string $name
+	 * @param array $attributes
+	 * @return Miao_Form_Control_File
+	 */
+	public function addFile( $name, array $attributes = array() )
 	{
 		$obj = new Miao_Form_Control_File( $name, $attributes );
 		$this->addControl( $obj );

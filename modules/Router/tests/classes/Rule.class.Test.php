@@ -131,10 +131,6 @@ class Miao_Router_Rule_Test extends PHPUnit_Framework_TestCase
 
 		return $data;
 	}
-    
-    
-	
-
 
 	/**
 	 * @dataProvider dataProviderTestMakeUrl
@@ -149,7 +145,7 @@ class Miao_Router_Rule_Test extends PHPUnit_Framework_TestCase
 		$expected = $route->makeUrl( $params );
 		$this->assertEquals( $expected, $actual );
 	}
-    
+
     public function dataProviderTestMakeUrl()
 	{
 		$data = array();
@@ -223,7 +219,7 @@ class Miao_Router_Rule_Test extends PHPUnit_Framework_TestCase
 
 		return $data;
 	}
-    
+
     /**
 	 * @dataProvider dataProviderTestMakeRewrite
 	 */
@@ -237,10 +233,10 @@ class Miao_Router_Rule_Test extends PHPUnit_Framework_TestCase
         }
         //catch (Exception $e)
         {
-            
+
         }
 	}
-    
+
     public function dataProviderTestMakeRewrite()
 	{
 		$data = array();
@@ -272,14 +268,14 @@ class Miao_Router_Rule_Test extends PHPUnit_Framework_TestCase
 					'id' => 'section',
 					'type' => 'In',
 					'variants' => 'lifestyle,finance' ) ) );
-		
+
 		$data[] = array( $config, '# action:Article_Item' . "\n" . 'RewriteRule ^article/(lifestyle|finance)$ index.php?section=$1&_action=Article_Item [L,QSA]' );
-        
+
         $config = array(
 			'prefix' => 'Miao_TestOffice',
 			'type' => Miao_Router_Rule::TYPE_VIEW,
 			'name' => 'Article_Item',
-            
+
 			'rule' => '/:page/:id/:part/:user/:mode/:param',
             'validators' => array(
                     array( 'id' => 'id', 'type' => 'Numeric' )
@@ -288,12 +284,11 @@ class Miao_Router_Rule_Test extends PHPUnit_Framework_TestCase
                     , array( 'id' => 'page', 'type' => 'Numeric', 'min' => 1 )
                     , array( 'id' => 'mode', 'type' => 'Numeric', 'min' => 2 )
                     , array( 'id' => 'param', 'type' => 'Numeric', 'min' => 3, 'max' => 5 )
-                    
+
                 )
             );
 		$data[] = array( $config, '# view:Article_Item' . "\n" . 'RewriteRule ^([0-9]+)/([0-9]+)/([0-9]+)/([0-9]{32})/([0-9]{2,})/([0-9]{3,5})$ index.php?page=$1&id=$2&part=$3&user=$4&mode=$5&param=$6&_view=Article_Item [L,QSA]' );
-        
+
 		return $data;
 	}
-
 }
