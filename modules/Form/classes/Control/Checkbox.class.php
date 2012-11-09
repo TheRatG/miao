@@ -128,4 +128,33 @@ class Miao_Form_Control_Checkbox extends Miao_Form_Control_Input
 		}
 		return $this;
 	}
+
+	public function render()
+	{
+		$pieces = array();
+
+		if ( $this->useHiddenElement() )
+		{
+			$pieces[] = '<input type="hidden"';
+			$pieces[] = sprintf( 'name="%s"', htmlspecialchars( $this->getName() ) );
+			$pieces[] = 'value="0"';
+			$pieces[] = '/>';
+		}
+
+		$pieces[] = '<input';
+		$pieces[] = sprintf( 'name="%s"', htmlspecialchars( $this->getName() ) );
+		$value = $this->getValue();
+		if ( is_scalar( $value ) )
+		{
+			$pieces[] = sprintf( 'value="%s"', htmlspecialchars( $value ) );
+		}
+		else
+		{
+			$pieces[] = sprintf( 'value="1"' );
+		}
+		$pieces[] = $this->_renderType();
+		$pieces[] = $this->_renderAttributes();
+		$result = trim( implode( ' ', $pieces ) ) . ' />';
+		return $result;
+	}
 }

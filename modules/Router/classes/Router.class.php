@@ -121,6 +121,14 @@ class Miao_Router
 		return $result;
 	}
 
+	/**
+	 *
+	 * @param string $uri
+	 * @param string $method
+	 * @param bool $throwException
+	 * @throws Miao_Router_Exception
+	 * @return Ambigous <boolean, multitype:string , string>
+	 */
 	public function route( $uri, $method = null, $throwException = true )
 	{
 		if ( empty( $method ) )
@@ -169,10 +177,10 @@ class Miao_Router
 		return $result;
 	}
 
-	public function action( $name, array $params )
+	public function action( $name, array $params, $method = 'POST' )
 	{
 		$result = $this->makeUrl( $name, Miao_Router_Rule::TYPE_ACTION,
-			$params );
+			$params, $method );
 		return $result;
 	}
 
@@ -221,7 +229,7 @@ class Miao_Router
 	static protected function _convertConfig( array $ruleConfig )
 	{
 		$result = array();
-		$validator = $ruleConfig[ 'validator' ];
+		$validator = isset( $ruleConfig[ 'validator' ] ) ? $ruleConfig[ 'validator' ] : array();
 		if ( is_array( $validator ) )
 		{
 			if ( array_key_exists( 'type', $validator ) )

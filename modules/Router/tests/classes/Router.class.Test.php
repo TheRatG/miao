@@ -68,6 +68,17 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 				array( 'id' => '123', 'flag' => '1', 'map' => 'google' ) ),
 			'/article/123?flag=1&map=google' );
 
+		$config = array(
+			'main' => 'Main',
+			'error' => '404',
+			'defaultPrefix' => 'Test_Office',
+			'route' => array(
+				array(
+					'view' => 'Import',
+					'rule' => 'import',
+					'validator' => array() ) ) );
+		$data[] = array( $config, 'view', array( 'Import', array() ), '/import' );
+
 		return $data;
 	}
 
@@ -95,6 +106,17 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 	public function dataProviderTestGetRoute()
 	{
 		$data = array();
+
+		$config = array(
+			'main' => 'Main',
+			'error' => '404',
+			'defaultPrefix' => 'Daily_FrontOffice',
+			'route' => array(
+				array(
+					'view' => 'Import',
+					'rule' => 'import',
+					'validator' => array() ) ) );
+		$data[] = array( $config, '/import', array( '_view' => 'Import', '_prefix' => 'Daily_FrontOffice' ) );
 
 		$config = array(
 			'main' => 'Main',
@@ -396,15 +418,15 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 					'validator' => array( 'type' => 'Numeric', 'param' => 'id' ) ) ) );
 
 		$data[] = array(
-				$config,
-				'/article/edit/555',
-				'GET',
-				array( '_view' => 'Article_Edit', 'id' => '555' ) );
+			$config,
+			'/article/edit/555',
+			'GET',
+			array( '_view' => 'Article_Edit', 'id' => '555' ) );
 		$data[] = array(
-				$config,
-				'/article/edit/555',
-				'POST',
-				array( '_action' => 'Article_Edit', 'id' => '555' ) );
+			$config,
+			'/article/edit/555',
+			'POST',
+			array( '_action' => 'Article_Edit', 'id' => '555' ) );
 
 		return $data;
 	}

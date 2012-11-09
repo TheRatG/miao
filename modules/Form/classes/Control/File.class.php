@@ -36,7 +36,7 @@ class Miao_Form_Control_File extends Miao_Form_Control_Input
 		{
 			$result = $result[ $key ];
 		}
-		return $this->_value;
+		return $result;
 	}
 
 	/**
