@@ -167,6 +167,7 @@ class Miao_Office_Request
 			$method = 'GET';
 		}
 		$this->_vars = $GLOBALS[ '_' . $method ];
+		$this->_vars = array_merge_recursive( $this->_vars, $_FILES );
 	}
 
 	/**
