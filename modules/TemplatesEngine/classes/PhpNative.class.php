@@ -260,7 +260,7 @@ class Miao_TemplatesEngine_PhpNative implements Miao_TemplatesEngine_Interface
 	 */
 	protected function _ssiVirtualInternal( $relativePath )
 	{
-		$project_root = Miao_Core_Config::Main()->paths->htdocs;
+		$project_root = Miao_Config::Main()->get( 'paths.shared' );
 		$absolutePath = $project_root . $relativePath;
 
 		return $this->_returnParsedTemplate( $absolutePath );
