@@ -93,6 +93,7 @@ class Miao_Router_Rule
 				else
 				{
 					$part = isset( $parts[ $partsIterator ] ) ? $parts[ $partsIterator ] : '';
+					$partsIterator++;
 				}
 				$check = $validator->test( $part );
 				if ( false == $check )
@@ -100,7 +101,6 @@ class Miao_Router_Rule
 					$result = $check;
 					break;
 				}
-				$partsIterator++;
 				$paramIndex = $validator->getId();
 				if ( $paramIndex )
 				{

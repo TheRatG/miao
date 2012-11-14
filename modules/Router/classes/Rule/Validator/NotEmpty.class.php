@@ -24,7 +24,6 @@ class Miao_Router_Rule_Validator_NotEmpty extends Miao_Router_Rule_Validator
 	{
 		$value = ( string ) trim( $value );
 		$result = ( '' !== $value );
-
 		$len = strlen( $value );
 		if ( $this->_min )
 		{
@@ -33,7 +32,6 @@ class Miao_Router_Rule_Validator_NotEmpty extends Miao_Router_Rule_Validator
 				$result = false;
 			}
 		}
-
 		if ( $result && $this->_max )
 		{
 			if ( $len > $this->_max )
@@ -44,7 +42,7 @@ class Miao_Router_Rule_Validator_NotEmpty extends Miao_Router_Rule_Validator
 
 		return $result;
 	}
-    
+
     public function getPattern()
     {
         return '[^/]+';
