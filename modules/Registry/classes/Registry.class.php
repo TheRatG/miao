@@ -37,6 +37,14 @@ class Miao_Registry extends ArrayObject
 		self::$_registry = null;
 	}
 
+	public static function remove( $index )
+	{
+		if ( array_key_exists( $index, self::$_registry ) )
+		{
+			unset( self::$_registry[ $index ] );
+		}
+	}
+
 	/**
 	 * getter method, basically same as offsetGet().
 	 *
