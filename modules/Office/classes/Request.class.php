@@ -77,19 +77,22 @@ class Miao_Office_Request
 	 */
 	public function getValueOf( $varName, $defaultValue = null, $useNullAsDefault = false )
 	{
+        $ret = false;
 		if ( !array_key_exists( $varName, $this->_vars ) )
 		{
 			if ( ( null === $defaultValue ) && ( false === $useNullAsDefault ) )
 			{
 				throw new Miao_Office_Request_Exception_OnVarNotExists( __METHOD__, $varName );
 			}
-			$this->_vars[ $varName ] = $defaultValue;
+			//$this->_vars[ $varName ] = $defaultValue;
+            $ret = $defaultValue;
 		}
 		else if ( is_null( $this->_vars[ $varName ] ) )
 		{
-			$this->_vars[ $varName ] = $defaultValue;
+			//$this->_vars[ $varName ] = $defaultValue;
+            $ret = $defaultValue;
 		}
-		return $this->_vars[ $varName ];
+		return $ret !== false ? $ret : $this->_vars[ $varName ];
 	}
 
 	public function setValuesOf( array $data )
