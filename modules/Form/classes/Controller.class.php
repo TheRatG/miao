@@ -1,6 +1,8 @@
 <?php
 abstract class Miao_Form_Controller
 {
+	static private $_instance;
+
 	/**
 	 *
 	 * @var Miao_Form
@@ -22,17 +24,11 @@ abstract class Miao_Form_Controller
 	final static public function getInstance()
 	{
 		$className = get_called_class();
-		$index = 'frm::' . $className;
-		if ( !Miao_Registry::isRegistered( $index ) )
+		if ( is_null(self::$_instance))
 		{
-			$instance = new $className();
-			Miao_Registry::set( $index, $instance );
+			self::$_instance = new $className();
 		}
-		else
-		{
-			$instance = Miao_Registry::get( $index );
-		}
-		return $instance;
+		return self::$_instance;
 	}
 
 	/**

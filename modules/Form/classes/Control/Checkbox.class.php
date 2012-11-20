@@ -129,17 +129,17 @@ class Miao_Form_Control_Checkbox extends Miao_Form_Control_Input
 		return $this;
 	}
 
+	/**
+	 * @return the $_value
+	 */
+	public function getValue()
+	{
+		return $this->getCheckedValue();
+	}
+
 	public function render()
 	{
 		$pieces = array();
-
-		if ( $this->useHiddenElement() )
-		{
-			$pieces[] = '<input type="hidden"';
-			$pieces[] = sprintf( 'name="%s"', htmlspecialchars( $this->getName() ) );
-			$pieces[] = 'value="0"';
-			$pieces[] = '/>';
-		}
 
 		$pieces[] = '<input';
 		$pieces[] = sprintf( 'name="%s"', htmlspecialchars( $this->getName() ) );
@@ -154,7 +154,17 @@ class Miao_Form_Control_Checkbox extends Miao_Form_Control_Input
 		}
 		$pieces[] = $this->_renderType();
 		$pieces[] = $this->_renderAttributes();
-		$result = trim( implode( ' ', $pieces ) ) . ' />';
+		$pieces[] = '/>';
+
+		if ( $this->useHiddenElement() )
+		{
+			$pieces[] = '<input type="hidden"';
+			$pieces[] = sprintf( 'name="%s"', htmlspecialchars( $this->getName() ) );
+			$pieces[] = 'value="0"';
+			$pieces[] = '/>';
+		}
+
+		$result = trim( implode( ' ', $pieces ) );
 		return $result;
 	}
 }
