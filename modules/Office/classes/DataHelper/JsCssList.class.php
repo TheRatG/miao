@@ -9,7 +9,6 @@ abstract class Miao_Office_DataHelper_JsCssList extends Miao_Office_DataHelper
 
 	protected $_minify = false;
 	protected $_dstFolder = false;
-	protected $_client = null;
 
 	/**
 	 *
@@ -30,13 +29,10 @@ abstract class Miao_Office_DataHelper_JsCssList extends Miao_Office_DataHelper
 		return $result;
 	}
 
-	protected function __construct( Miao_Office_DataHelper_Url $dhUrl, $dstFolder, $minify = true )
+	protected function __construct( Miao_Office_DataHelper_Url $dhUrl, $dstFolder )
 	{
 		$this->_dataHelperUrl = $dhUrl;
 		$this->_dstFolder = $dstFolder;
-		$this->_minify = $minify;
-
-		$this->_client = new Miaox_Compress_Client( $this->_dstFolder, $this->_minify );
 		$this->_init();
 	}
 
