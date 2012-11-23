@@ -16,6 +16,38 @@ class Miao_Office_Factory
 	protected $_actionRequestName = '_action';
 	protected $_prefixRequestName = '_prefix';
 
+	/**
+	 * @return the $_viewRequestName
+	 */
+	public function getViewRequestName()
+	{
+		return $this->_viewRequestName;
+	}
+
+	/**
+	 * @return the $_viewBlockRequestName
+	 */
+	public function getViewBlockRequestName()
+	{
+		return $this->_viewBlockRequestName;
+	}
+
+	/**
+	 * @return the $_actionRequestName
+	 */
+	public function getActionRequestName()
+	{
+		return $this->_actionRequestName;
+	}
+
+	/**
+	 * @return the $_prefixRequestName
+	 */
+	public function getPrefixRequestName()
+	{
+		return $this->_prefixRequestName;
+	}
+
 	public function __construct( array $config )
 	{
 		$this->setDefaultPrefix( $config[ 'defaultPrefix' ] );

@@ -121,6 +121,17 @@ class Miao_Router
 		return $result;
 	}
 
+	public function getCurrentView()
+	{
+		$params = $this->getCurrentRoute();
+		$result = '';
+		if ( isset( $params[ '_view' ] ) )
+		{
+			$result = $params[ '_view' ];
+		}
+		return $result;
+	}
+
 	/**
 	 *
 	 * @param string $uri
