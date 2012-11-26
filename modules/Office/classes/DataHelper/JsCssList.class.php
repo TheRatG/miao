@@ -4,11 +4,10 @@ abstract class Miao_Office_DataHelper_JsCssList extends Miao_Office_DataHelper
 	const TYPE_JS = 'js';
 	const TYPE_CSS = 'css';
 	const SECTION_COMMON = 'common';
-
 	protected $_resourceList = array();
-
 	protected $_minify = false;
 	protected $_dstFolder = false;
+	protected $_buildTimestamp = false;
 
 	/**
 	 *
@@ -16,15 +15,20 @@ abstract class Miao_Office_DataHelper_JsCssList extends Miao_Office_DataHelper
 	 */
 	protected $_dataHelperUrl;
 
-	protected function _makeLinks( array $fileList )
+	/**
+	 * initialize js, css resource
+	 */
+	abstract protected function _init();
+
+	public function getResourceList( $type, $section = self::SECTION_COMMON )
 	{
+		assert( !empty( $section ) );
+		$this->_prepareType( $type );
+
 		$result = array();
-		$search = $this->_dstFolder . DIRECTORY_SEPARATOR;
-		$replace = '';
-		foreach ( $fileList as $value )
+		if ( isset( $this->_resourceList[ $type ][ $section ] ) )
 		{
-			$query = 't=' . Miao_Config::Main()->get( 'timestamp' );
-			$result[] = $this->_dataHelperUrl->src( str_replace( $search, $replace, $value ), $query );
+			$result = $this->_resourceList[ $type ][ $section ];
 		}
 		return $result;
 	}
@@ -33,15 +37,21 @@ abstract class Miao_Office_DataHelper_JsCssList extends Miao_Office_DataHelper
 	{
 		$this->_dataHelperUrl = $dhUrl;
 		$this->_dstFolder = $dstFolder;
+		$this->_buildTimestamp = Miao_Config::Main()->get( 'timestamp' );
 		$this->_init();
 	}
 
-	/**
-	 * initialize js, css resource
-	 */
-	abstract protected function _init();
+	protected function _makeLink( $path )
+	{
+		$search = $this->_dstFolder . DIRECTORY_SEPARATOR;
+		$replace = '';
+		$query = 't=' . $this->_buildTimestamp;
+		$result = $this->_dataHelperUrl->src(
+			str_replace( $search, $replace, $path ), $query );
+		return $result;
+	}
 
-	protected function _addResource( $path, $type, $section = self::SECTION_COMMON )
+	protected function _addResource( $path, $type, array $attributes = array(), $section = self::SECTION_COMMON )
 	{
 		assert( !empty( $section ) );
 		$this->_prepareType( $type );
@@ -63,21 +73,12 @@ abstract class Miao_Office_DataHelper_JsCssList extends Miao_Office_DataHelper
 		}
 		else
 		{
-			$sectionAr[] = $path;
+			$tmp = array(
+				'path' => $path,
+				'attributes' => $attributes,
+				'link' => $this->_makeLink( $path ) );
+			$sectionAr[] = $tmp;
 		}
-	}
-
-	public function getResourceList( $type, $section = self::SECTION_COMMON )
-	{
-		assert( !empty( $section ) );
-		$this->_prepareType( $type );
-
-		$result = array();
-		if ( isset( $this->_resourceList[ $type ][ $section ] ) )
-		{
-			$result = $this->_resourceList[ $type ][ $section ];
-		}
-		return $result;
 	}
 
 	protected function _prepareType( $type )
