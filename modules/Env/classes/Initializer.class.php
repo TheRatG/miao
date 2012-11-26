@@ -68,7 +68,7 @@ class Miao_Env_Initializer
 		}
 		else
 		{
-			error_reporting( E_ALL | E_STRICT );
+			error_reporting( -1 );
 		}
 		return $this;
 	}

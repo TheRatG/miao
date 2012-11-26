@@ -25,8 +25,12 @@ class Miao_Office_ViewHelper_JsCssList
 		{
 			$link = $value[ 'link' ];
 			$attributes = $value[ 'attributes' ];
+			if ( !isset( $attributes['rel']))
+			{
+				$attributes['rel'] = 'stylesheet';
+			}
 			$result .= sprintf(
-				"\n\t<link href=\"%s\" rel=\"stylesheet\" %s ></link>", $link,
+				"\n\t<link href=\"%s\" %s ></link>", $link,
 				self::_makeTxtAttributes( $attributes ) );
 		}
 
