@@ -283,6 +283,7 @@ class Miao_Router_Rule
 		}
 		return $uri;
 	}
+
 	protected static $_rewriteRuleModeMasks = array(
 		'apache' => array(
 			'mask' => '^%s%s$',
@@ -316,7 +317,15 @@ class Miao_Router_Rule
 			{
 				$part = substr( $part, 1 );
 				$params[ $part ] = '$' . $j++;
-				$url[] = '(' . $pattern . ')';
+
+				if ( false !== strpos($pattern, '('))
+				{
+					$url[] = $pattern;
+				}
+				else
+				{
+					$url[] = '(' . $pattern . ')';
+				}
 			}
 			else
 			{

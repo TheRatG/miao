@@ -116,7 +116,10 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 					'view' => 'Import',
 					'rule' => 'import',
 					'validator' => array() ) ) );
-		$data[] = array( $config, '/import', array( '_view' => 'Import', '_prefix' => 'Daily_FrontOffice' ) );
+		$data[] = array(
+			$config,
+			'/import',
+			array( '_view' => 'Import', '_prefix' => 'Daily_FrontOffice' ) );
 
 		$config = array(
 			'main' => 'Main',
@@ -131,6 +134,23 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 			$config,
 			'/news/123',
 			array( '_view' => 'News_Item', 'id' => '123' ) );
+
+		$config = array(
+			'main' => 'Main',
+			'defaultPrefix' => '',
+			'error' => '404',
+			'route' => array(
+				array(
+					'rule' => '/news/:page',
+					'view' => 'News_List',
+					'validator' => array(
+						'type' => 'Regexp',
+						'param' => 'page',
+						'pattern' => 'p([0-9]+)' ) ) ) );
+		$data[] = array(
+			$config,
+			'/news/p1',
+			array( '_view' => 'News_List', 'page' => 'p1' ) );
 
 		$config = array(
 			'main' => 'Main',
@@ -326,6 +346,22 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 		$data[] = array(
 			$config,
 			'# view:News_Item' . "\n" . 'rewrite "^/?news/([0-9]+)$" /index.php?id=$1&_view=News_Item break;' );
+
+		$config = array(
+			'main' => 'Main',
+			'defaultPrefix' => '',
+			'error' => '404',
+			'route' => array(
+				array(
+					'rule' => '/news/:page',
+					'view' => 'News_List',
+					'validator' => array(
+						'type' => 'Regexp',
+						'param' => 'page',
+						'pattern' => 'p([0-9]+)' ) ) ) );
+		$data[] = array(
+			$config,
+			'# view:News_List' . "\n" . 'rewrite "^/?news/p([0-9]+)$" /index.php?page=$1&_view=News_List break;' );
 
 		$config = array(
 			'main' => 'Main',
