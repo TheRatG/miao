@@ -70,7 +70,7 @@ class Miao_Session
 				$handlerConfig = $config->get( 'Handler', false );
 				if ( empty( $handlerConfig ) )
 				{
-					$handler = new Miao_Session_Handler_Empty();
+					$handler = new Miao_Session_Handler_None();
 				}
 				else
 				{
