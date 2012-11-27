@@ -341,11 +341,12 @@ class Miao_Router
 			{
 				$candidate = $item;
 			}
-			else if ( $item[ 'cnt' ] == $candidate[ 'cnt' ] )
-			{
-				$message = sprintf( 'Rule dublicate detected, name: %s', $name );
-				throw new Miao_Router_Exception( $message );
-			}
+			//@todo: need test
+// 			else if ( $item[ 'cnt' ] == $candidate[ 'cnt' ] )
+// 			{
+// 				$message = sprintf( 'Rule dublicate detected, name: %s', $name );
+// 				throw new Miao_Router_Exception( $message );
+// 			}
 		}
 		$index = $candidate[ 'index' ];
 		$rule = $this->_rules[ $index ];
