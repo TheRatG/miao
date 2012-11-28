@@ -1,5 +1,3 @@
-data/config_map.php
-data/config.php
-data/config.xml
+data/config*
 scripts/miao.php
 modules/Env/data/*
