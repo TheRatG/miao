@@ -290,6 +290,9 @@ class Miao_Router
 		$result[ 'name' ] = $name;
 		$result[ 'type' ] = $type;
 		$result[ 'rule' ] = $ruleConfig[ 'rule' ];
+        $result[ 'rule' ] = $ruleConfig[ 'rule' ];
+        $result[ 'norewrite' ] = $ruleConfig[ 'norewrite' ];
+        $result[ 'desc' ] = $ruleConfig[ 'desc' ];
 		if ( array_key_exists( 'method', $ruleConfig ) )
 		{
 			$result[ 'method' ] = $ruleConfig[ 'method' ];

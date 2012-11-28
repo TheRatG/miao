@@ -285,6 +285,17 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 							'param' => 'section',
 							'variants' => 'social,finance' ),
 						array( 'type' => 'numeric', 'param' => 'id' ) ) ),
+                // we want this item to be skipped
+                array(
+					'rule' => '/news/:section/skip/:id',
+					'view' => 'News_Item',
+                    'norewrite' => 1,
+					'validator' => array(
+						array(
+							'type' => 'in',
+							'param' => 'section',
+							'variants' => 'social,finance' ),
+						array( 'type' => 'numeric', 'param' => 'id' ) ) ),
 				array(
 					'rule' => '/news/:section/:id2',
 					'view' => 'News_Bad_Item',
@@ -294,10 +305,11 @@ class Miao_Router_Test extends PHPUnit_Framework_TestCase
 							'param' => 'section',
 							'variants' => 'social,finance' ),
 						array( 'type' => 'numeric', 'param' => 'id2' ) ) ) ) );
+        
 
 		$data[] = array(
 			$config,
-			'# view:News_List' . "\n" . 'RewriteRule ^news/(social|finance)$ index.php?section=$1&_view=News_List [L,QSA]' . "\n" . '# view:News_Item' . "\n" . 'RewriteRule ^news/(social|finance)/([0-9]+)$ index.php?section=$1&id=$2&_view=News_Item [L,QSA]' . "\n" . '# error happened while generating rewrite for /news/:section/:id3' . "\n" . '# error happened while generating rewrite for /news/:section/:id2' );
+			'# view:News_List' . "\n" . 'RewriteRule ^news/(social|finance)$ index.php?section=$1&_view=News_List [L,QSA]' . "\n" . '# view:News_Item' . "\n" . 'RewriteRule ^news/(social|finance)/([0-9]+)$ index.php?section=$1&id=$2&_view=News_Item [L,QSA]' . "\n" . '# rule asks to skip it /news/:section/skip/:id' .  "\n" . '# error happened while generating rewrite for /news/:section/:id3' . "\n" . '# error happened while generating rewrite for /news/:section/:id2' );
 
 		return $data;
 	}

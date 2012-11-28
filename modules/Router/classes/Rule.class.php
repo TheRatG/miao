@@ -18,6 +18,7 @@ class Miao_Router_Rule
 	private $_prefix;
 	private $_desc;
 	private $_method = 'GET';
+    private $_norewrite = false;
 
 	/**
 	 *
@@ -34,7 +35,7 @@ class Miao_Router_Rule
 	 * @param string $rule
 	 * @param array $validators
 	 */
-	public function __construct( $prefix, $type, $name, $rule, $method = '', array $validators = array(), $desc = '' )
+	public function __construct( $prefix, $type, $name, $rule, $method = '', array $validators = array(), $desc = '', $norewrite = false )
 	{
 		$this->setPrefix( $prefix );
 		$this->setType( $type );
@@ -42,6 +43,7 @@ class Miao_Router_Rule
 		$this->setMethod( $method );
 		$this->setRule( $rule );
 		$this->setDesc( $desc );
+        $this->setNorewrite( $norewrite );
 		$this->_init( $validators );
 	}
 
@@ -60,7 +62,9 @@ class Miao_Router_Rule
 		$desc = Miao_Router::checkAndReturnParam( $config, 'desc', '' );
 		$validators = Miao_Router::checkAndReturnParam( $config, 'validators',
 			array() );
-		$result = new self( $prefix, $type, $name, $rule, $method, $validators, $desc );
+        $norewrite = Miao_Router::checkAndReturnParam( $config, 'norewrite', '' );
+        
+		$result = new self( $prefix, $type, $name, $rule, $method, $validators, $desc, $norewrite );
 		return $result;
 	}
 
@@ -122,7 +126,8 @@ class Miao_Router_Rule
 	{
 		return $this->_prefix;
 	}
-
+    
+    
 	/**
 	 * @param string $prefix
 	 */
@@ -130,6 +135,12 @@ class Miao_Router_Rule
 	{
 		$this->_prefix = $prefix;
 	}
+    
+    public function setNorewrite( $norewrite )
+    {
+        $this->_norewrite = (bool)$norewrite;
+    }
+
 
 	/**
 	 * @return the $_prefix
@@ -305,6 +316,12 @@ class Miao_Router_Rule
 			throw new Miao_Router_Rule_Exception( sprintf(
 				'Bad rewrite mode: %s', $mode ) );
 		}
+        
+        if ( $this->_norewrite )
+        {
+            $rule = sprintf( '# rule asks to skip it /%s', $this->_rule  );
+            return $rule;
+        }
 
 		$validators = $this->getValidators();
 		$url = array();
