@@ -1,0 +1,12 @@
+<!ELEMENT aspect (pointcut+)>
+<!ELEMENT pointcut (CDATA*,advice*)>
+
+<!ATTLIST pointcut class CDATA #IMPLIED>
+<!ATTLIST pointcut function CDATA #IMPLIED>
+<!ATTLIST pointcut nclass CDATA #IMPLIED>
+<!ATTLIST pointcut nfunction CDATA #IMPLIED>
+<!ATTLIST pointcut name CDATA #IMPLIED>
+<!ATTLIST pointcut auto CDATA #IMPLIED>
+
+<!ATTLIST advice src CDATA #REQUIRED>
+<!ATTLIST advice asrequire CDATA #IMPLIED>

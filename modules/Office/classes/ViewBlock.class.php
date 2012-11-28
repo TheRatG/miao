@@ -31,6 +31,27 @@ abstract class Miao_Office_ViewBlock
 
 	/**
 	 *
+	 * @var string Block name in tmpl
+	 */
+	protected $_name;
+
+	/**
+	 * конструктор
+	 *
+	 * @param string $name
+	 * @param array $templates
+	 * @param intger $lifetime
+	 * @param array $process_params
+	 */
+	public function __construct( $name, array $templates, array $block_class_process_params = array() )
+	{
+		$this->setTemplates( $templates );
+		$this->setProcessParams( $block_class_process_params );
+		$this->setName( $name );
+	}
+
+	/**
+	 *
 	 * @param Miao_Office $office
 	 */
 	public function setOffice( Miao_Office $office )
@@ -108,6 +129,22 @@ abstract class Miao_Office_ViewBlock
 		return $this->_processParams;
 	}
 
+	/**
+	 * @return the $name
+	 */
+	public function getName()
+	{
+		return $this->_name;
+	}
+
+	/**
+	 * @param string $name
+	 */
+	public function setName( $name )
+	{
+		$this->_name = $name;
+	}
+
 	protected function _init()
 	{
 		$templatesDir = $this->getTemplatesDir();
@@ -127,14 +164,20 @@ abstract class Miao_Office_ViewBlock
 	 */
 	public function process()
 	{
-		$this->_init();
+		/// Pointcut: process_p1
 
+		$this->_init();
 		$this->_processData();
+
+		/// Pointcut: process_p2
+
 		$data = $this->_setTemplateVariables();
 		if ( is_array( $data ) )
 		{
 			$this->_templateEngine->setValueOfByArray( $data );
 		}
+
+		/// Pointcut: process_p3
 	}
 
 	/**
@@ -156,7 +199,11 @@ abstract class Miao_Office_ViewBlock
 		$result = '';
 		foreach ( $templates as $templateName )
 		{
+			/// Pointcut: fetch_begin
+
 			$result .= $this->_templateEngine->fetch( $templateName );
+
+			/// Pointcut: fetch_end
 		}
 		return $result;
 	}

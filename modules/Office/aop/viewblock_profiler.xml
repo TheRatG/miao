@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE aspect SYSTEM "aop.dtd">
+
+<aspect>
+	<pointcut
+		name="process_p1"
+		function="process"
+		class="Miao_Office_ViewBlock">
+	<![CDATA[
+		$ts = microtime(true); # PROFILER'S LINE
+	]]>
+	</pointcut>
+	
+	<pointcut
+		name="process_p2"
+		function="process"
+		class="Miao_Office_ViewBlock">
+	<![CDATA[
+		$GLOBALS['ts']['_processData'] = microtime(true)-$ts;  # PROFILER'S LINE
+		$ts = microtime(true); # PROFILER'S LINE
+	]]>
+	</pointcut>
+	
+	<pointcut
+		name="process_p3"
+		function="process"
+		class="Miao_Office_ViewBlock">
+	<![CDATA[
+		$GLOBALS['ts']['_setTemplateVariables'] = microtime(true)-$ts; # PROFILER'S LINE
+	]]>
+	</pointcut>
+	
+	<pointcut
+		name="fetch_begin"
+		function="fetch"
+		class="Miao_Office_ViewBlock">
+	<![CDATA[
+	$ts = microtime(true); # PROFILER'S LINE
+	]]>
+	</pointcut>
+	
+	<pointcut
+		name="fetch_end"
+		function="fetch"
+		class="Miao_Office_ViewBlock">
+	<![CDATA[
+		/* BEGIN PROFILER'S BLOCK */
+		$undefinedVar = array();
+		 
+ 		$undefinedVar[] = '<span style="background-color:red;color:white;padding:2px;font-size:8pt;cursor:help;" title="';
+		$undefinedVar[] = sprintf('Name: %s&#013;',$this->getName());
+		$undefinedVar[] = sprintf('Class name: %s&#013;', __CLASS__ );
+		$sum = array_sum($GLOBALS['ts']);
+		isset($GLOBALS['ts_sum']) ? $GLOBALS['ts_sum'] += $sum : $GLOBALS['ts_sum'] = $sum;
+		isset($GLOBALS['ts_count']) ? $GLOBALS['ts_count']++ : $GLOBALS['ts_count'] = 1;
+		foreach($GLOBALS['ts'] as $key=>$value)
+		{
+			$undefinedVar[] = sprintf('%s: %.3f s&#013;',$key,$value);
+		}
+		$undefinedVar[] = sprintf('Number: %d&#013;',$GLOBALS['ts_count']);
+		$undefinedVar[] = sprintf('Total: %.3f s&#013;',$GLOBALS['ts_sum']);
+		$undefinedVar[] = '">';
+		$undefinedVar[] = sprintf('%s:%.3fs',$this->_name,$sum);
+		$undefinedVar[] = '</span>';
+		
+		$result .= implode( '', $undefinedVar );
+		/* END PROFILER'S BLOCK */
+	]]>
+	</pointcut>
+</aspect>
