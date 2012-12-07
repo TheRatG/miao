@@ -42,8 +42,7 @@ class Miao_Office_TemplatesEngine_PhpNative extends Miao_TemplatesEngine_PhpNati
 					$block_obj->getProcessParams() );
 				$result .= $block_obj->fetch();
 			}
-			//TODO: изменить тип Exception
-			catch ( Miao_TemplatesEngine_Exception_OnFileNotFoundCritical $e )
+			catch ( Miao_TemplatesEngine_Exception_Critical $e )
 			{
 				throw $e; // re-throw exception to the outer catch block
 			}

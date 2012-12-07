@@ -327,7 +327,7 @@ class Miao_TemplatesEngine_PhpNative implements Miao_TemplatesEngine_Interface
 
 			$resultUnbelievableNameForVar .= $this->_endBlock();
 		}
-		catch ( Miao_TemplatesEngine_Exception_OnFileNotFoundCritical $e )
+		catch ( Miao_TemplatesEngine_Exception_Critical $e )
 		{
 			throw $e; // re-throw exception to the outer catch block
 		}
