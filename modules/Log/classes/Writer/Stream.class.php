@@ -47,6 +47,11 @@ class Miao_Log_Writer_Stream extends Miao_Log_Writer_Abstract
 				$msg = "\"$streamOrUrl\" cannot be opened with mode \"$mode\"";
 				throw new Miao_Log_Exception( $msg );
 			}
+
+			if ( file_exists( $streamOrUrl ) )
+			{
+				@chmod( $streamOrUrl, 0666 );
+			}
 		}
 
 		$this->_formatter = new Miao_Log_Formatter_Simple();
