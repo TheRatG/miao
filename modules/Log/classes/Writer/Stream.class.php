@@ -50,7 +50,7 @@ class Miao_Log_Writer_Stream extends Miao_Log_Writer_Abstract
 
 			if ( file_exists( $streamOrUrl ) )
 			{
-				@chmod( $streamOrUrl, 0666 );
+				@chmod( $streamOrUrl, 0777 );
 			}
 		}
 
