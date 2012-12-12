@@ -130,14 +130,18 @@ class Miao_Router
 	{
 		$uri = $this->getRequestUri();
 		$rule = $this->getRuleByUri( $uri );
+		$result = '';
+		if ( $rule )
+		{
+			$method = $this->getRequestMethod();
+			$params = $GLOBALS[ '_' . $method ];
+			$params = array_diff_key( $params, array(
+				'_view' => 1,
+				'_action' => 2,
+				'_viewBlock' => 3 ) );
 
-		$method = $this->getRequestMethod();
-		$params = $GLOBALS[ '_' . $method ];
-		$params = array_diff_key( $params, array(
-			'_view' => 1,
-			'_action' => 2,
-			'_viewBlock' => 3 ) );
-		$result = $rule->makeUrl( $params, $method );
+			$result = $rule->makeUrl( $params, $method );
+		}
 		return $result;
 	}
 
