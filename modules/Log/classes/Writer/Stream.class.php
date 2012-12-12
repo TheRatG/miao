@@ -6,6 +6,7 @@ class Miao_Log_Writer_Stream extends Miao_Log_Writer_Abstract
 	 * @var null|stream
 	 */
 	protected $_stream = null;
+	protected $_mode = 'a';
 
 	/**
 	 * Class Constructor
@@ -18,7 +19,11 @@ class Miao_Log_Writer_Stream extends Miao_Log_Writer_Abstract
 		// Setting the default
 		if ( $mode === NULL )
 		{
-			$mode = 'a';
+			$this->_mode = 'a';
+		}
+		else
+		{
+			$this->_mode = $mode;
 		}
 
 		if ( is_resource( $streamOrUrl ) )
@@ -42,16 +47,7 @@ class Miao_Log_Writer_Stream extends Miao_Log_Writer_Abstract
 				$streamOrUrl = $streamOrUrl[ 'stream' ];
 			}
 
-			if ( !$this->_stream = @fopen( $streamOrUrl, $mode, false ) )
-			{
-				$msg = "\"$streamOrUrl\" cannot be opened with mode \"$mode\"";
-				throw new Miao_Log_Exception( $msg );
-			}
-
-			if ( file_exists( $streamOrUrl ) )
-			{
-				@chmod( $streamOrUrl, 0777 );
-			}
+			$this->_open( $streamOrUrl );
 		}
 
 		$this->_formatter = new Miao_Log_Formatter_Simple();
@@ -67,7 +63,9 @@ class Miao_Log_Writer_Stream extends Miao_Log_Writer_Abstract
 	static public function factory( $config )
 	{
 		$config = self::_parseConfig( $config );
-		$config = array_merge( array( 'stream' => null, 'mode' => null ), $config );
+		$config = array_merge( array(
+			'stream' => null,
+			'mode' => null ), $config );
 
 		$streamOrUrl = isset( $config[ 'url' ] ) ? $config[ 'url' ] : $config[ 'stream' ];
 
@@ -95,10 +93,48 @@ class Miao_Log_Writer_Stream extends Miao_Log_Writer_Abstract
 	 */
 	protected function _write( $event )
 	{
+		$this->_checkAndReopen();
+
 		$line = $this->_formatter->format( $event );
 		if ( false === @fwrite( $this->_stream, $line ) )
 		{
 			throw new Miao_Log_Exception( "Unable to write to stream" );
+		}
+	}
+
+	/**
+	 * Because delete log file does not throw exception, and when file,
+	 * for instance service log rotator delete log file,
+	 * delete you never know about it, and may lost your log
+	 *
+	 * @link http://newsgroups.derkeiler.com/Archive/Comp/comp.lang.c.moderated/2008-04/msg00000.html
+	 *
+	 */
+	protected function _checkAndReopen()
+	{
+		$streamMeta = stream_get_meta_data( $this->_stream );
+		$uri = $streamMeta[ 'uri' ];
+		if ( $uri[ 0 ] == '/' )
+		{
+			clearstatcache( false, $streamMeta[ 'uri' ] );
+			if ( !file_exists( $streamMeta[ 'uri' ] ) )
+			{
+				$this->_open( $uri );
+			}
+		}
+	}
+
+	protected function _open( $uri )
+	{
+		if ( !$this->_stream = @fopen( $uri, $this->_mode, false ) )
+		{
+			$msg = "\"$uri\" cannot be opened with mode \"$this->_mode\"";
+			throw new Miao_Log_Exception( $msg );
+		}
+
+		if ( file_exists( $uri ) )
+		{
+			@chmod( $uri, 0777 );
 		}
 	}
 }
