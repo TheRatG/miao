@@ -59,8 +59,7 @@ class Miao_Router
 	{
 		$main = self::checkAndReturnParam( $config, 'main' );
 		$error = self::checkAndReturnParam( $config, 'error' );
-		$defaultPrefix = self::checkAndReturnParam( $config, 'defaultPrefix',
-			'' );
+		$defaultPrefix = self::checkAndReturnParam( $config, 'defaultPrefix', '' );
 
 		$rulesConfig = self::checkAndReturnParam( $config, 'route', array() );
 
@@ -108,6 +107,13 @@ class Miao_Router
 
 	public function getCurrentRoute()
 	{
+		$uri = $this->getRequestUri();
+		$result = $this->route( $uri );
+		return $result;
+	}
+
+	public function getRequestUri()
+	{
 		$uri = '/';
 		if ( !empty( $_SERVER[ 'REQUEST_URI' ] ) )
 		{
@@ -117,7 +123,21 @@ class Miao_Router
 		{
 			throw new Miao_Router_Exception( 'Param $_SERVER[\'REQUEST_URI\'] is undefined' );
 		}
-		$result = $this->route( $uri );
+		return $uri;
+	}
+
+	public function getCurrentUrl()
+	{
+		$uri = $this->getRequestUri();
+		$rule = $this->getRuleByUri( $uri );
+
+		$method = $this->getRequestMethod();
+		$params = $GLOBALS[ '_' . $method ];
+		$params = array_diff_key( $params, array(
+			'_view' => 1,
+			'_action' => 2,
+			'_viewBlock' => 3 ) );
+		$result = $rule->makeUrl( $params, $method );
 		return $result;
 	}
 
@@ -142,13 +162,7 @@ class Miao_Router
 	 */
 	public function route( $uri, $method = null, $throwException = true )
 	{
-		if ( empty( $method ) )
-		{
-			$method = self::getRequestMethod();
-		}
-
 		$uri = trim( $uri, '/' );
-
 		$result = false;
 		if ( empty( $uri ) )
 		{
@@ -158,26 +172,50 @@ class Miao_Router
 		}
 		else
 		{
-			foreach ( $this->_rules as $rule )
+			$params = array();
+			$rule = $this->getRuleByUri( $uri, $method, $params );
+			if ( $rule )
 			{
-				$params = $rule->match( $uri, $method );
-				if ( is_array( $params ) )
+				if ( !array_key_exists( 'prefix', $params ) && $this->_defaultPrefix )
 				{
-					if ( !array_key_exists( 'prefix', $params ) && $this->_defaultPrefix )
-					{
-						$params[ '_prefix' ] = $this->_defaultPrefix;
-					}
-					$result = $params;
-					break;
+					$params[ '_prefix' ] = $this->_defaultPrefix;
 				}
+				$result = $params;
 			}
 		}
 
 		if ( $result == false && $throwException )
 		{
-			$message = sprintf(
-				'Rule for uri (%s) not found, please check your config', $uri );
+			$message = sprintf( 'Rule for uri (%s) not found, please check your config', $uri );
 			throw new Miao_Router_Exception( $message );
+		}
+		return $result;
+	}
+
+	/**
+	 *
+	 * @param string $uri
+	 * @param string $method Request method
+	 * @param array $params
+	 * @return Miao_Router_Rule
+	 */
+	public function getRuleByUri( $uri, $method = null, array &$params = array() )
+	{
+		$uri = trim( $uri, '/' );
+		if ( empty( $method ) )
+		{
+			$method = self::getRequestMethod();
+		}
+
+		$result = null;
+		foreach ( $this->_rules as $rule )
+		{
+			$params = $rule->match( $uri, $method );
+			if ( is_array( $params ) )
+			{
+				$result = $rule;
+				break;
+			}
 		}
 		return $result;
 	}
@@ -190,15 +228,13 @@ class Miao_Router
 
 	public function action( $name, array $params, $method = 'POST' )
 	{
-		$result = $this->makeUrl( $name, Miao_Router_Rule::TYPE_ACTION,
-			$params, $method );
+		$result = $this->makeUrl( $name, Miao_Router_Rule::TYPE_ACTION, $params, $method );
 		return $result;
 	}
 
 	public function viewBlock( $name, array $params )
 	{
-		$result = $this->makeUrl( $name, Miao_Router_Rule::TYPE_VIEWBLOCK,
-			$params );
+		$result = $this->makeUrl( $name, Miao_Router_Rule::TYPE_VIEWBLOCK, $params );
 		return $result;
 	}
 
@@ -245,7 +281,8 @@ class Miao_Router
 		{
 			if ( array_key_exists( 'type', $validator ) )
 			{
-				$result[ 'validators' ] = array( $validator );
+				$result[ 'validators' ] = array(
+					$validator );
 			}
 			else
 			{
@@ -261,9 +298,7 @@ class Miao_Router
 		{
 			if ( !array_key_exists( 'param', $valItem ) )
 			{
-				$message = sprintf(
-					'Invalid validator config, key "param" does not exists. Dump: (%s)',
-					print_r( $valItem, true ) );
+				$message = sprintf( 'Invalid validator config, key "param" does not exists. Dump: (%s)', print_r( $valItem, true ) );
 				throw new Miao_Router_Exception( $message );
 			}
 
@@ -290,9 +325,9 @@ class Miao_Router
 		$result[ 'name' ] = $name;
 		$result[ 'type' ] = $type;
 		$result[ 'rule' ] = $ruleConfig[ 'rule' ];
-        $result[ 'rule' ] = $ruleConfig[ 'rule' ];
-        $result[ 'norewrite' ] = self::checkAndReturnParam( $ruleConfig, 'norewrite', false );
-        $result[ 'desc' ] = self::checkAndReturnParam( $ruleConfig, 'desc', $name );
+		$result[ 'rule' ] = $ruleConfig[ 'rule' ];
+		$result[ 'norewrite' ] = self::checkAndReturnParam( $ruleConfig, 'norewrite', false );
+		$result[ 'desc' ] = self::checkAndReturnParam( $ruleConfig, 'desc', $name );
 		if ( array_key_exists( 'method', $ruleConfig ) )
 		{
 			$result[ 'method' ] = $ruleConfig[ 'method' ];
@@ -332,8 +367,7 @@ class Miao_Router
 
 		if ( empty( $candidates ) )
 		{
-			$message = sprintf(
-				'Rule with name (%s) didn\'t define. Check your config.', $name );
+			$message = sprintf( 'Rule with name (%s) didn\'t define. Check your config.', $name );
 			throw new Miao_Router_Exception( $message );
 		}
 
@@ -345,11 +379,11 @@ class Miao_Router
 				$candidate = $item;
 			}
 			//@todo: need test
-// 			else if ( $item[ 'cnt' ] == $candidate[ 'cnt' ] )
-// 			{
-// 				$message = sprintf( 'Rule dublicate detected, name: %s', $name );
-// 				throw new Miao_Router_Exception( $message );
-// 			}
+			// 			else if ( $item[ 'cnt' ] == $candidate[ 'cnt' ] )
+			// 			{
+			// 				$message = sprintf( 'Rule dublicate detected, name: %s', $name );
+			// 				throw new Miao_Router_Exception( $message );
+			// 			}
 		}
 		$index = $candidate[ 'index' ];
 		$rule = $this->_rules[ $index ];
