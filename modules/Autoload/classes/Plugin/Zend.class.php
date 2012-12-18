@@ -17,7 +17,7 @@ class Miao_Autoload_Plugin_Zend extends Miao_Autoload_Plugin
         {
             $items = explode( '\\', $className );
         }
-        if ( count( $items ) < 2 || $items[ 0 ] != 'Zend' )
+        if ( count( $items ) < 2 || $items[ 0 ] != $this->getName() )
 		{
 			return '';
 		}
