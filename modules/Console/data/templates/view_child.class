@@ -8,7 +8,7 @@ class %CLASS% extends %PARENT_CLASS%
 	/**
 	 * Init view bloks and template params for layout
 	 */
-	public function _initializeBlock()
+	protected function _initializeBlock()
 	{
 		parent::_initializeBlock();
 	}
