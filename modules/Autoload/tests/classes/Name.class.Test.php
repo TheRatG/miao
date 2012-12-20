@@ -9,7 +9,7 @@ class Miao_Autoload_Name_Test extends PHPUnit_Framework_TestCase
 
 	public function setUp()
 	{
-		$this->_path = Miao_Path::getDefaultInstance();
+		$this->_path = Miao_Path::getInstance();
 	}
 
 	/**

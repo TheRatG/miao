@@ -21,7 +21,7 @@ class Miao_PHPUnit
 
 		$className = $ar[ 0 ];
 
-		$path = Miao_Path::getDefaultInstance();
+		$path = Miao_Path::getInstance();
 		$moduleRoot = $path->getModuleRoot( $className );
 
 		$classNamePath = explode( '_', $className );

@@ -3,60 +3,50 @@
  * Bootstrap file, include this file in all your php scripts
  */
 
-/**
- * Return config data
- * @return array|null
- */
-function getConfig()
-{
-	$root = realpath( dirname( __FILE__ ) . '/..' );
-	$configFilename = $root . '/data/config.php';
-	if ( !file_exists( $configFilename ) )
-	{
-		$configFilename = $root . '/data/config.dev.php';
-	}
-	$config = include $configFilename;
-
-	return $config;
-}
+$boot = new MiaoBootstrap();
+$boot->run();
 
 /**
- * Register Miao autoload.
- * You can use glue miao in your prod platform
- * @param array $config
+ *
+ * @author vpak
  */
-function autoloadInit( $config )
+class MiaoBootstrap
 {
-	$isMinify = isset( $config[ 'use_glue' ] ) ? $config[ 'use_glue' ] : false;
-	if ( !$isMinify )
+	private $_root;
+
+	public function __construct( $root = '' )
 	{
-		foreach ( $config[ 'libs' ] as $value )
+		if ( empty( $root ) )
 		{
-			if ( 'Miao' == $value[ 'name' ] )
-			{
-				require_once $value[ 'path' ] . '/modules/Autoload/classes/Autoload.class.php';
-				break;
-			}
-		}
-	}
-	else
-	{
-		$miaoFilename = $config[ 'project_root' ] . '/scripts/miao.php';
-		if ( file_exists( $miaoFilename ) )
-		{
-			require_once $config[ 'project_root' ] . '/scripts/miao.php';
+			$this->_root = realpath( dirname( __FILE__ ) . '/..' );
 		}
 		else
 		{
-			$msg = sprintf( 'Run command from console: %s', $config[ 'project_root' ] . '/scripts/glue.php' );
-			die( $msg );
+			$this->_root = $root;
 		}
 	}
+
+	public function getConfig()
+	{
+		$configFilename = $this->_root . '/data/config_map.php';
+		if ( !file_exists( $configFilename ) )
+		{
+			$configFilename = $this->_root . '/data/config_map.dev.php';
+		}
+		$config = include $configFilename;
+		return $config;
+	}
+
+	public function run()
+	{
+		$config = $this->getConfig();
+		$this->_initApp( $config );
+	}
+
+	protected function _initApp( array $config )
+	{
+		$appFilename = $this->_root . DIRECTORY_SEPARATOR . '/modules/App/classes/App.class.php';
+		require_once $appFilename;
+		Miao_App::getInstance( $config );
+	}
 }
-
-$config = getConfig();
-autoloadInit( $config );
-
-Miao_Autoload::register( $config[ 'libs' ] );
-Miao_Path::register( $config );
-Miao_Env::defaultRegister();

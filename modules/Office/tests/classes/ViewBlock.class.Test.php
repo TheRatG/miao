@@ -6,7 +6,7 @@ class Miao_Office_ViewBlock_Test extends PHPUnit_Framework_TestCase
 
 	public function setUp()
 	{
-		$path = Miao_Path::getDefaultInstance();
+		$path = Miao_Path::getInstance();
 		$this->_path = $path;
 
 		$sourceDir = Miao_PHPUnit::getSourceFolder(

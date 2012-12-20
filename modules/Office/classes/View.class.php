@@ -125,7 +125,7 @@ abstract class Miao_Office_View
 		$result = implode( '_', $ar );
 		$result .= '.tpl';
 
-		$path = Miao_Path::getDefaultInstance();
+		$path = Miao_Path::getInstance();
 		$templateDir = $path->getTemplateDir( implode( '_', $prefix ) );
 
 		$result = $templateDir . DIRECTORY_SEPARATOR . $result;

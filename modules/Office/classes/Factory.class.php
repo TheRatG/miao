@@ -178,7 +178,7 @@ class Miao_Office_Factory
 		if ( $list[ lcfirst( Miao_Office::TYPE_VIEW ) ] )
 		{
 			$className = $list[ lcfirst( Miao_Office::TYPE_VIEW ) ];
-			$path = Miao_Path::getDefaultInstance();
+			$path = Miao_Path::getInstance();
 			$templatesDir = $path->getModuleRoot( $className ) . '/templates';
 			$templatesObj = new Miao_Office_TemplatesEngine_PhpNative( $templatesDir );
 			$view = new $list[ lcfirst( Miao_Office::TYPE_VIEW ) ]( $templatesObj );

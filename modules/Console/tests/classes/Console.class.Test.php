@@ -129,7 +129,7 @@ class Miao_Console_Test extends PHPUnit_Framework_TestCase
 		$status = true;
 		if ( !$isModule )
 		{
-			$path = Miao_Path::getDefaultInstance()->getFilenameByClassName( $className );
+			$path = Miao_Path::getInstance()->getFilenameByClassName( $className );
 			if ( !file_exists( $path ) )
 			{
 				$status = false;
@@ -137,7 +137,7 @@ class Miao_Console_Test extends PHPUnit_Framework_TestCase
 		}
 		else
 		{
-			$path = Miao_Path::getDefaultInstance()->getModuleRoot( $className );
+			$path = Miao_Path::getInstance()->getModuleRoot( $className );
 			if ( !is_dir( $path )
 				|| !is_dir( sprintf( '%s/data', $path ) )
 				|| !is_dir( sprintf( '%s/classes', $path ) )
@@ -225,7 +225,7 @@ class Miao_Console_Test extends PHPUnit_Framework_TestCase
 		$status = true;
 		if ( !$isModule )
 		{
-			$path = Miao_Path::getDefaultInstance()->getFilenameByClassName( $className );
+			$path = Miao_Path::getInstance()->getFilenameByClassName( $className );
 			if ( file_exists( $path ) )
 			{
 				$status = false;
@@ -233,7 +233,7 @@ class Miao_Console_Test extends PHPUnit_Framework_TestCase
 		}
 		else
 		{
-			$path = Miao_Path::getDefaultInstance()->getModuleRoot( $className );
+			$path = Miao_Path::getInstance()->getModuleRoot( $className );
 			if ( is_dir( $path ) )
 			{
 				$status = false;
@@ -302,7 +302,7 @@ class Miao_Console_Test extends PHPUnit_Framework_TestCase
 		$status = true;
 		if ( !$isModule )
 		{
-			$newPath = Miao_Path::getDefaultInstance()->getFilenameByClassName( $newClassName );
+			$newPath = Miao_Path::getInstance()->getFilenameByClassName( $newClassName );
 			if ( !file_exists( $newPath ) )
 			{
 				$status = false;
@@ -325,14 +325,14 @@ class Miao_Console_Test extends PHPUnit_Framework_TestCase
 		}
 		else
 		{
-			$newPath = Miao_Path::getDefaultInstance()->getModuleRoot( $newClassName );
+			$newPath = Miao_Path::getInstance()->getModuleRoot( $newClassName );
 			if ( !is_dir( $newPath ) )
 			{
 				$status = false;
 			}
 			else
 			{
-				$classPath = Miao_Path::getDefaultInstance()->getFilenameByClassName( $newClassName );
+				$classPath = Miao_Path::getInstance()->getFilenameByClassName( $newClassName );
 				$content = file_get_contents( $classPath );
 				if ( !$content )
 				{
@@ -441,9 +441,9 @@ class Miao_Console_Test extends PHPUnit_Framework_TestCase
 		$status = true;
 		if ( !$isModule )
 		{
-			$oldModulePath = Miao_Path::getDefaultInstance()->getModuleRoot( $className );
-			$oldPath = Miao_Path::getDefaultInstance()->getFilenameByClassName( $className );
-			$newPath = Miao_Path::getDefaultInstance()->getFilenameByClassName( $newClassName );
+			$oldModulePath = Miao_Path::getInstance()->getModuleRoot( $className );
+			$oldPath = Miao_Path::getInstance()->getFilenameByClassName( $className );
+			$newPath = Miao_Path::getInstance()->getFilenameByClassName( $newClassName );
 			if ( !is_dir( $oldModulePath ) || !file_exists( $newPath ) || file_exists( $oldPath ) )
 			{
 				$status = false;
@@ -466,15 +466,15 @@ class Miao_Console_Test extends PHPUnit_Framework_TestCase
 		}
 		else
 		{
-			$oldPath = Miao_Path::getDefaultInstance()->getModuleRoot( $className );
-			$newPath = Miao_Path::getDefaultInstance()->getModuleRoot( $newClassName );
+			$oldPath = Miao_Path::getInstance()->getModuleRoot( $className );
+			$newPath = Miao_Path::getInstance()->getModuleRoot( $newClassName );
 			if ( !is_dir( $newPath ) || is_dir( $oldPath ) )
 			{
 				$status = false;
 			}
 			else
 			{
-				$classPath = Miao_Path::getDefaultInstance()->getFilenameByClassName( $newClassName );
+				$classPath = Miao_Path::getInstance()->getFilenameByClassName( $newClassName );
 				$content = file_get_contents( $classPath );
 				if ( !$content )
 				{
@@ -574,7 +574,7 @@ class Miao_Console_Test extends PHPUnit_Framework_TestCase
 		{
 			try
 			{
-				$path = Miao_Path::getDefaultInstance()->getFilenameByClassName( $className );
+				$path = Miao_Path::getInstance()->getFilenameByClassName( $className );
 				Miao_Console_Helper::mkFile( $path, $className );
 			}
 			catch ( Exception $ex )
@@ -589,7 +589,7 @@ class Miao_Console_Test extends PHPUnit_Framework_TestCase
 		{
 			try
 			{
-				$path = Miao_Path::getDefaultInstance()->getModuleRoot( $className );
+				$path = Miao_Path::getInstance()->getModuleRoot( $className );
 				Miao_PHPUnit::rmdirr( $path );
 			}
 			catch ( Exception $ex )

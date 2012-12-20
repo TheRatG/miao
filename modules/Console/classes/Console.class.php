@@ -40,7 +40,7 @@ class Miao_Console
 	 */
 	public function __construct( $className, $author, Miao_Log $log = null )
 	{
-		$miaoPath = Miao_Path::getDefaultInstance();
+		$miaoPath = Miao_Path::getInstance();
 		$this->_className = $className;
 		$this->_author = $author;
 
@@ -124,7 +124,7 @@ class Miao_Console
 	{
 		$this->_log( 'Call ' . __METHOD__, Miao_Log::DEBUG );
 
-		$miaoPath = Miao_Path::getDefaultInstance();
+		$miaoPath = Miao_Path::getInstance();
 		try
 		{
 			$newModulePath = $miaoPath->getModuleRoot( $newClassName );
@@ -272,7 +272,7 @@ class Miao_Console
 			for ( $i = 0, $c = count( $stdClasses ); $i < $c; $i++ )
 			{
 				$className = sprintf( $stdClasses[ $i ], $this->_className );
-				$path = Miao_Path::getDefaultInstance()->getFilenameByClassName( $className );
+				$path = Miao_Path::getInstance()->getFilenameByClassName( $className );
 				$content = $this->_getTemplateContent( $className );
 				$status = Miao_Console_Helper::mkFile( $path, $content );
 				$this->_log( 'Create class: ' . $path, ( $status ? Miao_Log::DEBUG : Miao_Log::WARN ) );
@@ -487,7 +487,7 @@ class Miao_Console
 			}
 		}
 
-		$fileName = sprintf( '%s/data/templates/%s.%s', Miao_Path::getDefaultInstance()->getModuleRoot( __CLASS__ ), $template, $ext );
+		$fileName = sprintf( '%s/data/templates/%s.%s', Miao_Path::getInstance()->getModuleRoot( __CLASS__ ), $template, $ext );
 		$content = file_get_contents( $fileName );
 		$content = str_replace(
 			array( '%CLASS%', '%LOGIN%', '%DATE%', '%PARENT_CLASS%' )
@@ -510,13 +510,13 @@ class Miao_Console
 		if ( $parts[ 2 ] != 'View' )
 		{
 			$filename = ucfirst( array_pop( $parts ) ) . '/index.tpl';
-			$dir = Miao_Path::getDefaultInstance()->getTemplateDir( implode( '_', $parts ) );
+			$dir = Miao_Path::getInstance()->getTemplateDir( implode( '_', $parts ) );
 		}
 		else
 		{
 			$filename = strtolower( array_pop( $parts ) ) . '.tpl';
 			$forDir = array_slice( $parts, 0, 3 );
-			$dir = Miao_Path::getDefaultInstance()->getTemplateDir( implode( '_', $forDir ) );
+			$dir = Miao_Path::getInstance()->getTemplateDir( implode( '_', $forDir ) );
 			$forFile = array_slice( $parts, 3 );
 			$prefixFilename = strtolower( implode( '_', $forFile ) );
 			if ( !empty( $prefixFilename ) )

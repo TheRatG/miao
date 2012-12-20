@@ -18,9 +18,8 @@ abstract class Miao_Office_ViewBlock
 	 * @var Miao_TemplatesEngine_PhpNative
 	 */
 	protected $_templateEngine = null;
-
-	protected $_templates = array( 'index.tpl' );
-
+	protected $_templates = array(
+		'index.tpl' );
 	protected $_templatesDir = '';
 
 	/**
@@ -43,8 +42,15 @@ abstract class Miao_Office_ViewBlock
 	 * @param intger $lifetime
 	 * @param array $process_params
 	 */
-	public function __construct( $name, array $templates, array $block_class_process_params = array() )
+	public function __construct( $name = '', array $templates = array( 'index.tpl' ), array $block_class_process_params = array() )
 	{
+		if ( empty( $name ) )
+		{
+			$className = get_called_class();
+			$needle = 'ViewBlock';
+			$pos = strpos( $className, $needle ) + strlen( $needle );
+			$name = substr( $className, $pos );
+		}
 		$this->setTemplates( $templates );
 		$this->setProcessParams( $block_class_process_params );
 		$this->setName( $name );
@@ -84,7 +90,7 @@ abstract class Miao_Office_ViewBlock
 		if ( empty( $result ) )
 		{
 			//TODO; make with app
-			$path = Miao_Path::getDefaultInstance();
+			$path = Miao_Path::getInstance();
 			$result = $path->getTemplateDir( get_class( $this ) );
 		}
 		return $result;
@@ -165,11 +171,11 @@ abstract class Miao_Office_ViewBlock
 	public function process()
 	{
 		/// Pointcut: process_p1
-
 		$this->_init();
 		$this->_processData();
 
 		/// Pointcut: process_p2
+
 
 		$data = $this->_setTemplateVariables();
 		if ( is_array( $data ) )
@@ -189,7 +195,8 @@ abstract class Miao_Office_ViewBlock
 	{
 		if ( !empty( $templates ) && is_string( $templates ) )
 		{
-			$templates = array( $templates );
+			$templates = array(
+				$templates );
 		}
 		if ( empty( $templates ) )
 		{
@@ -200,6 +207,7 @@ abstract class Miao_Office_ViewBlock
 		foreach ( $templates as $templateName )
 		{
 			/// Pointcut: fetch_begin
+
 
 			$result .= $this->_templateEngine->fetch( $templateName );
 

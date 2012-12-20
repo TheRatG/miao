@@ -140,7 +140,7 @@ class Miao_Path_Test extends PHPUnit_Framework_TestCase
 		{
 			$this->setExpectedException( $expectedException );
 		}
-		$path = Miao_Path::getDefaultInstance();
+		$path = Miao_Path::getInstance();
 		$actual = $path->getModuleRoot( $className );
 		$this->assertEquals( $expected, $actual );
 	}
@@ -148,7 +148,7 @@ class Miao_Path_Test extends PHPUnit_Framework_TestCase
 	{
 		$data = array();
 
-		$path = Miao_Path::getDefaultInstance();
+		$path = Miao_Path::getInstance();
 		$libDir = $path->getRootByLibName( 'Miao' ) . '/modules';
 
 		$data[] = array( 'Miao_Autoload', $libDir . '/Autoload' );
@@ -169,7 +169,7 @@ class Miao_Path_Test extends PHPUnit_Framework_TestCase
 	}
 	public function testGetModuleList()
 	{
-		$path = Miao_Path::getDefaultInstance();
+		$path = Miao_Path::getInstance();
 		$result = $path->getModuleList( 'Miao' );
 
 		$this->assertTrue( is_array( $result ) && !empty( $result ) );
@@ -191,7 +191,7 @@ class Miao_Path_Test extends PHPUnit_Framework_TestCase
 			$this->setExpectedException( $expectedException );
 		}
 
-		$path = Miao_Path::getDefaultInstance();
+		$path = Miao_Path::getInstance();
 		$expected = $path->getFilenameByClassName( $className );
 		$this->assertEquals( $expected, $actual );
 	}

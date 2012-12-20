@@ -203,7 +203,7 @@ class Miao_Session
 		}
 		else
 		{
-			$this->_handler = new Miao_Session_Handler_Empty();
+			$this->_handler = new Miao_Session_Handler_None();
 		}
 
 		$this->_handler->init();

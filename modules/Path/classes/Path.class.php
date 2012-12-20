@@ -38,14 +38,9 @@ class Miao_Path
 	 * @throws Miao_Path_Exception
 	 * @return Miao_Path
 	 */
-	static public function getDefaultInstance()
+	static public function getInstance()
 	{
-		$index = self::$_defaultindex;
-		if ( !Miao_Registry::isRegistered( $index ) )
-		{
-			throw new Miao_Path_Exception( 'Default instance does\'t register.' );
-		}
-		$result = Miao_Registry::get( $index );
+		$result = Miao_App::getInstance()->getPath();
 		return $result;
 	}
 

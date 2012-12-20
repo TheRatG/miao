@@ -27,6 +27,31 @@ pear install --alldeps pear.phpunit.de/PHPUnit
 php scripts/test.php -d Miao
 -----
 
-=== TODO
+=== File structure
 
-Merge with trunk
+.Folders
+* build - content build files
+ - scripts
+ - templates
+ - targets - phing instructions
+* data - generated data and configuration files
+* modules - classes and tests
+* scripts - generated scripts
+* tmp - temporary files
+ 
+.Files
+* build.xml - configure library and run test
+* README
+* CHANGELOG.md - issue history and information about versions
+
+=== Configuration
+
+.Include map
+[options="header,footer"]
+|======================================================================================================================
+|Your scripts|Init app|Inf. about libs|Other conf. data
+|public/index.php <---|||<--- config_main.php
+||<--- bootstrap.php|<--- config_map.php|
+|scripts/console.php <---|||<--- config_libs.php
+|All scripts must be include bootstrap.php|Load config and init application|Main config file|Project configuration data
+|=======================================================================================================================

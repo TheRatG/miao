@@ -34,20 +34,8 @@ require_once 'Plugin.class.php';
 
 class Miao_Autoload
 {
-	static private $_instance;
-
 	private $_registerList = array();
 	private $_history = array();
-
-	private function __construct()
-	{
-
-	}
-
-	private function __clone()
-	{
-
-	}
 
 	/**
 	 * @static
@@ -55,11 +43,7 @@ class Miao_Autoload
 	 */
 	static public function getInstance()
 	{
-		if ( is_null( self::$_instance ) )
-		{
-			self::$_instance = new self();
-		}
-		return self::$_instance;
+		return Miao_App::getInstance()->getAutoload();
 	}
 
 	static public function register( array $autoloadConfig )

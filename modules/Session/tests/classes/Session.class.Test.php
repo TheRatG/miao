@@ -107,7 +107,7 @@ class Miao_Session_Test extends PHPUnit_Framework_TestCase
 		$options = array();
 		$handler = null;
 		$expectedOptions = $localOptions;
-		$expectedHandler = new Miao_Session_Handler_Empty();
+		$expectedHandler = new Miao_Session_Handler_None();
 		$data[] = array( $options, $handler, $expectedOptions, $expectedHandler );
 
 		$options = array();
@@ -125,13 +125,13 @@ class Miao_Session_Test extends PHPUnit_Framework_TestCase
 		$handler = null;
 		$expectedOptions = $localOptions;
 		$expectedOptions[ 'session.cache_expire' ] = '200';
-		$expectedHandler = new Miao_Session_Handler_Empty();
+		$expectedHandler = new Miao_Session_Handler_None();
 		$data[] = array( $options, $handler, $expectedOptions, $expectedHandler );
 
 		$options = array( 'unnamed_option' => '200' );
 		$handler = null;
 		$expectedOptions = $localOptions;
-		$expectedHandler = new Miao_Session_Handler_Empty();
+		$expectedHandler = new Miao_Session_Handler_None();
 		$data[] = array(
 			$options,
 			$handler,
@@ -143,7 +143,7 @@ class Miao_Session_Test extends PHPUnit_Framework_TestCase
 		$options = array();
 		$handler = new stdClass();
 		$expectedOptions = $localOptions;
-		$expectedHandler = new Miao_Session_Handler_Empty();
+		$expectedHandler = new Miao_Session_Handler_None();
 		$data[] = array(
 			$options,
 			$handler,

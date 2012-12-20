@@ -162,7 +162,7 @@ class Miao_Form_KCaptcha
 		$this->_alphabet = "0123456789abcdefghijklmnopqrstuvwxyz";
 		$this->_allowed_symbols = "23456789abcdegikpqsvxyz";
 
-		$this->_fontsdir = Miao_Path::getDefaultInstance()->getModuleRoot( __CLASS__ ) . '/data/fonts';
+		$this->_fontsdir = Miao_Path::getInstance()->getModuleRoot( __CLASS__ ) . '/data/fonts';
 		$this->_length = mt_rand( 5, 7 );
 
 		$this->_width = 160;

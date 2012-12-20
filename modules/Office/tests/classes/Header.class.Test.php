@@ -66,16 +66,15 @@ class Miao_Office_Header_Test extends PHPUnit_Framework_TestCase
 	{
 		$data = array();
 
-		$data[] = array( 'text/html', 'text/html' );
-		$data[] = array( 'html', 'text/html' );
-		$data[] = array( 'xml', 'application/xml' );
-		$data[] = array( 'application/xml', 'application/xml' );
-		$data[] = array( 'json', 'application/json' );
-		$data[] = array( 'application/json', 'application/json' );
+		$data[] = array( 'text/html', 'Content-type: text/html' );
+		$data[] = array( 'html', 'Content-type: text/html' );
+		$data[] = array( 'xml', 'Content-type: application/xml' );
+		$data[] = array( 'application/xml', 'Content-type: application/xml' );
+		$data[] = array( 'json', 'Content-type: application/json' );
+		$data[] = array( 'application/json', 'Content-type: application/json' );
 
 		$exceptionName = 'Miao_Office_Header_Exception';
 		//$data[] = array( 'unknownType', '', $exceptionName );
-
 
 		return $data;
 	}
@@ -106,12 +105,12 @@ class Miao_Office_Header_Test extends PHPUnit_Framework_TestCase
 	{
 		$data = array();
 
-		$data[] = array( 'html', 'utf-8', 'text/html; charset=UTF-8' );
+		$data[] = array( 'html', 'utf-8', 'Content-type: text/html; charset=UTF-8' );
 		$data[] = array(
 			'html',
 			'windows-1251',
-			'text/html; charset=WINDOWS-1251' );
-		$data[] = array( 'json', 'utf-8', 'application/json; charset=UTF-8' );
+			'Content-type: text/html; charset=WINDOWS-1251' );
+		$data[] = array( 'json', 'utf-8', 'Content-type: application/json; charset=UTF-8' );
 
 		$exceptionName = 'Miao_Office_Header_Exception';
 		$data[] = array( '', 'utf-8', '', $exceptionName );

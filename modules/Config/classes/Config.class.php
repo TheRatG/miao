@@ -7,20 +7,31 @@ class Miao_Config
 
 	/**
 	 *
+	 * @var Miao_Path
+	 */
+	private $_path;
+
+	/**
+	 *
 	 * @var Miao_Config_File
 	 */
 	private $_file;
 
+	public function __construct( Miao_Path $path )
+	{
+		$this->_path = $path;
+	}
+
 	static public function Main( $throwException = true )
 	{
-		$instance = self::_getDefaultInstance();
+		$instance = self::getInstance();
 		$result = $instance->_getConfig( self::MAIN, $throwException );
 		return $result;
 	}
 
 	static public function Libs( $className, $throwException = true )
 	{
-		$instance = self::_getDefaultInstance();
+		$instance = self::getInstance();
 		$result = $instance->_getConfig( $className, $throwException );
 		return $result;
 	}
@@ -30,18 +41,9 @@ class Miao_Config
 		return false;
 	}
 
-	static private function _getDefaultInstance()
+	static public function getInstance()
 	{
-		$index = 'Miao_Config::default';
-		if ( !Miao_Registry::isRegistered( $index ) )
-		{
-			$result = new self();
-			Miao_Registry::set( $index, $result );
-		}
-		else
-		{
-			$result = Miao_Registry::get( $index );
-		}
+		$result = Miao_App::getInstance()->getConfig();
 		return $result;
 	}
 
@@ -84,14 +86,18 @@ class Miao_Config
 	{
 		if ( !isset( $this->_baseInstanceList[ $libName ] ) )
 		{
-			$path = Miao_Path::getDefaultInstance();
+			$path = $this->_path;
 			if ( $libName == self::MAIN )
 			{
 				$filename = $path->getMainConfigFilename();
 			}
 			else
 			{
-				$filename = $path->getRootByLibName( $libName ) . '/data/config.php';
+				$filename = $path->getRootByLibName( $libName ) . '/data/config_modules.php';
+				if ( !file_exists( $filename ) )
+				{
+					$filename = $path->getRootByLibName( $libName ) . '/data/config_modules.dev.php';
+				}
 			}
 			$configData = include $filename;
 

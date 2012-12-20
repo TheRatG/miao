@@ -60,6 +60,11 @@ class Miao_Office_Header
 	{
 		assert( is_string( $contentType ) );
 
+		if ( empty( $contentType ) )
+		{
+			throw new Miao_Office_Header_Exception( 'Ivalid param $contentType, must be not empty' );
+		}
+
 		$result = $contentType;
 		if ( array_key_exists( $contentType, $this->_contentTypeList ) )
 		{

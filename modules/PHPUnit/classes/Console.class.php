@@ -81,7 +81,7 @@ class Miao_PHPUnit_Console
 	{
 		try
 		{
-			$path = Miao_Path::getDefaultInstance();
+			$path = Miao_Path::getInstance();
 			$dir = $path->getRootByLibName( $libName );
 		}
 		catch ( Miao_Path_Exception $e )

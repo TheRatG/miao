@@ -18,7 +18,7 @@ class Miao_PHPUnit_Test extends PHPUnit_Framework_TestCase
 	{
 		$data = array();
 
-		$path = Miao_Path::getDefaultInstance();
+		$path = Miao_Path::getInstance();
 
 		$expected = $path->getModuleRoot( 'Miao_PHPUnit_Test' );
 		$data[] = array(
