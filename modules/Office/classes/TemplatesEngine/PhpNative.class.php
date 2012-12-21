@@ -29,7 +29,7 @@ class Miao_Office_TemplatesEngine_PhpNative extends Miao_TemplatesEngine_PhpNati
 		return $this->_viewTemplate;
 	}
 
-	protected function _includeBlock( $name )
+	protected function _includeBlock( $name, $before = '', $after = '' )
 	{
 		$result = '';
 		if ( array_key_exists( $name, $this->_listBlock ) )
@@ -38,8 +38,9 @@ class Miao_Office_TemplatesEngine_PhpNative extends Miao_TemplatesEngine_PhpNati
 
 			try
 			{
-				call_user_func_array( array( $block_obj, 'process' ),
-					$block_obj->getProcessParams() );
+				call_user_func_array( array(
+					$block_obj,
+					'process' ), $block_obj->getProcessParams() );
 				$result .= $block_obj->fetch();
 			}
 			catch ( Miao_TemplatesEngine_Exception_Critical $e )
@@ -55,6 +56,12 @@ class Miao_Office_TemplatesEngine_PhpNative extends Miao_TemplatesEngine_PhpNati
 					$result .= $message;
 				}
 			}
+		}
+
+		$trmRes = trim( $result );
+		if ( !empty( $trmRes ) )
+		{
+			$result = $before . $result . $after;
 		}
 
 		return $result;
