@@ -292,7 +292,7 @@ class Miao_Router
 		$result[ 'rule' ] = $ruleConfig[ 'rule' ];
         $result[ 'rule' ] = $ruleConfig[ 'rule' ];
         $result[ 'norewrite' ] = self::checkAndReturnParam( $ruleConfig, 'norewrite', false );
-        $result[ 'desc' ] = self::checkAndReturnParam( $ruleConfig, 'desc', $name );
+        $result[ 'desc' ] = self::checkAndReturnParam( $ruleConfig, 'desc', '' );
 		if ( array_key_exists( 'method', $ruleConfig ) )
 		{
 			$result[ 'method' ] = $ruleConfig[ 'method' ];

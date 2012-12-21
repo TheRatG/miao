@@ -72,7 +72,7 @@ class Miao_Form_Test extends PHPUnit_Framework_TestCase
 	{
 		$data = array();
 
-		$actual = '<input name="name" value="" type="text" class="input-xlarge" />';
+		$actual = '<input name="name" type="text" class="input-xlarge" />';
 		$data[] = array( 'name', array( 'class' => 'input-xlarge' ), $actual );
 
 		return $data;
