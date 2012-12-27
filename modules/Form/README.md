@@ -1,6 +1,7 @@
 # Miao Form
 ## Пример 1. Сохранение комментария
 
+```php
 $form = new Miao_Form( 'frm_blog', '/form.php' );
 $form->setMethod( 'POST' );
 $form->addText( 'name' )->setLabel( 'Name' )->setRequired( 'Field name is required' );
@@ -37,3 +38,4 @@ if ( $form->isValid( $_POST ) )
 	</fieldset>
 
 <?=$form->end()?>
+```
