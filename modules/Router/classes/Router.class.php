@@ -84,7 +84,7 @@ class Miao_Router
 			}
 		}
 
-		$result = new Miao_Router( $main, $error, $rules, $defaultPrefix, $skippedRules );
+		$result = new static( $main, $error, $rules, $defaultPrefix, $skippedRules );
 		return $result;
 	}
 
