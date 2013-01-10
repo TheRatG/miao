@@ -83,6 +83,11 @@ class Miao_Session
 		return self::$_instance;
 	}
 
+	/**
+	 *
+	 * @param Miao_Session_Namespace $namespace
+	 * @return multitype:
+	 */
 	static public function getNamespace( $namespace )
 	{
 		$session = self::getInstance();
