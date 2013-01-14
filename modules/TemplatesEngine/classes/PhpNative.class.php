@@ -1,15 +1,10 @@
 <?php
 class Miao_TemplatesEngine_PhpNative implements Miao_TemplatesEngine_Interface
 {
-
 	protected $_templatesDir;
-
 	protected $_templateVars = array();
-
 	protected $_debugMode = false;
-
 	protected $_forceExceptionsOnInclude;
-
 	protected $_logFilename = '';
 
 	/**
@@ -415,6 +410,7 @@ class Miao_TemplatesEngine_PhpNative implements Miao_TemplatesEngine_Interface
 		$trace = $e->getTrace();
 		$trace = current( $trace );
 
-		return ( $e->getMessage() . "\n" . print_r( $trace, true ) . "\n" );
+		$result = sprintf( "Uri: %s\nMessage: %s\nTrace: %s", $_SERVER[ 'REQUEST_URI' ], $e->getMessage(), print_r( $trace, true ) );
+		return $result;
 	}
 }
