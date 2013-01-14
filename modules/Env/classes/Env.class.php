@@ -11,7 +11,8 @@ class Miao_Env
 			'umask' => '0',
 			'upload_tmp_dir' => '/tmp' );
 
-		if ( Miao_Config::checkConfig( __CLASS__ ) )
+		$config = Miao_Config::Libs( __CLASS__, false );
+		if ( $config )
 		{
 			$config = Miao_Config::Libs( __CLASS__ );
 		}
@@ -19,13 +20,29 @@ class Miao_Env
 		{
 			$config = new Miao_Config_Base( $configDefault );
 		}
-		$initialazer = new Miao_Env_Initializer( $config );
-		$initialazer->run();
+		$result = self::_run( $config );
+		return $result;
 	}
-	static public function register( array $config )
+
+	static public function register( array $config = array() )
 	{
-		$config = new Miao_Config_Base( $config );
+		if ( empty( $config ) )
+		{
+			$result = self::defaultRegister();
+		}
+		else
+		{
+			$config = new Miao_Config_Base( $config );
+			$result = self::_run( $config );
+		}
+
+		return $result;
+	}
+
+	static protected function _run( Miao_Config_Base $config )
+	{
 		$initialazer = new Miao_Env_Initializer( $config );
-		$initialazer->run();
+		$result = $initialazer->run();
+		return $result;
 	}
 }
