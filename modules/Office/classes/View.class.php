@@ -175,7 +175,7 @@ abstract class Miao_Office_View
 		else if ( is_array( $className ) )
 		{
 			$block_class_name = $className[ 0 ];
-			$block_class_process_params = $className[ 1 ];
+			$block_class_process_params = isset($className[ 1 ]) ? $className[ 1 ] : null;
 			if ( !is_array( $block_class_process_params ) )
 			{
 				$block_class_process_params = array(
