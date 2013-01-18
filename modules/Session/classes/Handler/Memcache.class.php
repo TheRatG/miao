@@ -4,7 +4,6 @@ class Miao_Session_Handler_Memcache extends Miao_Session_Handler
 	private $_host;
 	private $_port;
 	private $_persistent;
-
 	private $_savePath;
 	private $_handlerName = 'memcache';
 
@@ -31,6 +30,16 @@ class Miao_Session_Handler_Memcache extends Miao_Session_Handler
 
 	private function _initSavePath()
 	{
-		$this->_savePath = sprintf( 'tcp://%s:%s?persistent=%d', $this->_host, $this->_port, $this->_persistent );
+		$checkProt = false !== strpos( $this->_host, '://' );
+		if ( $checkProt )
+		{
+			$this->_savePath = $this->_host;
+			$this->_savePath .= ( $this->_port ) ? ':' . $this->_port : '';
+			$this->_savePath .= sprintf( '?persistent=%d', $this->_persistent );
+		}
+		else
+		{
+			$this->_savePath = sprintf( 'tcp://%s:%s?persistent=%d', $this->_host, $this->_port, $this->_persistent );
+		}
 	}
 }

@@ -70,7 +70,14 @@ class Miao_Config
 
 			$result = new Miao_Config_Base( $resultData );
 		}
-		catch ( Miao_Config_Exception_PathNotFound $e )
+		catch ( Miao_Config_Exception $e )
+		{
+			if ( $throwException )
+			{
+				throw $e;
+			}
+		}
+		catch ( Miao_Path_Exception $e )
 		{
 			if ( $throwException )
 			{

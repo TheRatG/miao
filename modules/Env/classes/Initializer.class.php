@@ -52,6 +52,8 @@ class Miao_Env_Initializer
 		{
 			$this->stripGlobalSlashes();
 		}
+
+		$this->_initSet();
 	}
 
 	/**
@@ -169,10 +171,16 @@ class Miao_Env_Initializer
 	 */
 	protected function _initSet()
 	{
-		$upload_tmp_dir = $this->_config->get( 'upload_tmp_dir', false );
-		if ( $upload_tmp_dir )
+		$uploadTmpDir = $this->_config->get( 'upload_tmp_dir', false );
+		if ( $uploadTmpDir )
 		{
-			ini_set( 'upload_tmp_dir', $this->_config->upload_tmp_dir );
+			ini_set( 'upload_tmp_dir', $uploadTmpDir );
+		}
+
+		$errorLog = $this->_config->get( 'error_log', false );
+		if ( $errorLog )
+		{
+			ini_set( 'error_log', $errorLog );
 		}
 	}
 
