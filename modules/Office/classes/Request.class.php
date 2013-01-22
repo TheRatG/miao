@@ -35,7 +35,7 @@ class Miao_Office_Request
 	 */
 	protected function __construct()
 	{
-		$this->_method = strtoupper( $_SERVER[ 'REQUEST_METHOD' ] );
+		$this->_method = isset( $_SERVER[ 'REQUEST_METHOD' ] ) ? strtoupper( $_SERVER[ 'REQUEST_METHOD' ] ) : 'GET' ;
 		$this->resetVars();
 		$this->_unsetDataStore();
 	}
