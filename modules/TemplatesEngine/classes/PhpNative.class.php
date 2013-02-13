@@ -330,11 +330,11 @@ class Miao_TemplatesEngine_PhpNative implements Miao_TemplatesEngine_Interface
 		{
 			$resultUnbelievableNameForVar .= $this->_endBlock();
 
-			$this->getLogObj()->log( $this->_exceptionToString( $e ), Miao_Log::ERR );
+			$this->getLogObj()->log( $this->_exceptionToString( $e, $absoluteFilename ), Miao_Log::ERR );
 
 			if ( $this->_debugMode )
 			{
-				$resultUnbelievableNameForVar .= $this->_exceptionToString( $e );
+				$resultUnbelievableNameForVar .= $this->_exceptionToString( $e, $absoluteFilename );
 			}
 		}
 		return $resultUnbelievableNameForVar;
@@ -405,12 +405,12 @@ class Miao_TemplatesEngine_PhpNative implements Miao_TemplatesEngine_Interface
 	 * @param Exception $e
 	 * @return string
 	 */
-	protected function _exceptionToString( Exception $e )
+	protected function _exceptionToString( Exception $e, $absoluteFilename = '' )
 	{
 		$trace = $e->getTrace();
-		$trace = current( $trace );
+		$trace = array_slice( $trace, 0, 3 );
 
-		$result = sprintf( "Uri: %s\nMessage: %s\nTrace: %s", $_SERVER[ 'REQUEST_URI' ], $e->getMessage(), print_r( $trace, true ) );
+		$result = sprintf( "Uri: %s. \nTmpl: %s\nMessage: %s\nTrace: %s", $_SERVER[ 'REQUEST_URI' ], $absoluteFilename, $e->getMessage(), print_r( $trace, true ) );
 		return $result;
 	}
 }

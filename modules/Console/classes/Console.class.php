@@ -58,6 +58,12 @@ class Miao_Console
 			throw new Miao_Console_Exception( $ex->getMessage() );
 		}
 		$this->_parts = $this->_parse( $className );
+
+		// --- dump ---
+		echo __FILE__ . __METHOD__ . chr( 10 );
+		var_dump( $this->_parts ) . chr( 10 );
+		// --- // ---
+
 		$this->createTemplate();
 
 		$this->_miaoLog = $log;
@@ -566,6 +572,10 @@ class Miao_Console
 			if ( false !== in_array( $parts[ 0 ], array( 'View', 'ViewBlock' ) ) )
 			{
 				$result[ 'office' ] = true;
+			}
+			else
+			{
+				$result[ 'office' ] = false;
 			}
 		}
 
