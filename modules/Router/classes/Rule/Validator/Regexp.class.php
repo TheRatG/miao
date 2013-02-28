@@ -37,7 +37,7 @@ class Miao_Router_Rule_Validator_Regexp extends Miao_Router_Rule_Validator
 	public function test( $value )
 	{
 		// preg_quote($keywords, '/'); не сработало
-		$pt = '/' . str_replace( '/', '\/', $this->_pattern ) . '/';
+		$pt = '/^' . str_replace( '/', '\/', $this->_pattern ) . '$/';
 		$result = preg_match( $pt, $value );
 		return $result;
 	}

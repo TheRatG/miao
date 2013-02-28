@@ -224,7 +224,7 @@ class Miao_TemplatesEngine_PhpNative implements Miao_TemplatesEngine_Interface
 			}
 			$this->_templateVars[ $varName ] = $defaultValue;
 		}
-		else if ( empty( $this->_templateVars[ $varName ] ) )
+		else if ( !isset( $this->_templateVars[ $varName ] ) )
 		{
 			$this->_templateVars[ $varName ] = $defaultValue;
 		}

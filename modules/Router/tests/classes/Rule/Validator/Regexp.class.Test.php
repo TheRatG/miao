@@ -39,6 +39,9 @@ class Miao_Router_Rule_Validator_Regexp_Test extends PHPUnit_Framework_TestCase
 
 		$data[] = array( $config, '', false );
 
+		$config = array( 'id' => 'section', 'pattern' => '^[a-zA-Z_]+$' );
+		$data[] = array( $config, 'p2', false );
+
 		return $data;
 	}
 }
