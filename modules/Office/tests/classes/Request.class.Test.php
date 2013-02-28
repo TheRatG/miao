@@ -118,6 +118,13 @@ class Miao_Office_Request_Test extends PHPUnit_Framework_TestCase
 		$this->assertEquals( $request->getVars(), $res );
 	}
 
+    public function testValuesDoesNotExist()
+    {
+        $request = Miao_Office_Request::getInstance();
+        $res = $request->getValueOf('variable_does_not_exists', null, true);
+        $this->assertNull($res);
+    }
+
 	public function testGetServerVar()
 	{
 		$_SERVER = array( 'REQUEST_URI' => '/' );
