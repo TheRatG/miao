@@ -85,17 +85,16 @@ class Miao_Acl_Adapter_Default implements Miao_Acl_Adapter_Interface
 
 		if ( false !== $result )
 		{
-			$permission = $this->_deny;
-			$result = $this->_check( self::DENY, $permission, $group, $resource, $privilege );
+			$permission = $this->_allow;
+			$isAllow = $this->_checkAllow( $permission, $group, $resource, $privilege );
 
-			if ( true === $result )
+			$permission = $this->_deny;
+			$isDeny = $this->_checkDeny( $permission, $group, $resource, $privilege );
+
+			$result = false;
+			if ( $isAllow && !$isDeny )
 			{
-				$result = false;
-			}
-			else
-			{
-				$permission = $this->_allow;
-				$result = $this->_check( self::ALLOW, $permission, $group, $resource, $privilege );
+				$result = true;
 			}
 		}
 		return $result;
@@ -153,7 +152,7 @@ class Miao_Acl_Adapter_Default implements Miao_Acl_Adapter_Interface
 		$permission[ $group ][ $resource ] = $privileges;
 	}
 
-	protected function _check( $type, &$permission, $group, $resource, $privilege )
+	protected function _checkAllow( &$permission, $group, $resource, $privilege )
 	{
 		$resourceList = array();
 		if ( isset( $permission[ '*' ] ) )
@@ -166,16 +165,24 @@ class Miao_Acl_Adapter_Default implements Miao_Acl_Adapter_Interface
 			$resourceList = array_merge_recursive( $resourceList, $permission[ $group ] );
 		}
 
-		if ( $type == self::ALLOW )
+		$result = $this->_isAllowByResourceList( $resourceList, $resource, $privilege );
+		return $result;
+	}
+
+	protected function _checkDeny( &$permission, $group, $resource, $privilege )
+	{
+		$resourceList = array();
+		if ( isset( $permission[ '*' ] ) && !isset( $this->_allow[ $group ][ $resource ] ) )
 		{
-			$funcName = '_isAllowByResourceList';
-		}
-		else if ( $type == self::DENY )
-		{
-			$funcName = '_isDenyByResourceList';
+			$resourceList = array_merge_recursive( $resourceList, $permission[ '*' ] );
 		}
 
-		$result = $this->$funcName( $resourceList, $resource, $privilege );
+		if ( isset( $permission[ $group ] ) )
+		{
+			$resourceList = array_merge_recursive( $resourceList, $permission[ $group ] );
+		}
+
+		$result = $this->_isDenyByResourceList( $resourceList, $resource, $privilege );
 		return $result;
 	}
 
