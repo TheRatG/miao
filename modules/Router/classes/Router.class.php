@@ -190,7 +190,11 @@ class Miao_Router
 
 		if ( $result == false && $throwException )
 		{
-			$message = sprintf( 'Rule for uri (%s) not found, please check your config', $uri );
+			if ( empty( $method ) )
+			{
+				$method = self::getRequestMethod();
+			}
+			$message = sprintf( 'Rule for uri (%s), method (%s) not found, please check your config', $uri, $method );
 			throw new Miao_Router_Exception( $message );
 		}
 		return $result;
