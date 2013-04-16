@@ -76,7 +76,7 @@ class Miao_Router_Rule
 		}
 
 		$result = false;
-		if ( $method == $this->getMethod() )
+		if ( $method == $this->getMethod() || ( 'HEAD' == $method && 'GET' == $this->getMethod() ) )
 		{
 			$parts = explode( '/', trim( $uri, '/' ) );
 			$result = array(
@@ -220,6 +220,7 @@ class Miao_Router_Rule
 		if ( empty( $this->_method ) )
 		{
 			$this->_method = 'GET';
+			//only POST for actions
 			if ( self::TYPE_ACTION == $this->getType() )
 			{
 				$this->_method = 'POST';
@@ -378,6 +379,18 @@ class Miao_Router_Rule
 				$flags );
 		}
 		return $rule;
+	}
+
+	protected function _checkMethod( $method )
+	{
+		$ruleMethod = $this->getMethod();
+		$result = false;
+		//because head and get in Office module equals
+		if ( $method == $ruleMethod || ( 'HEAD' == $method && 'GET' == $ruleMethod ) )
+		{
+			$result = true;
+		}
+		return $result;
 	}
 
 	protected function _isParam( $str )
