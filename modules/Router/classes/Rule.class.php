@@ -76,7 +76,7 @@ class Miao_Router_Rule
 		}
 
 		$result = false;
-		if ( $method == $this->getMethod() || ( 'HEAD' == $method && 'GET' == $this->getMethod() ) )
+		if ( $this->_checkMethod( $method ) )
 		{
 			$parts = explode( '/', trim( $uri, '/' ) );
 			$result = array(
