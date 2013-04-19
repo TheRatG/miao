@@ -7,11 +7,6 @@ abstract class Miao_Office_Action
 	 */
 	protected $_office;
 
-	public function __construct()
-	{
-		$this->_init();
-	}
-
 	/**
 	 *
 	 * @param Miao_Office $office
@@ -19,6 +14,7 @@ abstract class Miao_Office_Action
 	public function setOffice( Miao_Office $office )
 	{
 		$this->_office = $office;
+		$this->_init();
 	}
 
 	/**

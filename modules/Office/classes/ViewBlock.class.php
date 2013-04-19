@@ -43,8 +43,13 @@ abstract class Miao_Office_ViewBlock
 	 * @param intger $lifetime
 	 * @param array $process_params
 	 */
-	public function __construct( $name, array $templates, array $block_class_process_params = array() )
+	public function __construct( $name = '', array $templates = array( 'index.tpl' ), array $block_class_process_params = array() )
 	{
+		if ( empty( $name ) )
+		{
+			$name = implode( '_', array_slice( explode ( '_', get_called_class() ), 3 ) );
+		}
+
 		$this->setTemplates( $templates );
 		$this->setProcessParams( $block_class_process_params );
 		$this->setName( $name );

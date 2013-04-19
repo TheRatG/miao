@@ -24,6 +24,7 @@ abstract class Miao_Office_View
 	public function setOffice( Miao_Office $office )
 	{
 		$this->_office = $office;
+		$this->_init();
 	}
 
 	/**
@@ -40,7 +41,6 @@ abstract class Miao_Office_View
 	public function __construct( Miao_Office_TemplatesEngine_PhpNative $templatesObj )
 	{
 		$this->setTemplateObj( $templatesObj );
-		$this->_init();
 	}
 
 	public function getTemplateObj()
