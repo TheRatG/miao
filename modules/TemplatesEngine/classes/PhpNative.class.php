@@ -291,8 +291,12 @@ class Miao_TemplatesEngine_PhpNative implements Miao_TemplatesEngine_Interface
 	 * @param string $templateFilename
 	 * @return string
 	 */
-	protected function _includeTemplate( $templateFilename, $useSelfBaseDir = false )
+	protected function _includeTemplate( $templateFilename, $useSelfBaseDir = false, array $tmplVars = array() )
 	{
+		if ( $tmplVars )
+		{
+			$this->setValueOfByArray( $tmplVars );
+		}
 		if ( true === $useSelfBaseDir )
 		{
 			$templateFilename = $this->_templatesDir . $templateFilename;
