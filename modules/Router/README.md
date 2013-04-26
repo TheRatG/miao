@@ -17,6 +17,9 @@
 * генерация правил для .nginx
 * получение текущих route-параметров
 
+## Use case
+![Use case](http://theratg.github.io/miao/images/route_usecase.png)
+
 ## Пример
 
 Конфигурационный файл свойств в автосборке haru.
