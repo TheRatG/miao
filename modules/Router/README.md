@@ -9,6 +9,14 @@
 это позволяет в разы увеличить скорость обработки правил, в отличие от разрбора запроса на стороне php. На стороне 
 сервера модуль используется для генерации "правильных" uri.
 
+## Основные функции
+* генерация ссылок
+* преобразование uri в параметры для Miao_Office
+* валидация параметров
+* генерация правил для .htaccess
+* генерация правил для .nginx
+* получение текущих route-параметров
+
 ## Пример
 
 Конфигурационный файл свойств в автосборке haru.
@@ -74,10 +82,16 @@ $router = Daily_BackOffice_Router::getInstance();
 $uri = $router->view( 'Article_EditMain', array( 'id' => 123 ) );
 ```
 
-## Основные функции
-* генерация ссылок
-* преобразование uri в параметры для Miao_Office
-* валидация параметров
-* генерация правил для .htaccess
-* генерация правил для .nginx
-
+Поместите скрипт генератор в раширение автосборки
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+    name="Project Configure"
+    default="main">
+    <target name="main">            
+        <exec
+            command="${system.bin.php} ${libs.Daily.deploy.dst}/build/scripts/rewrites.php"
+            passthru="true"
+            checkreturn="true"
+            level="info" />
+```
