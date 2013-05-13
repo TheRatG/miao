@@ -75,6 +75,7 @@ abstract class Miao_Form_Control
 	public function setValue( $value )
 	{
 		$this->_value = $value;
+		return $this;
 	}
 
 	/**
@@ -91,6 +92,7 @@ abstract class Miao_Form_Control
 	public function setName( $name )
 	{
 		$this->_name = $name;
+		return $this;
 	}
 
 	/**
@@ -110,6 +112,7 @@ abstract class Miao_Form_Control
 		{
 			$this->addAttribute( $name, $value );
 		}
+		return $this;
 	}
 
 	/**
@@ -126,6 +129,7 @@ abstract class Miao_Form_Control
 			throw new Miao_Form_Exception( $msg );
 		}
 		$this->_attributes[ $name ] = $value;
+		return $this;
 	}
 
 	/**
@@ -182,6 +186,20 @@ abstract class Miao_Form_Control
 		return $this;
 	}
 
+	public function isRequired()
+	{
+		$result = false;
+		foreach( $this->_validator->getValidators() as $validator )
+		{
+			if ( isset( $validator[ 'instance' ] ) && $validator[ 'instance' ] instanceof Miao_Form_Validate_Require )
+			{
+				$result = true;
+				break;
+			}
+		}
+		return $result;
+	}
+
 	/**
 	 *
 	 * @return boolean
@@ -205,7 +223,7 @@ abstract class Miao_Form_Control
 
 	abstract public function render();
 
-	protected function _renderAttributes()
+	public function renderAttributes()
 	{
 		$pieces = array();
 		foreach ( $this->getAttributes() as $name => $value )

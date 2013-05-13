@@ -26,7 +26,7 @@ class Miao_Form_Control_Captcha extends Miao_Form_Control
 		$pieces = array();
 		$pieces[] = '<img';
 		$pieces[] = sprintf( 'src="%s"', $this->getUrl() );
-		$pieces[] = $this->_renderAttributes();
+		$pieces[] = $this->renderAttributes();
 		$pieces[] = '/>';
 		$result = trim( implode( ' ', $pieces ) );
 		return $result;
@@ -37,7 +37,7 @@ class Miao_Form_Control_Captcha extends Miao_Form_Control
 		$pieces = array();
 		$pieces[] = '<input type="text"';
 		$pieces[] = sprintf( 'name="%s"', $this->getName() );
-		$pieces[] = $this->_renderAttributes();
+		$pieces[] = $this->renderAttributes();
 		$pieces[] = '/>';
 		$result = trim( implode( ' ', $pieces ) );
 		return $result;

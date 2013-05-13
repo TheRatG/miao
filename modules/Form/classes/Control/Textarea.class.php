@@ -6,7 +6,7 @@ class Miao_Form_Control_Textarea extends Miao_Form_Control
 		$pieces = array();
 		$pieces[] = '<textarea';
 		$pieces[] = sprintf( 'name="%s"', $this->getName() );
-		$pieces[] = $this->_renderAttributes();
+		$pieces[] = $this->renderAttributes();
 
 		$result = trim( implode( ' ', $pieces ) ) . '>';
 		$result .= $this->getValue() . '</textarea>';

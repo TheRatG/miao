@@ -7,13 +7,13 @@ class Miao_Form_Control_Select extends Miao_Form_Control
 	 */
 	private $_items = array();
 	private $_selected = false;
-	
+
 	public function __construct( $id, array $attributes = array(), $items = array() )
 	{
 		parent::__construct( $id, $attributes );
 		$this->setItems( $items );
 	}
-	
+
 	public function setItems( array $items )
 	{
 		$this->_items = array();
@@ -22,11 +22,11 @@ class Miao_Form_Control_Select extends Miao_Form_Control
 			$control = new Miao_Form_Control_SelectOption( $this->getName());
 			$control->setValue( $key );
 			$control->setLabel( $value );
-			
+
 			$this->_items[] = $control;
 		}
 	}
-	
+
 	public function setValue( $value )
 	{
 		foreach ( $this->_items as $key => $control )
@@ -38,15 +38,15 @@ class Miao_Form_Control_Select extends Miao_Form_Control
 			}
 		}
 	}
-	
+
 	public function render()
 	{
 		$pieces = array();
 		$pieces[] = "<select";
 		$pieces[] = sprintf( 'name="%s"', $this->getName() );
-		$pieces[] = $this->_renderAttributes();
+		$pieces[] = $this->renderAttributes();
 		$pieces[] = ">";
-		
+
 		foreach ( $this->_items as $key => $control )
 		{
 			if ( $key === $this->_selected )
@@ -55,7 +55,7 @@ class Miao_Form_Control_Select extends Miao_Form_Control
 			}
 			$pieces[] = $control->render();
 		}
-		
+
 		$pieces[] = '</select>';
 
 		$result = implode( chr( 10 ), $pieces );

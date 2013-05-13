@@ -141,6 +141,19 @@ class Miao_Form_Control_Checkbox extends Miao_Form_Control_Input
 	{
 		$pieces = array();
 
+		if ( $this->isChecked() )
+		{
+			$this->addAttribute( 'checked', 'checked' );
+		}
+
+		if ( $this->useHiddenElement() )
+		{
+			$pieces[] = '<input type="hidden"';
+			$pieces[] = sprintf( 'name="%s"', htmlspecialchars( $this->getName() ) );
+			$pieces[] = 'value="0"';
+			$pieces[] = '/>';
+		}
+
 		$pieces[] = '<input';
 		$pieces[] = sprintf( 'name="%s"', htmlspecialchars( $this->getName() ) );
 		$value = $this->getValue();
@@ -153,16 +166,8 @@ class Miao_Form_Control_Checkbox extends Miao_Form_Control_Input
 			$pieces[] = sprintf( 'value="1"' );
 		}
 		$pieces[] = $this->_renderType();
-		$pieces[] = $this->_renderAttributes();
+		$pieces[] = $this->renderAttributes();
 		$pieces[] = '/>';
-
-		if ( $this->useHiddenElement() )
-		{
-			$pieces[] = '<input type="hidden"';
-			$pieces[] = sprintf( 'name="%s"', htmlspecialchars( $this->getName() ) );
-			$pieces[] = 'value="0"';
-			$pieces[] = '/>';
-		}
 
 		$result = trim( implode( ' ', $pieces ) );
 		return $result;

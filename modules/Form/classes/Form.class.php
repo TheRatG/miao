@@ -169,7 +169,7 @@ class Miao_Form extends Miao_Form_Control
 		$pieces[] = sprintf( 'action="%s"', $this->getAction() );
 		$pieces[] = sprintf( 'method="%s"', $this->getMethod() );
 		$pieces[] = sprintf( 'enctype="%s"', $this->getEnctype() );
-		$pieces[] = $this->_renderAttributes();
+		$pieces[] = $this->renderAttributes();
 
 		$result = trim( implode( ' ', $pieces ) ) . '>';
 		return $result;

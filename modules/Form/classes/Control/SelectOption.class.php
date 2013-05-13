@@ -8,11 +8,11 @@ class Miao_Form_Control_SelectOption extends Miao_Form_Control_Input
 		$pieces = array();
 		$pieces[] = '<option';
 		$pieces[] = sprintf( 'value="%s"', htmlspecialchars( $this->getValue() ) );
-		$pieces[] = $this->_renderAttributes();
+		$pieces[] = $this->renderAttributes();
 		$pieces[] = '>';
 		$pieces[] = $this->label();
 		$result = trim( implode( ' ', $pieces ) ) . '</option>';
-		
+
 		return $result;
 	}
 }

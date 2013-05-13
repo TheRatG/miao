@@ -25,7 +25,7 @@ abstract class Miao_Form_Control_Input extends Miao_Form_Control
 			$pieces[] = sprintf( 'value="%s"', htmlspecialchars( $value ) );
 		}
 		$pieces[] = $this->_renderType();
-		$pieces[] = $this->_renderAttributes();
+		$pieces[] = $this->renderAttributes();
 		$result = trim( implode( ' ', $pieces ) ) . ' />';
 		return $result;
 	}
