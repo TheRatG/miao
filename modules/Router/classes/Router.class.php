@@ -320,15 +320,20 @@ class Miao_Router
 			$type = Miao_Router_Rule::TYPE_VIEWBLOCK;
 			$name = $ruleConfig[ $type ];
 		}
-		if ( array_key_exists( Miao_Router_Rule::TYPE_ACTION, $ruleConfig ) )
+		else if ( array_key_exists( Miao_Router_Rule::TYPE_ACTION, $ruleConfig ) )
 		{
 			$type = Miao_Router_Rule::TYPE_ACTION;
 			$name = $ruleConfig[ $type ];
 		}
-		if ( array_key_exists( Miao_Router_Rule::TYPE_VIEW, $ruleConfig ) )
+		else if ( array_key_exists( Miao_Router_Rule::TYPE_VIEW, $ruleConfig ) )
 		{
 			$type = Miao_Router_Rule::TYPE_VIEW;
 			$name = $ruleConfig[ $type ];
+		}
+		else
+		{
+			$message = sprintf( 'Unknown route type. Support: view, action, viewblock' );
+			throw new Miao_Router_Exception( $message );
 		}
 		$result[ 'name' ] = $name;
 		$result[ 'type' ] = $type;
