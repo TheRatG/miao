@@ -220,6 +220,11 @@ class Miao_Router_Rule
 		if ( empty( $this->_method ) )
 		{
 			$this->_method = 'GET';
+			//POST for actions is default
+			if ( self::TYPE_ACTION == $this->getType() )
+			{
+				$this->_method = 'POST';
+			}
 		}
 		return $this->_method;
 	}
