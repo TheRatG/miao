@@ -1,5 +1,7 @@
 <?php
 /**
+ * Box for multi control
+ *
  * @author vpak
  * @date 2013-05-13 17:28:34
  */
@@ -89,6 +91,14 @@ class Miao_Form_Control_Group extends Miao_Form_Control
 	public function validate()
 	{
 		$this->_isValid = $this->_validator->isValid( $this->getValue() );
+		if ( !empty( $this->_itemList ) )
+		{
+			$itemList = $this->getItemList();
+			foreach ( $itemList as $key => $item )
+			{
+				$this->_isValid = $item->validate() && $this->_isValid;
+			}
+		}
 		return $this->_isValid;
 	}
 
@@ -100,7 +110,6 @@ class Miao_Form_Control_Group extends Miao_Form_Control
 		if ( !empty( $value ) )
 		{
 			$this->_value = $value;
-			$itemList = $this->getItemList();
 			foreach ( $this->_value as $key => $value )
 			{
 				if ( !array_key_exists( $key, $this->_controlPrototypeList ) || !is_array(
@@ -108,15 +117,19 @@ class Miao_Form_Control_Group extends Miao_Form_Control
 				{
 					continue;
 				}
-
 				foreach ( $value as $itemKey => $itemValue )
 				{
+					if ( !array_key_exists($key, $this->_controlPrototypeList ) )
+					{
+						continue;
+					}
+
 					if ( !array_key_exists( $itemKey, $this->_itemList ) )
 					{
 						$this->addItem( $itemKey );
 					}
-					$item = $this->_itemList[ $key ];
-					$item->setValue( $itemValue );
+					$item = $this->_itemList[ $itemKey ];
+					$item->$key->setValue( $itemValue );
 				}
 			}
 		}

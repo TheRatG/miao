@@ -293,6 +293,29 @@ class Miao_Form extends Miao_Form_Control
 		return $obj;
 	}
 
+	/**
+	 * Create Group control, use it when you need multi block controls.
+	 *
+	 * @example
+	 * <code>
+	 * <input type="text" name="title[]" />
+	 * <input type="text" name="url[]" />
+	 * </code>
+	 *
+	 * @param string $name Group name, may be empty.
+	 * @param array $controls
+	 */
+	public function addGroup( $name, array $controls )
+	{
+		$obj = new Miao_Form_Control_Group( $name );
+		foreach ( $controls as $control )
+		{
+			$obj->addControl( $control );
+		}
+		$this->addControl( $obj );
+		return $obj;
+	}
+
 	public function render()
 	{
 		$pieces = array();
@@ -301,7 +324,6 @@ class Miao_Form extends Miao_Form_Control
 			$pieces[] = $control->render();
 		}
 		$result = implode( chr( 10 ), $pieces );
-
 		return $result;
 	}
 

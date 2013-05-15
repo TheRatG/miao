@@ -39,6 +39,16 @@ class Miao_Form_Control_Group_Item
 		return $result;
 	}
 
+	public function validate()
+	{
+		$result = true;
+		foreach ( $this->_controlList as $control )
+		{
+			$result = $control->validate() && $result;
+		}
+		return $result;
+	}
+
 	public function render()
 	{
 		$result = array();
@@ -75,5 +85,11 @@ class Miao_Form_Control_Group_Item
 			$name = sprintf( '%s[%s]', $controlName, $key );
 		}
 		return $name;
+	}
+
+	public function __destruct()
+	{
+		$this->_group = null;
+		unset( $this->_controlList );
 	}
 }
