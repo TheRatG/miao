@@ -39,7 +39,7 @@ abstract class Miao_Office_ViewBlock
 	 *
 	 * @var bool
 	 */
-	protected $_consumeExeption = true;
+	protected $_consumeException = true;
 
 	/**
 	 * конструктор
@@ -64,11 +64,11 @@ abstract class Miao_Office_ViewBlock
 	/**
 	 * Enable, disable throw Exception
 	 *
-	 * @param boolean $consumeExeption
+	 * @param boolean $consumeException
 	 */
-	public function setConsumeExeption( $consumeExeption )
+	public function setConsumeException( $consumeException )
 	{
-		$this->_consumeExeption = $consumeExeption;
+		$this->_consumeException = $consumeException;
 	}
 
 	/**
@@ -178,7 +178,7 @@ abstract class Miao_Office_ViewBlock
 			$this->_templateEngine->setTemplatesDir( $templatesDir );
 			$this->_templateEngine->resetTemplateVariables();
 		}
-		$this->_templateEngine->setConsumeExeption( $this->_consumeExeption );
+		$this->_templateEngine->setConsumeException( $this->_consumeException );
 	}
 
 	/**

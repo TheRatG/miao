@@ -11,7 +11,7 @@ class Miao_TemplatesEngine_PhpNative implements Miao_TemplatesEngine_Interface
 	 *
 	 * @var bool
 	 */
-	protected $_consumeExeption = true;
+	protected $_consumeException = true;
 
 	/**
 	 *
@@ -62,17 +62,17 @@ class Miao_TemplatesEngine_PhpNative implements Miao_TemplatesEngine_Interface
 	/**
 	 * @return the $_consumeExeption
 	 */
-	public function getConsumeExeption()
+	public function getConsumeException()
 	{
-		return $this->_consumeExeption;
+		return $this->_consumeException;
 	}
 
 	/**
-	 * @param boolean $consumeExeption
+	 * @param boolean $consumeException
 	 */
-	public function setConsumeExeption( $consumeExeption )
+	public function setConsumeException( $consumeException )
 	{
-		$this->_consumeExeption = $consumeExeption;
+		$this->_consumeException = $consumeException;
 	}
 
 	/**
@@ -362,7 +362,7 @@ class Miao_TemplatesEngine_PhpNative implements Miao_TemplatesEngine_Interface
 				$this->_exceptionToString( $e, $absoluteFilename ),
 				Miao_Log::ERR );
 
-			if ( !$this->getConsumeExeption() )
+			if ( !$this->getConsumeException() )
 			{
 				throw $e;
 			}
