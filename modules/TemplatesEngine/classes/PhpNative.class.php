@@ -9,6 +9,12 @@ class Miao_TemplatesEngine_PhpNative implements Miao_TemplatesEngine_Interface
 
 	/**
 	 *
+	 * @var bool
+	 */
+	protected $_consumeExeption = true;
+
+	/**
+	 *
 	 * @var Miao_Log
 	 */
 	protected $_log = null;
@@ -32,7 +38,8 @@ class Miao_TemplatesEngine_PhpNative implements Miao_TemplatesEngine_Interface
 		{
 			$debugMode = $this->getDebugMode();
 			$logFilename = $this->_logFilename;
-			$log = Miao_Log::easyFactory( $logFilename, false, $debugMode ? Miao_Log::DEBUG : Miao_Log::ERR );
+			$log = Miao_Log::easyFactory( $logFilename, false,
+				$debugMode ? Miao_Log::DEBUG : Miao_Log::ERR );
 			$this->_log = $log;
 		}
 
@@ -50,6 +57,22 @@ class Miao_TemplatesEngine_PhpNative implements Miao_TemplatesEngine_Interface
 	{
 		$this->setTemplatesDir( $templatesDir );
 		$this->_initByConfig( $debugMode );
+	}
+
+	/**
+	 * @return the $_consumeExeption
+	 */
+	public function getConsumeExeption()
+	{
+		return $this->_consumeExeption;
+	}
+
+	/**
+	 * @param boolean $consumeExeption
+	 */
+	public function setConsumeExeption( $consumeExeption )
+	{
+		$this->_consumeExeption = $consumeExeption;
 	}
 
 	/**
@@ -276,7 +299,8 @@ class Miao_TemplatesEngine_PhpNative implements Miao_TemplatesEngine_Interface
 		}
 		catch ( Exception $e )
 		{
-			$this->getLogObj()->log( $this->_exceptionToString( $e ), Miao_Log::ERR );
+			$this->getLogObj()->log( $this->_exceptionToString( $e ),
+				Miao_Log::ERR );
 			return ( $this->_debugMode ? $this->_exceptionToString( $e ) : '' );
 		}
 	}
@@ -334,10 +358,19 @@ class Miao_TemplatesEngine_PhpNative implements Miao_TemplatesEngine_Interface
 		{
 			$resultUnbelievableNameForVar .= $this->_endBlock();
 
-			$this->getLogObj()->log( $this->_exceptionToString( $e, $absoluteFilename ), Miao_Log::ERR );
+			$this->getLogObj()->log(
+				$this->_exceptionToString( $e, $absoluteFilename ),
+				Miao_Log::ERR );
+
+			if ( !$this->getConsumeExeption() )
+			{
+				throw $e;
+			}
+
 			if ( $this->_debugMode )
 			{
-				$resultUnbelievableNameForVar .= $this->_exceptionToString( $e, $absoluteFilename );
+				$resultUnbelievableNameForVar .= $this->_exceptionToString( $e,
+					$absoluteFilename );
 			}
 		}
 		return $resultUnbelievableNameForVar;
@@ -390,7 +423,8 @@ class Miao_TemplatesEngine_PhpNative implements Miao_TemplatesEngine_Interface
 	 */
 	protected function _checkFile( $absoluteFilename )
 	{
-		if ( ( !file_exists( $absoluteFilename ) ) || ( !is_readable( $absoluteFilename ) ) )
+		if ( ( !file_exists( $absoluteFilename ) ) || ( !is_readable(
+			$absoluteFilename ) ) )
 		{
 			if ( $this->_debugMode )
 			{
@@ -413,7 +447,9 @@ class Miao_TemplatesEngine_PhpNative implements Miao_TemplatesEngine_Interface
 		$trace = $e->getTrace();
 		$trace = array_slice( $trace, 0, 3 );
 
-		$result = sprintf( "Uri: \"%s\". \nTmpl: %s\nMessage: %s\nTrace: %s", $_SERVER[ 'REQUEST_URI' ], $absoluteFilename, $e->getMessage(), print_r( $trace, true ) );
+		$result = sprintf( "Uri: \"%s\". \nTmpl: %s\nMessage: %s\nTrace: %s",
+			$_SERVER[ 'REQUEST_URI' ], $absoluteFilename, $e->getMessage(),
+			print_r( $trace, true ) );
 		return $result;
 	}
 }

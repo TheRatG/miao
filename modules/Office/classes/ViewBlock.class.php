@@ -36,6 +36,12 @@ abstract class Miao_Office_ViewBlock
 	protected $_name;
 
 	/**
+	 *
+	 * @var bool
+	 */
+	protected $_consumeExeption = true;
+
+	/**
 	 * конструктор
 	 *
 	 * @param string $name
@@ -53,6 +59,16 @@ abstract class Miao_Office_ViewBlock
 		$this->setTemplates( $templates );
 		$this->setProcessParams( $block_class_process_params );
 		$this->setName( $name );
+	}
+
+	/**
+	 * Enable, disable throw Exception
+	 *
+	 * @param boolean $consumeExeption
+	 */
+	public function setConsumeExeption( $consumeExeption )
+	{
+		$this->_consumeExeption = $consumeExeption;
 	}
 
 	/**
@@ -162,6 +178,7 @@ abstract class Miao_Office_ViewBlock
 			$this->_templateEngine->setTemplatesDir( $templatesDir );
 			$this->_templateEngine->resetTemplateVariables();
 		}
+		$this->_templateEngine->setConsumeExeption( $this->_consumeExeption );
 	}
 
 	/**
