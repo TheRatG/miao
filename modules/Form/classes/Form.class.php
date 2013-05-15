@@ -112,14 +112,34 @@ class Miao_Form extends Miao_Form_Control
 
 		foreach ( $this->_controls as $key => $control )
 		{
+			$isMultiple = true;
 			if ( array_key_exists( $key, $data ) )
 			{
 				$this->_controls[ $key ]->setValue( $data[ $key ] );
+				$isMultiple = false;
 			}
 			if ( $control instanceof Miao_Form_Control_File && array_key_exists(
 				$key, $_FILES ) )
 			{
 				$this->_controls[ $key ]->setValue( $_FILES[ $key ] );
+				$isMultiple = false;
+			}
+			if ( $isMultiple )
+			{
+				$value = array();
+				$matches = preg_grep( '/^' . $key . '\[.*\]$/',
+					array_keys( $data ) );
+				if ( !empty( $matches ) )
+				{
+					foreach ( $matches as $match )
+					{
+						$value[] = $data[ $match ];
+					}
+				}
+				if ( !empty( $value ) )
+				{
+					$this->_controls[ $key ]->setValue( $value );
+				}
 			}
 		}
 	}
