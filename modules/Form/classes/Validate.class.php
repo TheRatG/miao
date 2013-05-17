@@ -87,6 +87,16 @@ class Miao_Form_Validate
 		return $result;
 	}
 
+	/**
+     * Returns first error message
+     * @return string
+     */
+	public function getMessage()
+	{
+		$ret = current( $this->_messages );
+		return $ret;
+	}
+
 	public function reset()
 	{
 		$this->_messages = array();

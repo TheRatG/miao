@@ -16,7 +16,7 @@ class Miao_Form extends Miao_Form_Control
 
 	/**
 	 *
-	 * @var array Miao_Form_Control
+	 * @var Miao_Form_Control[]
 	 */
 	protected $_controls = array();
 
@@ -69,7 +69,7 @@ class Miao_Form extends Miao_Form_Control
 	}
 
 	/**
-	 * @return the $_controls
+	 * @return Miao_Form_Control[]
 	 */
 	public function getControls()
 	{
@@ -87,7 +87,7 @@ class Miao_Form extends Miao_Form_Control
 		$this->_controls[ $index ] = $obj;
 	}
 
-	public function __construct( $id, $action = '/', array $attributes = array() )
+	public function __construct( $id = '', $action = '/', array $attributes = array() )
 	{
 		$this->_exceptAttrMap = array( 'id', 'method', 'action', 'enctype' );
 		$this->setAction( $action );
@@ -334,6 +334,26 @@ class Miao_Form extends Miao_Form_Control
 		}
 		$this->addControl( $obj );
 		return $obj;
+	}
+
+	/**
+	     * Returns array of errors
+	     *
+	     * @return array
+	     */
+	public function getErrors()
+	{
+		$errors = array();
+		foreach ( $this->getControls() as $control )
+		{
+			if ( !$control->isValid() )
+			{
+				$errors[] = array(
+					'name' => $control->getName(),
+					'error' => $control->error()->getMessage() );
+			}
+		}
+		return $errors;
 	}
 
 	public function render()
