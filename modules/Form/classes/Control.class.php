@@ -210,9 +210,9 @@ abstract class Miao_Form_Control
 		return $result;
 	}
 
-	public function validate()
+	public function validate( Miao_Form $form = null )
 	{
-		$this->_isValid = $this->_validator->isValid( $this->getValue() );
+		$this->_isValid = $this->_validator->isValid( $this->getValue(), $form );
 		return $this->_isValid;
 	}
 

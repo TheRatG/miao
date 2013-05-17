@@ -174,7 +174,7 @@ class Miao_Form extends Miao_Form_Control
 			$result = true;
 			foreach ( $this->_controls as $control )
 			{
-				$result = $control->validate() && $result;
+				$result = $control->validate( $this ) && $result;
 			}
 			$this->_isValid = $result;
 		}
