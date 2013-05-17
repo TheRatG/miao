@@ -53,14 +53,14 @@ class Miao_Form_Validate
 	 * @param unknown_type $value
 	 * @return boolean
 	 */
-	public function isValid( $value )
+	public function isValid( $value, Miao_Form $form = null )
 	{
 		$this->_messages = array();
 		$result = true;
 		foreach ( $this->_validators as $element )
 		{
 			$validator = $element[ 'instance' ];
-			if ( $validator->isValid( $value ) )
+			if ( $validator->isValid( $value, $form ) )
 			{
 				continue;
 			}
