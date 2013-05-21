@@ -88,6 +88,7 @@ abstract class Miao_Form_Control
 
 	/**
 	 * @param string $name
+     * @return Miao_Form_Control
 	 */
 	public function setName( $name )
 	{
