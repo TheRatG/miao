@@ -42,4 +42,34 @@ class Miao_Form_Validate_Test extends PHPUnit_Framework_TestCase
 
 		return $data;
 	}
+
+	/**
+	 * @dataProvider providerTestSeveralValidator
+	 * @param unknown_type $value
+	 */
+	public function testSeveralValidator( $value )
+	{
+		$control = new Miao_Form_Control_Text( 'title' );
+		$control->setRequired( 'require' );
+
+		$control->addValidator( new Miao_Form_Validate_Length( 5 ), false );
+		$control->addValidator( new Miao_Form_Validate_Length( 6 ), false );
+
+		$control->setValue( $value );
+		$control->validate();
+
+		$expected = $control->error()->__toString();
+	}
+
+	public function providerTestSeveralValidator()
+	{
+		$data = array();
+
+		$data[] = array( '123' );
+		$data[] = array( '12345' );
+		$data[] = array( '123456' );
+		$data[] = array( '1234567' );
+
+		return $data;
+	}
 }

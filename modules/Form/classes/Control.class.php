@@ -79,7 +79,7 @@ abstract class Miao_Form_Control
 	}
 
 	/**
-	 * @return the $_name
+	 * @return string the $_name
 	 */
 	public function getName()
 	{

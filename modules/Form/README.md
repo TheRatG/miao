@@ -39,3 +39,18 @@ if ( $form->isValid( $_POST ) )
 
 <?=$form->end()?>
 ```
+
+
+## Validate
+Create your validator and if you need get form instance use this code in method isValid()
+
+```php
+...
+public function isValid( $value )
+{
+    $form = func_get_arg( 1 );
+    
+    ...
+}
+... 
+```

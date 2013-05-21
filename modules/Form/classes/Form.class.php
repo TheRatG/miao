@@ -21,7 +21,7 @@ class Miao_Form extends Miao_Form_Control
 	protected $_controls = array();
 
 	/**
-	 * @return the $_action
+	 * @return string the $_action
 	 */
 	public function getAction()
 	{
@@ -37,23 +37,23 @@ class Miao_Form extends Miao_Form_Control
 	}
 
 	/**
-	 * @return the $_type
+	 * @return string the $_type
 	 */
 	public function getMethod()
 	{
 		return $this->_method;
 	}
 
-	/**
-	 * @param string $type
-	 */
-	public function setMethod( $method )
+    /**
+     * @param $method
+     */
+    public function setMethod( $method )
 	{
 		$this->_method = $method;
 	}
 
 	/**
-	 * @return the $_enctype
+	 * @return string the $_enctype
 	 */
 	public function getEnctype()
 	{
@@ -108,38 +108,16 @@ class Miao_Form extends Miao_Form_Control
 
 	public function load( $data )
 	{
-		$data = self::getHtmlName( $data );
-
 		foreach ( $this->_controls as $key => $control )
 		{
-			$isMultiple = true;
 			if ( array_key_exists( $key, $data ) )
 			{
 				$this->_controls[ $key ]->setValue( $data[ $key ] );
-				$isMultiple = false;
 			}
 			if ( $control instanceof Miao_Form_Control_File && array_key_exists(
 				$key, $_FILES ) )
 			{
 				$this->_controls[ $key ]->setValue( $_FILES[ $key ] );
-				$isMultiple = false;
-			}
-			if ( $isMultiple )
-			{
-				$value = array();
-				$matches = preg_grep( '/^' . $key . '\[.*\]$/',
-					array_keys( $data ) );
-				if ( !empty( $matches ) )
-				{
-					foreach ( $matches as $match )
-					{
-						$value[] = $data[ $match ];
-					}
-				}
-				if ( !empty( $value ) )
-				{
-					$this->_controls[ $key ]->setValue( $value );
-				}
 			}
 		}
 	}
@@ -165,6 +143,7 @@ class Miao_Form extends Miao_Form_Control
 
 	/**
 	 * @param array $data from data
+     * @return bool
 	 */
 	public function isValid( array $data = array() )
 	{
@@ -203,7 +182,7 @@ class Miao_Form extends Miao_Form_Control
 
 	/**
 	 *
-	 * @param unknown_type $name
+	 * @param string $name
 	 * @param array $attributes
 	 * @return Miao_Form_Control_Text
 	 */
@@ -216,7 +195,7 @@ class Miao_Form extends Miao_Form_Control
 
 	/**
 	 *
-	 * @param unknown_type $name
+	 * @param string $name
 	 * @param array $attributes
 	 * @return Miao_Form_Control_Text
 	 */
@@ -287,7 +266,7 @@ class Miao_Form extends Miao_Form_Control
 	 * @param string $name
 	 * @param array $attributes
 	 * @param Miao_Form_Control $captcha
-	 * @return Ambigous <Miao_Form_Control, Miao_Form_Control_Captcha>
+	 * @return Miao_Form_Control_Captcha
 	 */
 	public function addCaptcha( $name, array $attributes = array(), Miao_Form_Control $captcha = null )
 	{
@@ -324,7 +303,8 @@ class Miao_Form extends Miao_Form_Control
 	 *
 	 * @param string $name Group name, may be empty.
 	 * @param array $controls
-	 */
+     * @return \Miao_Form_Control_Group
+     */
 	public function addGroup( $name, array $controls )
 	{
 		$obj = new Miao_Form_Control_Group( $name );
@@ -337,20 +317,23 @@ class Miao_Form extends Miao_Form_Control
 	}
 
 	/**
-	     * Returns array of errors
-	     *
-	     * @return array
-	     */
+     * Returns array of errors
+     *
+     * @return array
+     */
 	public function getErrors()
 	{
 		$errors = array();
+		/** @var Miao_Form_Control $control */
+		/** @var Miao_Form_Validate $validator */
 		foreach ( $this->getControls() as $control )
 		{
 			if ( !$control->isValid() )
 			{
+				$validator = $control->error();
 				$errors[] = array(
 					'name' => $control->getName(),
-					'error' => $control->error()->getMessage() );
+					'error' => $validator->getMessage() );
 			}
 		}
 		return $errors;
