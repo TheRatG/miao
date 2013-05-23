@@ -134,7 +134,12 @@ class Miao_Form_Control_Checkbox extends Miao_Form_Control_Input
 	 */
 	public function getValue()
 	{
-		return $this->getCheckedValue();
+		$result = $this->getUncheckedValue();
+		if ( $this->isChecked() )
+		{
+			$result = $this->getCheckedValue();
+		}
+		return $result;
 	}
 
 	public function render()

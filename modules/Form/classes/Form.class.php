@@ -317,6 +317,20 @@ class Miao_Form extends Miao_Form_Control
 	}
 
 	/**
+	 * List control
+	 *
+	 * @param unknown_type $name
+	 * @param unknown_type $control
+	 * @return Miao_Form_Control_List
+	 */
+	public function addList( $control, array $values = array() )
+	{
+		$obj = new Miao_Form_Control_List( $control, $values );
+		$this->addControl( $obj );
+		return $obj;
+	}
+
+	/**
      * Returns array of errors
      *
      * @return array
