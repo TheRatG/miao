@@ -10,17 +10,17 @@ class Miao_Form_Control_Checkbox extends Miao_Form_Control_Input
 	/**
 	 * @var bool
 	 */
-	protected $useHiddenElement = true;
+	protected $_useHiddenElement = true;
 
 	/**
 	 * @var string
 	 */
-	protected $uncheckedValue = '0';
+	protected $_uncheckedValue = '0';
 
 	/**
 	 * @var string
 	 */
-	protected $checkedValue = '1';
+	protected $_checkedValue = '1';
 
 	/**
 	 * Do we render hidden element?
@@ -30,7 +30,7 @@ class Miao_Form_Control_Checkbox extends Miao_Form_Control_Input
 	 */
 	public function setUseHiddenElement( $useHiddenElement )
 	{
-		$this->useHiddenElement = ( bool ) $useHiddenElement;
+		$this->_useHiddenElement = ( bool ) $useHiddenElement;
 		return $this;
 	}
 
@@ -41,7 +41,7 @@ class Miao_Form_Control_Checkbox extends Miao_Form_Control_Input
 	 */
 	public function useHiddenElement()
 	{
-		return $this->useHiddenElement;
+		return $this->_useHiddenElement;
 	}
 
 	/**
@@ -52,7 +52,7 @@ class Miao_Form_Control_Checkbox extends Miao_Form_Control_Input
 	 */
 	public function setUncheckedValue( $uncheckedValue )
 	{
-		$this->uncheckedValue = $uncheckedValue;
+		$this->_uncheckedValue = $uncheckedValue;
 		return $this;
 	}
 
@@ -63,7 +63,7 @@ class Miao_Form_Control_Checkbox extends Miao_Form_Control_Input
 	 */
 	public function getUncheckedValue()
 	{
-		return $this->uncheckedValue;
+		return $this->_uncheckedValue;
 	}
 
 	/**
@@ -74,7 +74,7 @@ class Miao_Form_Control_Checkbox extends Miao_Form_Control_Input
 	 */
 	public function setCheckedValue( $checkedValue )
 	{
-		$this->checkedValue = $checkedValue;
+		$this->_checkedValue = $checkedValue;
 		return $this;
 	}
 
@@ -85,7 +85,7 @@ class Miao_Form_Control_Checkbox extends Miao_Form_Control_Input
 	 */
 	public function getCheckedValue()
 	{
-		return $this->checkedValue;
+		return $this->_checkedValue;
 	}
 
 	/**
@@ -95,7 +95,7 @@ class Miao_Form_Control_Checkbox extends Miao_Form_Control_Input
 	 */
 	public function isChecked()
 	{
-		return ( bool ) $this->value;
+		return ( bool ) $this->_value;
 	}
 
 	/**
@@ -106,7 +106,7 @@ class Miao_Form_Control_Checkbox extends Miao_Form_Control_Input
 	 */
 	public function setChecked( $value )
 	{
-		$this->value = ( bool ) $value;
+		$this->_value = ( bool ) $value;
 		return $this;
 	}
 
@@ -120,11 +120,11 @@ class Miao_Form_Control_Checkbox extends Miao_Form_Control_Input
 	{
 		if ( is_bool( $value ) )
 		{
-			$this->value = $value;
+			$this->_value = $value;
 		}
 		else
 		{
-			$this->value = $value === $this->getCheckedValue();
+			$this->_value = $value === $this->getCheckedValue();
 		}
 		return $this;
 	}

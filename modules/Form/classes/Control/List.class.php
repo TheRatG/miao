@@ -106,7 +106,7 @@ class Miao_Form_Control_List extends Miao_Form_Control implements ArrayAccess, C
      * @param array $values
      * @return Miao_Form_Control_List
      */
-	public function setValue( array $values )
+	public function setValue( $values )
 	{
 		if ( !empty( $values ) )
 		{
