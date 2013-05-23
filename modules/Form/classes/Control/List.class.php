@@ -206,7 +206,8 @@ class Miao_Form_Control_List extends Miao_Form_Control implements ArrayAccess, C
 		if ( is_null( $offset ) )
 		{
 			$this->_items[] = null;
-			$offset = array_pop( array_keys( $this->_items ) );
+			$keys = array_keys( $this->_items );
+			$offset = array_pop( $keys );
 		}
 		$this->_items[ $offset ] = $value;
 
