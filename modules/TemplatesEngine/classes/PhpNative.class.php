@@ -385,10 +385,6 @@ class Miao_TemplatesEngine_PhpNative implements Miao_TemplatesEngine_Interface
 	protected function _startBlock()
 	{
 		$result = '';
-		if ( ob_get_level() == 0 )
-		{
-			ob_start();
-		}
 		ob_start();
 		return $result;
 	}
