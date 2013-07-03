@@ -119,6 +119,10 @@ class Miao_Router
 		{
 			list( $uri ) = explode( '?', $_SERVER[ 'REQUEST_URI' ] );
 		}
+		else
+		{
+			throw new Miao_Router_Exception( 'Param $_SERVER[\'REQUEST_URI\'] is undefined' );
+		}
 		return $uri;
 	}
 
@@ -186,11 +190,7 @@ class Miao_Router
 
 		if ( $result == false && $throwException )
 		{
-			if ( empty( $method ) )
-			{
-				$method = self::getRequestMethod();
-			}
-			$message = sprintf( 'Rule for uri (%s), method (%s) not found, please check your config', $uri, $method );
+			$message = sprintf( 'Rule for uri (%s) not found, please check your config', $uri );
 			throw new Miao_Router_Exception( $message );
 		}
 		return $result;
@@ -316,25 +316,20 @@ class Miao_Router
 			$type = Miao_Router_Rule::TYPE_VIEWBLOCK;
 			$name = $ruleConfig[ $type ];
 		}
-		else if ( array_key_exists( Miao_Router_Rule::TYPE_ACTION, $ruleConfig ) )
+		if ( array_key_exists( Miao_Router_Rule::TYPE_ACTION, $ruleConfig ) )
 		{
 			$type = Miao_Router_Rule::TYPE_ACTION;
 			$name = $ruleConfig[ $type ];
 		}
-		else if ( array_key_exists( Miao_Router_Rule::TYPE_VIEW, $ruleConfig ) )
+		if ( array_key_exists( Miao_Router_Rule::TYPE_VIEW, $ruleConfig ) )
 		{
 			$type = Miao_Router_Rule::TYPE_VIEW;
 			$name = $ruleConfig[ $type ];
 		}
-		else
-		{
-			$message = sprintf( 'Unknown route type. Support: view, action, viewblock' );
-			throw new Miao_Router_Exception( $message );
-		}
 		$result[ 'name' ] = $name;
 		$result[ 'type' ] = $type;
 		$result[ 'rule' ] = $ruleConfig[ 'rule' ];
-		$result[ 'rule' ] = $ruleConfig[ 'rule' ];
+		$result[ 'prefix' ] = self::checkAndReturnParam( $ruleConfig, 'prefix', '' );
 		$result[ 'norewrite' ] = self::checkAndReturnParam( $ruleConfig, 'norewrite', false );
 		$result[ 'desc' ] = self::checkAndReturnParam( $ruleConfig, 'desc', $name );
 		if ( array_key_exists( 'method', $ruleConfig ) )

@@ -8,6 +8,7 @@ class Miao_Router_Rule
 	const TYPE_VIEW = 'view';
 	const TYPE_ACTION = 'action';
 	const TYPE_VIEWBLOCK = 'viewblock';
+
 	private $_magicMap = array(
 		self::TYPE_VIEW => '_view',
 		self::TYPE_ACTION => '_action',
@@ -76,7 +77,7 @@ class Miao_Router_Rule
 		}
 
 		$result = false;
-		if ( $this->_checkMethod( $method ) )
+		if ( $method == $this->getMethod() )
 		{
 			$parts = explode( '/', trim( $uri, '/' ) );
 			$result = array(
@@ -220,7 +221,6 @@ class Miao_Router_Rule
 		if ( empty( $this->_method ) )
 		{
 			$this->_method = 'GET';
-			//POST for actions is default
 			if ( self::TYPE_ACTION == $this->getType() )
 			{
 				$this->_method = 'POST';
@@ -360,6 +360,10 @@ class Miao_Router_Rule
 		else
 		{
 			$params[ $this->_magicMap[ $this->_type ] ] = $this->_name;
+			if ( $this->getPrefix() )
+			{
+			    $params[ '_prefix' ] = $this->getPrefix();
+			}
 
 			/** @fixme */
 			$suffix = substr( $this->_rule, -1 ) == '/' ? '/' : '';
@@ -381,18 +385,6 @@ class Miao_Router_Rule
 		return $rule;
 	}
 
-	protected function _checkMethod( $method )
-	{
-		$ruleMethod = $this->getMethod();
-		$result = false;
-		//because head and get in Office module equals
-		if ( $method == $ruleMethod || ( 'HEAD' == $method && 'GET' == $ruleMethod ) )
-		{
-			$result = true;
-		}
-		return $result;
-	}
-
 	protected function _isParam( $str )
 	{
 		return ':' == $str[ 0 ];
@@ -410,7 +402,7 @@ class Miao_Router_Rule
 		$parts = explode( '/', $rule );
 		foreach ( $parts as $value )
 		{
-			if ( $value && ':' == $value[ 0 ] )
+			if ( ':' == $value[ 0 ] )
 			{
 				$id = substr( $value, 1 );
 				$config = $this->_searchValidatorConfigById( $id, $validators );
