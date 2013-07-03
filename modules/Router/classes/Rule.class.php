@@ -8,6 +8,7 @@ class Miao_Router_Rule
 	const TYPE_VIEW = 'view';
 	const TYPE_ACTION = 'action';
 	const TYPE_VIEWBLOCK = 'viewblock';
+
 	private $_magicMap = array(
 		self::TYPE_VIEW => '_view',
 		self::TYPE_ACTION => '_action',
@@ -63,7 +64,7 @@ class Miao_Router_Rule
 		$validators = Miao_Router::checkAndReturnParam( $config, 'validators',
 			array() );
         $norewrite = Miao_Router::checkAndReturnParam( $config, 'norewrite', '' );
-        
+
 		$result = new self( $prefix, $type, $name, $rule, $method, $validators, $desc, $norewrite );
 		return $result;
 	}
@@ -126,8 +127,8 @@ class Miao_Router_Rule
 	{
 		return $this->_prefix;
 	}
-    
-    
+
+
 	/**
 	 * @param string $prefix
 	 */
@@ -135,7 +136,7 @@ class Miao_Router_Rule
 	{
 		$this->_prefix = $prefix;
 	}
-    
+
     public function setNorewrite( $norewrite )
     {
         $this->_norewrite = (bool)$norewrite;
@@ -316,7 +317,7 @@ class Miao_Router_Rule
 			throw new Miao_Router_Rule_Exception( sprintf(
 				'Bad rewrite mode: %s', $mode ) );
 		}
-        
+
         if ( $this->_norewrite )
         {
             $rule = sprintf( '# rule asks to skip it /%s', $this->_rule  );
@@ -359,6 +360,10 @@ class Miao_Router_Rule
 		else
 		{
 			$params[ $this->_magicMap[ $this->_type ] ] = $this->_name;
+			if ( $this->getPrefix() )
+			{
+			    $params[ '_prefix' ] = $this->getPrefix();
+			}
 
 			/** @fixme */
 			$suffix = substr( $this->_rule, -1 ) == '/' ? '/' : '';
