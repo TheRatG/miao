@@ -42,6 +42,7 @@ require_once 'Plugin/PHPExcel.class.php';
 require_once 'Plugin/PHPUnit.class.php';
 require_once 'Plugin/Pheanstalk.class.php';
 require_once 'Plugin/Pear.class.php';
+require_once 'Plugin/Doctrine.class.php';
 
 abstract class Miao_Autoload_Plugin
 {
