@@ -119,10 +119,6 @@ class Miao_Router
 		{
 			list( $uri ) = explode( '?', $_SERVER[ 'REQUEST_URI' ] );
 		}
-		else
-		{
-			throw new Miao_Router_Exception( 'Param $_SERVER[\'REQUEST_URI\'] is undefined' );
-		}
 		return $uri;
 	}
 
