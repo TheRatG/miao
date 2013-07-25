@@ -57,7 +57,7 @@ class Miao_Autoload
 	{
 		if ( is_null( self::$_instance ) )
 		{
-			self::$_instance = new self();
+			self::$_instance = new static();
 		}
 		return self::$_instance;
 	}
