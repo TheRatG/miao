@@ -2,6 +2,9 @@
 namespace Miao\Autoload;
 
 require_once 'Plugin/Standart.php';
+require_once 'Plugin/Pear.php';
+require_once 'Plugin/IncludePath.php';
+require_once 'Plugin/PHPUnit.php';
 
 abstract class Plugin
 {

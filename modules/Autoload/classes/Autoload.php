@@ -1,5 +1,8 @@
 <?php
-namespace Miao\Autoload;
+namespace Miao;
+
+use Miao\Autoload\Plugin;
+use Miao\Autoload\Exception;
 
 require_once 'Exception.php';
 require_once 'Plugin.php';
@@ -38,20 +41,21 @@ class Autoload
      */
     static public function init( array $libs )
     {
-        $auto = self::getInstance();
+        $self = self::getInstance();
         foreach ( $libs as $libItem )
         {
-            $auto->checkConfigItem( $libItem );
+            $self->checkConfigItem( $libItem );
             if ( 0 !== strcasecmp( $libItem[ 'plugin' ], 'None' ) )
             {
-                $auto->registerItem( $libItem[ 'name' ], $libItem[ 'plugin' ], $libItem[ 'path' ] );
+                $self->registerItem( $libItem[ 'name' ], $libItem[ 'plugin' ], $libItem[ 'path' ] );
             }
         }
-        $res = spl_autoload_register( array( $auto, 'autoload' ), true );
+        $res = spl_autoload_register( array( $self, 'autoload' ), true );
         if ( !$res )
         {
             throw new Exception( 'Miao autoload did not register' );
         }
+        return $res;
     }
 
     /**
@@ -60,17 +64,17 @@ class Autoload
      */
     static public function getFilenameByClassName( $className )
     {
-        $auto = self::getInstance();
+        $self = self::getInstance();
         $result = '';
-        $auto->_history = array();
+        $self->_history = array();
 
-        foreach ( $auto->getRegisterList() as $item )
+        foreach ( $self->getRegisterList() as $item )
         {
             /**
              * @var $item Plugin
              */
             $filename = $item->getFilenameByClassName( $className );
-            $auto->_history[ ] = $filename;
+            $self->_history[ ] = $filename;
             if ( file_exists( $filename ) )
             {
                 $result = $filename;
@@ -80,9 +84,28 @@ class Autoload
         return $result;
     }
 
+    static public function classExists( $className )
+    {
+        $self = self::getInstance();
+        try
+        {
+            $result = $self->autoload( $className );
+        }
+        catch ( Exception\FileNotFound $e )
+        {
+            $result = false;
+        }
+        return $result;
+    }
+
     static public function throwFileNotFoundException( $message )
     {
         throw new Exception\FileNotFound( $message );
+    }
+
+    static public function throwClassNotFoundException( $message )
+    {
+        throw new Exception\ClassNotFound( $message );
     }
 
     public function checkConfigItem( array $libItem )
@@ -136,8 +159,8 @@ class Autoload
             require_once $filename;
             if ( !class_exists( $className, false ) && !interface_exists( $className, false ) )
             {
-                $message = sprintf( 'Class (%s) not found (%s)', $className, $filename );
-                self::throwFileNotFoundException( $message );
+                $message = sprintf( 'Class/interface (%s) not found (%s)', $className, $filename );
+                self::throwClassNotFoundException( $message );
             }
             else
             {

@@ -1,5 +1,5 @@
 <?php
-namespace Miao\Autoload;
+namespace Miao;
 
 class AutoloadTest extends \PHPUnit_Framework_TestCase
 {
@@ -31,7 +31,7 @@ class AutoloadTest extends \PHPUnit_Framework_TestCase
         $name = 'Miao';
         $plugin = 'Standart';
         $libPath = $this->_getLibPath();
-        $data[] = array( $name, $plugin, $libPath );
+        $data[ ] = array( $name, $plugin, $libPath );
 
         return $data;
     }
@@ -56,15 +56,17 @@ class AutoloadTest extends \PHPUnit_Framework_TestCase
     {
         $data = array();
 
-        $data[] = array(
+        $data[ ] = array(
             'Miao\\Autoload\\Plugin',
-            $this->_getLibPath() . '/modules/Autoload/classes/Plugin.php' );
+            $this->_getLibPath() . '/modules/Autoload/classes/Plugin.php'
+        );
 
-        $data[] = array(
+        $data[ ] = array(
             'Miao\\Autoload\\AutoloadTest',
-            $this->_getLibPath() . '/modules/Autoload/tests/classes/AutoloadTest.php' );
+            $this->_getLibPath() . '/modules/Autoload/tests/classes/AutoloadTest.php'
+        );
 
-        $data[] = array( 'Miao\\Autoload\\UnknownClass', '' );
+        $data[ ] = array( 'Miao\\Autoload\\UnknownClass', '' );
 
         return $data;
     }
@@ -91,11 +93,36 @@ class AutoloadTest extends \PHPUnit_Framework_TestCase
     {
         $data = array();
 
-        $data[] = array( 'Miao\\Autoload\\ClassInfo' );
+        $data[ ] = array( 'Miao\\Autoload\\ClassInfo' );
 
         $exceptionName = 'Miao\\Autoload\\Exception\\FileNotFound';
-        $data[] = array( 'Miao\\Autoload\\UnknownClass', $exceptionName );
-        $data[] = array( 'UnknownClass', $exceptionName );
+        $data[ ] = array( 'Miao\\Autoload\\UnknownClass', $exceptionName );
+        $data[ ] = array( 'UnknownClass', $exceptionName );
+
+        return $data;
+    }
+
+    /**
+     * @dataProvider providerTestClassExists
+     * @param $className
+     * @param $actual
+     */
+    public function testClassExists( $className, $actual )
+    {
+        $autoload = Autoload::getInstance();
+        $autoload->registerItem( 'Miao', 'Standart', $this->_getLibPath() );
+
+        $expected = $autoload->classExists( $className );
+        $this->assertEquals( $expected, $actual );
+    }
+
+    public function providerTestClassExists()
+    {
+        $data = array();
+
+        $data[ ] = array( 'Miao\\Autoload\\ClassInfo', true );
+        $data[ ] = array( 'Miao\\Autoload', true );
+        $data[ ] = array( 'Miao\\Autoload\\UnknownClass', false );
 
         return $data;
     }

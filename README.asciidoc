@@ -18,15 +18,13 @@ http://www.phpunit.de/manual/current/en/installation.html
 
 -----
 pear config-set auto_discover 1; 
-pear install --alldeps pear.phpunit.de/PHPUnit
+pear install pear.phpunit.de/PHPUnit --alldeps
+pear install phpunit/PHPUnit_Selenium
+pear install phpunit/PHPUnit_Story
 -----
 
 === Test
 Убеждаемся в том что все необходимое установлено, запускаем тесты.
 -----
-php scripts/test.php -d Miao
+phpunit
 -----
-
-=== TODO
-
-Merge with trunk

@@ -7,8 +7,15 @@ class Standart extends Autoload\Plugin
 {
     public function getFilenameByClassName( $className )
     {
-        $items = explode( '\\', $className );
         $result = '';
+        if ( strpos( $className, '\\' ) === false )
+        {
+            $items = explode( '_', $className );
+        }
+        else
+        {
+            $items = explode( '\\', $className );
+        }
         if ( count( $items ) >= 2 && $items[ 0 ] == $this->getName() )
         {
             if ( !Autoload\ClassInfo::isTest( $className ) )

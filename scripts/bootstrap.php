@@ -47,6 +47,6 @@ $configModules = array();
 // Include Autoload module
 require_once $projectRoot . '/modules/Autoload/classes/Autoload.php';
 // Register libs
-Miao\Autoload\Autoload::init( $configMap[ 'libs' ] );
+Miao\Autoload::init( $configMap[ 'libs' ] );
 // Init application
 Miao\Application::init( $configMain, $configModules );
