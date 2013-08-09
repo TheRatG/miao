@@ -4,12 +4,9 @@
  * Test, Class generator.
  */
 require_once 'bootstrap.php';
+require_once 'vendor/autoload.php';
 
-$app = Miao\Application::getInstance();
-$configMain = $app->getConfig()->toArray();
-//$configMiao = $app->getConfig( 'Miao' )->toArray();
-
-// --- dump ---
-echo __FILE__ . __METHOD__ . chr( 10 );
-var_dump( $configMain ) . chr( 10 );
-// --- // ---
+$application = new \Symfony\Component\Console\Application();
+$application->add( new \Miao\Console\Command\Info );
+$application->add( new \Miao\Console\Command\Generate\Module );
+$application->run();

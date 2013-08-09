@@ -32,12 +32,12 @@ class Application
      * @param string $name Instance name
      * @return \Miao\Application
      */
-    static public function init( array $configMain, array $configModules = array(),
+    static public function init( array $configMap, array $configMain, array $configModules = array(),
                                  $name = self::INSTANCE_DEFAULT_NAME )
     {
         if ( !isset( self::$_instance[ $name ] ) )
         {
-            self::$_instance[ $name ] = new self( $configMain, $configModules );
+            self::$_instance[ $name ] = new self( $configMap, $configMain, $configModules );
         }
         $result = self::$_instance[ $name ];
         return $result;
@@ -77,7 +77,7 @@ class Application
     }
 
     /**
-     * @return mixed
+     * @return \Miao\Path
      */
     public function getPath()
     {
@@ -89,8 +89,9 @@ class Application
         $this->_config[ $name ] = new Config\Base( $data );
     }
 
-    protected function __construct( array $configMain, array $configModules = array() )
+    protected function __construct( array $configMap, array $configMain, array $configModules = array() )
     {
         $this->_config = new Application\Config( $configMain, $configModules );
+        $this->_path = new \Miao\Path( $configMap['project_root'], $configMap['libs'] );
     }
 }

@@ -42,11 +42,11 @@ $configMain = array(
 /**
  * Modules properties
  */
-$configModules = array();
+$configModules = array( 'Miao' => array() );
 
 // Include Autoload module
 require_once $projectRoot . '/modules/Autoload/classes/Autoload.php';
 // Register libs
-Miao\Autoload::init( $configMap[ 'libs' ] );
+\Miao\Autoload::init( $configMap[ 'libs' ] );
 // Init application
-Miao\Application::init( $configMain, $configModules );
+\Miao\Application::init( $configMap, $configMain, $configModules );

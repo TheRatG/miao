@@ -5,6 +5,7 @@ use Miao\Autoload\Plugin;
 use Miao\Autoload\Exception;
 
 require_once 'Exception.php';
+require_once 'PluginInterface.php';
 require_once 'Plugin.php';
 require_once 'ClassInfo.php';
 

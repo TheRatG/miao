@@ -3,7 +3,7 @@ namespace Miao\Autoload\Plugin;
 
 use  Miao\Autoload;
 
-class IncludePath extends Autoload\Plugin
+class IncludePath extends Autoload\Plugin implements Autoload\PluginInterface
 {
     public function __construct( $name, $libPath )
     {

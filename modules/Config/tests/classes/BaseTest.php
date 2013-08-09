@@ -24,6 +24,9 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals( $expected, $actual );
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function providerTestGet()
     {
         $data = array();

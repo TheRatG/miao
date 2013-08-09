@@ -1,0 +1,14 @@
+{
+    "name": "miaoworld/miao",
+    "description": "PHP framework",
+    "require": {
+        "symfony/console": "2.3.2"
+    },
+    "authors": [
+        {
+            "name": "Vladimir",
+            "email": "TheRatW@gmail.com"
+        }
+    ],
+    "minimum-stability": "alpha"
+}

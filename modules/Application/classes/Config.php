@@ -21,7 +21,7 @@ class Config
         $result = null;
         if ( !$name )
         {
-            $name = self::CONFIG_MAIN_NAME;
+            $name = self::MAIN_NAME;
         }
         $name = ltrim( $name, '\\' );
         $items = explode( '\\', $name );

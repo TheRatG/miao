@@ -89,11 +89,14 @@ class AutoloadTest extends \PHPUnit_Framework_TestCase
         $obj = new $className();
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function providerTestAutoload()
     {
         $data = array();
 
-        $data[ ] = array( 'Miao\\Autoload\\ClassInfo' );
+        $data[ ] = array( 'Miao\\Autoload\\Exception' );
 
         $exceptionName = 'Miao\\Autoload\\Exception\\FileNotFound';
         $data[ ] = array( 'Miao\\Autoload\\UnknownClass', $exceptionName );
@@ -116,6 +119,9 @@ class AutoloadTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals( $expected, $actual );
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function providerTestClassExists()
     {
         $data = array();

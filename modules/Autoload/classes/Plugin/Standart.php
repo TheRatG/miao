@@ -3,7 +3,7 @@ namespace Miao\Autoload\Plugin;
 
 use  Miao\Autoload;
 
-class Standart extends Autoload\Plugin
+class Standart extends Autoload\Plugin implements Autoload\PluginInterface
 {
     public function getFilenameByClassName( $className )
     {
@@ -18,7 +18,7 @@ class Standart extends Autoload\Plugin
         }
         if ( count( $items ) >= 2 && $items[ 0 ] == $this->getName() )
         {
-            if ( !Autoload\ClassInfo::isTest( $className ) )
+            if ( !Autoload\ClassInfo::parse( $className )->isTest() )
             {
                 $formatString = '%s/modules/%s/classes/%s.php';
             }

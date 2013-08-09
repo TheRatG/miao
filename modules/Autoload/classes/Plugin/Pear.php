@@ -3,7 +3,7 @@ namespace Miao\Autoload\Plugin;
 
 use  Miao\Autoload;
 
-class Pear extends Autoload\Plugin
+class Pear extends Autoload\Plugin implements Autoload\PluginInterface
 {
     public function __construct( $name, $libPath )
     {
