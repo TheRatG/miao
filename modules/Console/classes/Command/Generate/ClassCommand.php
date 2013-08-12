@@ -2,6 +2,7 @@
 
 namespace Miao\Console\Command\Generate;
 
+use Miao\Path\Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,14 +19,15 @@ class ClassCommand extends \Symfony\Component\Console\Command\Command
             ->addArgument(
                 'name', InputArgument::REQUIRED,
                 'Module name, must content two parts. Example: \\\\Miao\\\\NewModule, Miao_NewModule'
-            );
+            )
+            ->addOption( 'author', 'a', null, 'Author tag' );
     }
 
     protected function execute( InputInterface $input, OutputInterface $output )
     {
         $name = $input->getArgument( 'name' );
 
-        $msg = sprintf( '<info>Generate class by name "%s"</info>', $name );
+        $msg = sprintf( '<info>Begin generate class by name "%s"</info>', $name );
         $output->writeln( $msg );
 
         $app = \Miao\Application::getInstance();
@@ -51,8 +53,53 @@ class ClassCommand extends \Symfony\Component\Console\Command\Command
 
         $plugin = new \Miao\Autoload\Plugin\Standart( $libName, $path->getRootDir( $libName ) );
         $classFilename = $plugin->getFilenameByClassName( $name );
-        $classTemplateFolder = $path->getTemplateDir( '\\Miao\\Console\\Generate\\ClassCommand' );
 
-        $classTemplateFilename = $classTemplateFolder . DIRECTORY_SEPARATOR . 'common.tpl';
+        if ( file_exists( $classFilename ) )
+        {
+            $msg = sprintf( '<error>File %s for class %s exists</error>', $classFilename, $name );
+            $output->writeln( $msg );
+        }
+        else
+        {
+            $classTemplateFolder = $path->getTemplateDir( '\\Miao\\Console\\Generate\\ClassCommand' );
+
+            $author = $input->getOption( 'author' ) ? $input->getOption( 'author' ) : $_SERVER[ 'USER' ];
+
+            $tpl = 'general.tpl';
+            if ( $classInfo->isView() )
+            {
+                $tpl = 'view.tpl';
+            }
+            else if ( $classInfo->isViewBlock() )
+            {
+                $tpl = 'view_block.tpl';
+            }
+            $classTemplateFilename = $classTemplateFolder . DIRECTORY_SEPARATOR . $tpl;
+
+            $string = file_get_contents( $classTemplateFilename );
+            $string = str_replace(
+                array(
+                     '%author%',
+                     '%namespace%',
+                     '%date%',
+                     '%class%'
+                ), array(
+                        $author,
+                        $classInfo->getNamespace(),
+                        date( 'Y-m-d H:i:s' ),
+                        $name
+                   ), $string
+            );
+
+            $dir = dirname( $classFilename );
+            if ( !file_exists( $dir ) )
+            {
+                mkdir( $dir, 0644, true );
+            }
+            file_put_contents( $classFilename, $string );
+
+            $msg = sprintf( 'Generated file (%s), for class %s', $classFilename, $name );
+            $output->writeln( $msg );
+        }
     }
 }

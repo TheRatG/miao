@@ -13,6 +13,8 @@ class ClassCommandTest extends \PHPUnit_Framework_TestCase
      */
     private $_path;
 
+    private $_module = 'Miao\\TModule';
+
     public function setUp()
     {
         $this->_path = \Miao\Application::getInstance()
@@ -22,6 +24,9 @@ class ClassCommandTest extends \PHPUnit_Framework_TestCase
         $this->_app = new \Symfony\Component\Console\Application();
         $this->_app->add( new \Miao\Console\Command\Generate\ModuleCommand );
         $this->_app->add( new \Miao\Console\Command\Generate\ClassCommand );
+
+        $moduleRoot = $this->_path->getModuleDir( $this->_module );
+        \Miao\Path\Helper::removeDir( $moduleRoot );
     }
 
     public function testGenerateClass()
@@ -34,12 +39,17 @@ class ClassCommandTest extends \PHPUnit_Framework_TestCase
             array( 'command' => $command->getName(), 'name' => $className )
         );
 
-        $this->assertRegExp( '/Generate class/', $commandTester->getDisplay() );
+        $this->assertRegExp( '/Generated file/', $commandTester->getDisplay() );
         $moduleRoot = $this->_path->getModuleDir( $className );
 
         $filename = \Miao\Autoload::getInstance()
             ->getFilenameByClassName( $className );
         $this->assertTrue( file_exists( $filename ) );
+
+        $commandTester->execute(
+            array( 'command' => $command->getName(), 'name' => $className )
+        );
+        $this->assertRegExp( sprintf ( '/File .* exists/', $className ), $commandTester->getDisplay() );
 
         \Miao\Path\Helper::removeDir( $moduleRoot );
     }

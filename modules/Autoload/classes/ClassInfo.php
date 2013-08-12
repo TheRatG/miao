@@ -21,6 +21,8 @@ class ClassInfo
 
     private $_isViewBlock = false;
 
+    private $_namespace;
+
     /**
      * @param bool $short
      * @return string
@@ -66,6 +68,11 @@ class ClassInfo
     public function getParsedString()
     {
         return $this->_parsedString;
+    }
+
+    public function getNamespace()
+    {
+        return $this->_namespace;
     }
 
     /**
@@ -172,6 +179,9 @@ class ClassInfo
         {
             $this->_isTest = true;
         }
+
+        array_pop( $ar );
+        $this->_namespace = implode( $this->_delimiter, $ar );
 
         $this->_initOffice();
     }

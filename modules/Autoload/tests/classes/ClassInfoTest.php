@@ -118,4 +118,31 @@ class ClassInfoTest extends \PHPUnit_Framework_TestCase
 
         return $data;
     }
+
+    /**
+     * @dataProvider providerTestGetNamespace
+     * @param $string
+     * @param $expected
+     */
+    public function testGetNamespace( $string, $expected )
+    {
+        $actual = ClassInfo::parse( $string )
+            ->getNamespace();
+        $this->assertEquals( $expected, $actual );
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return array
+     */
+    public function providerTestGetNamespace()
+    {
+        $data = array();
+
+        $data[ ] = array( 'Miao\\Office', 'Miao' );
+        $data[ ] = array( 'Miao\\Office\\View', 'Miao\\Office' );
+        $data[ ] = array( 'Miao\\Office\\View\\Main', 'Miao\\Office\\View' );
+
+        return $data;
+    }
 }

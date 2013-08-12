@@ -7,7 +7,8 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     public function getApp()
     {
         $app = \Miao\Application::init(
-            array(), array( 'Miaox' => array( 'Sphinx' => array( 'host' => 'localhost' ) ) ), 'test'
+            array( 'project_root' => '', 'libs' => array() ), array(),
+            array( 'Miaox' => array( 'Sphinx' => array( 'host' => 'localhost' ) ) ), 'test'
         );
         return $app;
     }
