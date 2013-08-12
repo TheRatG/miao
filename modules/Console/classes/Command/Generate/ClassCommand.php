@@ -2,14 +2,14 @@
 
 namespace Miao\Console\Command\Generate;
 
-use Miao\Path\Exception;
-use Symfony\Component\Console\Command\Command;
+use Miao\Console\Command;
+
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ClassCommand extends \Symfony\Component\Console\Command\Command
+class ClassCommand extends Command\Generate
 {
     protected function configure()
     {
@@ -35,7 +35,6 @@ class ClassCommand extends \Symfony\Component\Console\Command\Command
         $dir = $path->getModuleDir( $name );
 
         $classInfo = \Miao\Autoload\ClassInfo::parse( $name );
-        $libName = $classInfo->getLib();
 
         if ( !file_exists( $dir ) )
         {
@@ -51,54 +50,37 @@ class ClassCommand extends \Symfony\Component\Console\Command\Command
             $command->run( $inputModule, $output );
         }
 
-        $plugin = new \Miao\Autoload\Plugin\Standart( $libName, $path->getRootDir( $libName ) );
-        $classFilename = $plugin->getFilenameByClassName( $name );
+        $author = $input->getOption( 'author' ) ? $input->getOption( 'author' ) : $_SERVER[ 'USER' ];
 
-        if ( file_exists( $classFilename ) )
+        $template = 'general.tpl';
+        if ( $classInfo->isView() )
         {
-            $msg = sprintf( '<error>File %s for class %s exists</error>', $classFilename, $name );
-            $output->writeln( $msg );
+            $template = 'view.tpl';
+            //@todo: create folder and tpl
+        }
+        else if ( $classInfo->isViewBlock() )
+        {
+            $template = 'view_block.tpl';
+            //@todo: create folder and tpl
+        }
+
+        $error = '';
+        try
+        {
+            $classFilename = $this->_makeFile( $classInfo, $template, $author );
+        }
+        catch ( Command\Exception $e )
+        {
+            $error = $e->getMessage();
+        }
+
+        if ( $error )
+        {
+            $output->writeln( '<error>' . $msg . '</error>' );
         }
         else
         {
-            $classTemplateFolder = $path->getTemplateDir( '\\Miao\\Console\\Generate\\ClassCommand' );
-
-            $author = $input->getOption( 'author' ) ? $input->getOption( 'author' ) : $_SERVER[ 'USER' ];
-
-            $tpl = 'general.tpl';
-            if ( $classInfo->isView() )
-            {
-                $tpl = 'view.tpl';
-            }
-            else if ( $classInfo->isViewBlock() )
-            {
-                $tpl = 'view_block.tpl';
-            }
-            $classTemplateFilename = $classTemplateFolder . DIRECTORY_SEPARATOR . $tpl;
-
-            $string = file_get_contents( $classTemplateFilename );
-            $string = str_replace(
-                array(
-                     '%author%',
-                     '%namespace%',
-                     '%date%',
-                     '%class%'
-                ), array(
-                        $author,
-                        $classInfo->getNamespace(),
-                        date( 'Y-m-d H:i:s' ),
-                        $name
-                   ), $string
-            );
-
-            $dir = dirname( $classFilename );
-            if ( !file_exists( $dir ) )
-            {
-                mkdir( $dir, 0644, true );
-            }
-            file_put_contents( $classFilename, $string );
-
-            $msg = sprintf( 'Generated file (%s), for class %s', $classFilename, $name );
+            $msg = sprintf( '<info>Generated file (%s), for class %s</info>', $classFilename, $name );
             $output->writeln( $msg );
         }
     }

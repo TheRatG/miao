@@ -10,4 +10,5 @@ $application = new \Symfony\Component\Console\Application();
 $application->add( new \Miao\Console\Command\Info() );
 $application->add( new \Miao\Console\Command\Generate\ModuleCommand() );
 $application->add( new \Miao\Console\Command\Generate\ClassCommand() );
+$application->add( new \Miao\Console\Command\Generate\TestCommand() );
 $application->run();
