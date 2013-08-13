@@ -13,7 +13,7 @@ class ClassCommandTest extends \PHPUnit_Framework_TestCase
      */
     private $_path;
 
-    private $_module = 'Miao\\TModule';
+    private $_module = 'Miao\\TestModule';
 
     public function setUp()
     {
@@ -29,9 +29,15 @@ class ClassCommandTest extends \PHPUnit_Framework_TestCase
         \Miao\Path\Helper::removeDir( $moduleRoot );
     }
 
+    public function tearDown()
+    {
+        $moduleRoot = $this->_path->getModuleDir( $this->_module );
+        \Miao\Path\Helper::removeDir( $moduleRoot );
+    }
+
     public function testGenerateClass()
     {
-        $className = 'Miao_TModule';
+        $className = $this->_module;
 
         $command = $this->_app->find( 'miao:generate-class' );
         $commandTester = new \Symfony\Component\Console\Tester\CommandTester( $command );
@@ -46,11 +52,35 @@ class ClassCommandTest extends \PHPUnit_Framework_TestCase
             ->getFilenameByClassName( $className );
         $this->assertTrue( file_exists( $filename ) );
 
+        try
+        {
+            $commandTester->execute(
+                array( 'command' => $command->getName(), 'name' => $className )
+            );
+        }
+        catch ( \Miao\Console\Exception $e )
+        {
+
+        }
+    }
+
+    public function testView()
+    {
+        $className = $this->_module . '\\View\\Main';
+
+        $command = $this->_app->find( 'miao:generate-class' );
+        $commandTester = new \Symfony\Component\Console\Tester\CommandTester( $command );
         $commandTester->execute(
             array( 'command' => $command->getName(), 'name' => $className )
         );
-        $this->assertRegExp( sprintf ( '/File .* exists/', $className ), $commandTester->getDisplay() );
 
-        \Miao\Path\Helper::removeDir( $moduleRoot );
+        $filename = \Miao\Autoload::getInstance()
+            ->getFilenameByClassName( $className );
+        $this->assertFileExists( $filename );
+
+        $filename = \Miao\Autoload::getInstance()
+            ->getPlugin( 'Miao' )->getFilenameByClassName( $this->_module . '\\View' );
+
+        $this->assertFileExists( $filename );
     }
 }

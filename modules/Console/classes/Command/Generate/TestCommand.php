@@ -40,7 +40,7 @@ class TestCommand extends Command\Generate
         $error = '';
         try
         {
-            $classFilename = $this->_makeFile( $classInfo, 'test.tpl', $author );
+            $classFilename = $this->_makeFile( $classInfo, 'test.tpl', array( '%author%' ), array( $author ) );
         }
         catch ( Command\Exception $e )
         {

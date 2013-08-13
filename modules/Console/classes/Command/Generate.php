@@ -21,35 +21,43 @@ class Generate extends \Symfony\Component\Console\Command\Command
         $this->_path = $this->_miaoApp->getPath();
     }
 
-    public function _makeFile( \Miao\Autoload\ClassInfo $classInfo, $template, $author )
+    public function _makeFile( \Miao\Autoload\ClassInfo $classInfo, $template, $search, $replace )
     {
         $classTemplateFolder = $this->_path->getTemplateDir( '\\Miao\\Console\\Generate\\ClassCommand' );
         $classTemplateFilename = $classTemplateFolder . DIRECTORY_SEPARATOR . $template;
 
         $libName = $classInfo->getLib();
-        $name = $classInfo->getClass();
+        $className = $classInfo->getClass();
+        $ar = explode( $classInfo->getDelimiter(), $className );
+        $name = array_pop( $ar );
 
         $plugin = new \Miao\Autoload\Plugin\Standart( $libName, $this->_path->getRootDir( $libName ) );
-        $classFilename = $plugin->getFilenameByClassName( $name );
+        $classFilename = $plugin->getFilenameByClassName( $className );
 
         $string = file_get_contents( $classTemplateFilename );
-        $string = str_replace(
+
+        $search = array_merge(
             array(
-                 '%author%',
                  '%namespace%',
                  '%date%',
                  '%class%'
-            ), array(
-                    $author,
-                    $classInfo->getNamespace(),
-                    date( 'Y-m-d H:i:s' ),
-                    $name
-               ), $string
+            ), $search
+        );
+        $replace = array_merge(
+            array(
+                 $classInfo->getNamespace(),
+                 date( 'Y-m-d H:i:s' ),
+                 $name
+            ), $replace
+        );
+
+        $string = str_replace(
+            $search, $replace, $string
         );
 
         if ( file_exists( $classFilename ) )
         {
-            $msg = sprintf( 'Class "%s" exists by file (%s)', $name, $classFilename );
+            $msg = sprintf( 'Class "%s" exists by file (%s)', $className, $classFilename );
             throw new Exception( $msg );
         }
 

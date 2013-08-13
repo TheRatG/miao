@@ -21,6 +21,8 @@ class ClassInfo
 
     private $_isViewBlock = false;
 
+    private $_isAction = false;
+
     private $_namespace;
 
     /**
@@ -32,11 +34,10 @@ class ClassInfo
         $result = $this->_class;
         if ( $short )
         {
-            $separator = $this->_isOldFashion ? '_' : '\\';
-            $ar = explode( $separator, $result );
+            $ar = explode( $this->getDelimiter(), $result );
             if ( count( $ar ) > 2 )
             {
-                $result = implode( $separator, array_slice( $ar, 2 ) );
+                $result = implode( $this->getDelimiter(), array_slice( $ar, 2 ) );
             }
             else
             {
@@ -105,6 +106,14 @@ class ClassInfo
     public function isViewBlock()
     {
         return $this->_isViewBlock;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isAction()
+    {
+        return $this->_isAction;
     }
 
     /**
@@ -195,6 +204,10 @@ class ClassInfo
         else if ( false !== strpos( $this->_class, 'Office' . $this->_delimiter . 'View' ) )
         {
             $this->_isView = true;
+        }
+        else if ( false !== strpos( $this->_class, 'Office' . $this->_delimiter . 'Action' ) )
+        {
+            $this->_isAction = true;
         }
     }
 }
