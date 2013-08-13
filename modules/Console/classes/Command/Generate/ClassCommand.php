@@ -129,6 +129,7 @@ class ClassCommand extends Command\Generate
     protected function _getParent( OutputInterface $output )
     {
         $result = '';
+        $parentClassName = '';
         if ( $this->_classInfo->isView() )
         {
             $parentClassName = $this->_classInfo->getLib() . '\\' . $this->_classInfo->getModule() . '\\' . 'View';
@@ -148,19 +149,24 @@ class ClassCommand extends Command\Generate
             $baseClassName = '\\Miao\\Office\\Action';
         }
 
-        $isParentExists = \Miao\Autoload::getInstance()
-            ->getFilenameByClassName( $parentClassName );
-        if ( !$isParentExists )
+        if ( $parentClassName )
         {
-            $parentFilename = $this->_makeFile(
-                \Miao\Autoload\ClassInfo::parse( $parentClassName ), $parentTemplate, array( '%author%', '%parent%' ),
-                array( $this->_author, $baseClassName )
-            );
+            $isParentExists = \Miao\Autoload::getInstance()
+                ->getFilenameByClassName( $parentClassName );
+            if ( !$isParentExists )
+            {
+                $parentFilename = $this->_makeFile(
+                    \Miao\Autoload\ClassInfo::parse( $parentClassName ), $parentTemplate,
+                    array( '%author%', '%parent%' ), array( $this->_author, $baseClassName )
+                );
 
-            $msg = sprintf( '<info>...Generated parent class "%s", file "%s"</info>', $baseClassName, $parentFilename );
-            $output->writeln( $msg );
+                $msg = sprintf(
+                    '<info>...Generated parent class "%s", file "%s"</info>', $baseClassName, $parentFilename
+                );
+                $output->writeln( $msg );
 
-            $result = $parentClassName;
+                $result = '\\' . $parentClassName;
+            }
         }
 
         return $result;

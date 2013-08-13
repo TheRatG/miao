@@ -13,7 +13,7 @@ class ClassCommandTest extends \PHPUnit_Framework_TestCase
      */
     private $_path;
 
-    private $_module = 'Miao\\TestModule';
+    private $_module = 'Miao\\TestOffice';
 
     public function setUp()
     {
@@ -60,7 +60,6 @@ class ClassCommandTest extends \PHPUnit_Framework_TestCase
         }
         catch ( \Miao\Console\Exception $e )
         {
-
         }
     }
 
@@ -78,9 +77,16 @@ class ClassCommandTest extends \PHPUnit_Framework_TestCase
             ->getFilenameByClassName( $className );
         $this->assertFileExists( $filename );
 
+        $content = file_get_contents( $filename );
+        $this->assertRegExp( '/class Main extends \\\\Miao\\\\TestOffice\\\\View/', $content );
+
         $filename = \Miao\Autoload::getInstance()
-            ->getPlugin( 'Miao' )->getFilenameByClassName( $this->_module . '\\View' );
+            ->getPlugin( 'Miao' )
+            ->getFilenameByClassName( $this->_module . '\\View' );
 
         $this->assertFileExists( $filename );
+
+        $content = file_get_contents( $filename );
+        $this->assertRegExp( '/class View extends \\\\Miao\\\\Office\\\\View/', $content );
     }
 }
