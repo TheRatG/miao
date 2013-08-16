@@ -9,7 +9,7 @@ namespace Miao\Log;
 interface FactoryInterface
 {
     /**
-     * Construct a Miao_Log driver
+     * Construct a \Miao\Log driver
      * @param  array|\Miao\Config $config
      * @return \Miao\Log\FactoryInterface
      */

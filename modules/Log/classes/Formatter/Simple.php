@@ -18,7 +18,7 @@ class Simple implements \Miao\Log\Formatter\FormatterInterface
     /**
      * Class constructor
      * @param  null|string $format  Format specifier for log messages
-     * @throws Miao_Log_Exception
+     * @throws \Miao\Log\Exception
      */
     public function __construct( $format = null )
     {
@@ -29,7 +29,7 @@ class Simple implements \Miao\Log\Formatter\FormatterInterface
 
         if ( !is_string( $format ) )
         {
-            throw new Miao_Log_Exception( 'Format must be a string' );
+            throw new \Miao\Log\Exception( 'Format must be a string' );
         }
 
         $this->_format = $format;

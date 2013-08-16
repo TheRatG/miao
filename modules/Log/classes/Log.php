@@ -31,7 +31,7 @@ class Log
     protected $_priorities = array();
 
     /**
-     * @var array of Miao_Log_Writer_Abstract
+     * @var array of \Miao\Log\Writer_Abstract
      */
     protected $_writers = array();
 
@@ -48,12 +48,12 @@ class Log
     /**
      * @var string
      */
-    protected $_defaultWriterNamespace = 'Miao_Log_Writer';
+    protected $_defaultWriterNamespace = '\Miao\Log\Writer';
 
     /**
      * @var string
      */
-    protected $_defaultFilterNamespace = 'Miao_Log_Filter';
+    protected $_defaultFilterNamespace = '\Miao\Log\Filter';
 
     static public function factory( $filename = '', $verbose = false, $level = 7 )
     {
@@ -68,7 +68,7 @@ class Log
         }
         if ( !$filename && !$verbose )
         {
-            $result->addWriter( new \Miao\Log\Writer_Null() );
+            $result->addWriter( new \Miao\Log\Writer\Null() );
         }
 
         $filter = new \Miao\Log\Filter\Priority( $level );
@@ -233,7 +233,7 @@ class Log
 
         if ( !$writer instanceof \Miao\Log\Writer\AbstractWriter )
         {
-            throw new \Miao\Log\Exception( 'Writer must be an instance of Miao_Log_Writer_Abstract' . ' or you should pass a configuration array' );
+            throw new \Miao\Log\Exception( 'Writer must be an instance of \Miao\Log\Writer\AbstractWriter' . ' or you should pass a configuration array' );
         }
 
         $this->_writers[ ] = $writer;
@@ -297,7 +297,7 @@ class Log
         if ( !$writer instanceof \Miao\Log\Writer\AbstractWriter )
         {
             $writerName = is_object( $writer ) ? get_class( $writer ) : 'The specified writer';
-            throw new \Miao\Log\Exception( "{$writerName} does not extend Miao_Log_Writer_Abstract!" );
+            throw new \Miao\Log\Exception( "{$writerName} does not extend \Miao\Log\Writer\AbstractWriter!" );
         }
 
         if ( isset( $config[ 'filterName' ] ) )

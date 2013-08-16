@@ -2,6 +2,7 @@
 
 ## 4.0
  * Namespace support
+ * Rename TemplateEngine to Template
  * [30] Autoload. Fatal error if did not find class with namespace
  * [29] Autoload, need method classExists()
  * [15] Autoload doesn't work with namespaces

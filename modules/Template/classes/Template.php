@@ -23,6 +23,11 @@ class Template
      */
     protected $_log;
 
+    /**
+     * @var bool
+     */
+    protected $_consumeException = true;
+
     public function __construct( $templatesDir, $debugMode = true, \Miao\Log $log = null )
     {
         $this->setTemplatesDir( $templatesDir );
@@ -60,7 +65,7 @@ class Template
             throw new \Miao\Template\Exception( $msg );
         }
 
-        $this->_templatesDir = $templatesDir;
+        $this->_templatesDir = rtrim( $templatesDir, DIRECTORY_SEPARATOR );
     }
 
     /**
@@ -91,6 +96,22 @@ class Template
         return $this->_log;
     }
 
+    /**
+     * @return bool
+     */
+    public function getConsumeException()
+    {
+        return $this->_consumeException;
+    }
+
+    /**
+     * @param $consumeException bool
+     */
+    public function setConsumeException( $consumeException )
+    {
+        $this->_consumeException = (bool)$consumeException;
+    }
+
     public function fetch( $templateName )
     {
         $absoluteFilename = $this->getAbsoluteFilename( $templateName );
@@ -98,10 +119,88 @@ class Template
         return $templateContents;
     }
 
-    public function getAbsoluteFilename( $template )
+    public function getAbsoluteFilename( $template, $useSelfBaseDir = null )
     {
-        $result = $this->getTemplatesDir() . DIRECTORY_SEPARATOR . $template;
+        if ( is_null( $useSelfBaseDir ) )
+        {
+            //TODO: autodetect
+            $result = $this->getTemplatesDir() . DIRECTORY_SEPARATOR . ltrim( $template, DIRECTORY_SEPARATOR );
+        }
+        else if ( true === $useSelfBaseDir )
+        {
+            $result = $this->getTemplatesDir() . DIRECTORY_SEPARATOR . ltrim( $template, DIRECTORY_SEPARATOR );
+        }
+        else
+        {
+            $result = $template;
+        }
         return $result;
+    }
+
+    /**
+     * Setter for template variables.
+     * @param string $templateVarName
+     * @param mixed $templateVarValue
+     */
+    public function setValueOf( $templateVarName, $templateVarValue = null )
+    {
+        $this->_templateVars[ $templateVarName ] = $templateVarValue;
+    }
+
+    /**
+     * Assigns value by array
+     * @param array $data
+     */
+    public function setValueOfByArray( array $data )
+    {
+        foreach ( $data as $templateVarName => $templateVarValue )
+        {
+            $this->_templateVars[ $templateVarName ] = $templateVarValue;
+        }
+    }
+
+    /**
+     * @param $varName
+     * @param null $defaultValue
+     * @param bool $useNullAsDefault
+     * @return mixed
+     * @throws Template\Exception\OnVariableNotFound
+     */
+    public function getValueOf( $varName, $defaultValue = null, $useNullAsDefault = false )
+    {
+        if ( !array_key_exists( $varName, $this->_templateVars ) )
+        {
+            if ( ( null === $defaultValue ) && ( false === $useNullAsDefault ) )
+            {
+                $msg = sprintf( 'Template variable (%s) not found', $varName );
+                throw new \Miao\Template\Exception\OnVariableNotFound( $msg );
+            }
+            $this->_templateVars[ $varName ] = $defaultValue;
+        }
+        else if ( !isset( $this->_templateVars[ $varName ] ) )
+        {
+            $this->_templateVars[ $varName ] = $defaultValue;
+        }
+        return $this->_templateVars[ $varName ];
+    }
+
+    /**
+     * Unset all template variables.
+     */
+    public function resetTemplateVariables()
+    {
+        unset( $this->_templateVars );
+        $this->_templateVars = array();
+    }
+
+    protected function _includeTemplate( $templateFilename, $useSelfBaseDir = true, array $templateVars = array() )
+    {
+        if ( $templateVars )
+        {
+            $this->setValueOfByArray( $templateVars );
+        }
+        $templateFilename = $this->getAbsoluteFilename( $templateFilename, $useSelfBaseDir );
+        return $this->_returnParsedTemplate( $templateFilename );
     }
 
     /**
@@ -120,8 +219,9 @@ class Template
         $resultUnbelievableNameForVar = '';
         try
         {
-            $this->_checkFile( $absoluteFilename );
             $resultUnbelievableNameForVar .= $this->_startBlock();
+
+            $this->_checkFile( $absoluteFilename );
 
             include( $absoluteFilename );
 
@@ -135,22 +235,20 @@ class Template
         {
             $resultUnbelievableNameForVar .= $this->_endBlock();
 
+            $msg = $this->_exceptionToString( $e, $absoluteFilename );
             $this
                 ->getLog()
                 ->log(
-                    $this->_exceptionToString( $e, $absoluteFilename ), Miao_Log::ERR
+                    $msg, \Miao\Log::ERR
                 );
 
             if ( !$this->getConsumeException() )
             {
                 throw $e;
             }
-
             if ( $this->debugMode() )
             {
-                $resultUnbelievableNameForVar .= $this->_exceptionToString(
-                    $e, $absoluteFilename
-                );
+                $resultUnbelievableNameForVar .= $msg;
             }
         }
         return $resultUnbelievableNameForVar;
@@ -201,13 +299,8 @@ class Template
             ) )
         )
         {
-            if ( $this->debugMode() )
-            {
-                throw new \Miao\Template\Exception\OnFileNotFound( $absoluteFilename );
-            }
-            return false;
+            throw new \Miao\Template\Exception\OnFileNotFound( 'File not found: path = "' . $absoluteFilename . '"' );
         }
-        return true;
     }
 
     /**
@@ -218,12 +311,14 @@ class Template
      */
     protected function _exceptionToString( \Exception $e, $absoluteFilename = '' )
     {
+        $requestUri = isset( $_SERVER[ 'REQUEST_URI' ] ) ? $_SERVER[ 'REQUEST_URI' ] : 'console';
+
         $trace = $e->getTrace();
         $trace = array_slice( $trace, 0, 3 );
 
         $result = sprintf(
-            "Uri: \"%s\". \nTemplate: %s\nMessage: %s\nTrace: %s", $_SERVER[ 'REQUEST_URI' ], $absoluteFilename,
-            $e->getMessage(), print_r( $trace, true )
+            "Uri: \"%s\". \nTemplate: %s\nMessage: %s\nTrace: %s", $requestUri, $absoluteFilename, $e->getMessage(),
+            print_r( $trace, true )
         );
         return $result;
     }
