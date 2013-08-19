@@ -17,7 +17,7 @@ class Generate extends \Symfony\Component\Console\Command\Command
     public function __construct()
     {
         parent::__construct();
-        $this->_miaoApp = \Miao\Application::getInstance();
+        $this->_miaoApp = \Miao\App::getInstance();
         $this->_path = $this->_miaoApp->getPath();
     }
 

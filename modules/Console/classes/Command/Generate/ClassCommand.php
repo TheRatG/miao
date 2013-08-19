@@ -41,7 +41,7 @@ class ClassCommand extends Command\Generate
         $msg = sprintf( '<info>Begin generate class by name "%s"</info>', $name );
         $output->writeln( $msg );
 
-        $app = \Miao\Application::getInstance();
+        $app = \Miao\App::getInstance();
         $path = $app->getPath();
         $dir = $path->getModuleDir( $name );
 

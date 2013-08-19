@@ -14,7 +14,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->_templatesDir = $templatesDir = \Miao\Application::getInstance()
+        $this->_templatesDir = $templatesDir = \Miao\App::getInstance()
             ->getPath()
             ->getTestSourcesDir( __METHOD__ );
     }
@@ -30,7 +30,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
 
     public function testConstruct()
     {
-        $templatesDir = \Miao\Application::getInstance()
+        $templatesDir = \Miao\App::getInstance()
             ->getPath()
             ->getTestSourcesDir( __CLASS__ );
         $debugMode = false;
@@ -58,7 +58,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
             $this->setExpectedException( $exceptionName );
         }
 
-        $templatesDir = \Miao\Application::getInstance()
+        $templatesDir = \Miao\App::getInstance()
             ->getPath()
             ->getTestSourcesDir( __METHOD__ );
         $native = new \Miao\Template( $templatesDir, false );
@@ -96,7 +96,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
             $this->setExpectedException( $exceptionName );
         }
 
-        $templatesDir = \Miao\Application::getInstance()
+        $templatesDir = \Miao\App::getInstance()
             ->getPath()
             ->getTestSourcesDir( __METHOD__ );
         $native = new \Miao\Template( $templatesDir, false );

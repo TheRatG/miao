@@ -6,7 +6,7 @@ class LogTest extends \PHPUnit_Framework_TestCase
 {
     public function testLog()
     {
-        $sourceDir = \Miao\Application::getInstance()->getPath()->getTestSourcesDir( __CLASS__ );
+        $sourceDir = \Miao\App::getInstance()->getPath()->getTestSourcesDir( __CLASS__ );
         $filename = $sourceDir . '/test_log';
 
         $log = \Miao\Log::factory( $filename );
@@ -20,7 +20,7 @@ class LogTest extends \PHPUnit_Framework_TestCase
 
     public function testFileMode()
     {
-        $sourceDir = \Miao\Application::getInstance()->getPath()->getTestSourcesDir( __CLASS__ );
+        $sourceDir = \Miao\App::getInstance()->getPath()->getTestSourcesDir( __CLASS__ );
         $filename = $sourceDir . '/test_log';
 
         $log = \Miao\Log::factory( $filename );

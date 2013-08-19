@@ -187,6 +187,11 @@ class ClassInfo
         if ( 0 === $pos )
         {
             $this->_isTest = true;
+
+            if ( count( $ar ) == 2 )
+            {
+                $this->_module = substr( $module, 0, strpos( $module, 'Test' ) );
+            }
         }
 
         array_pop( $ar );

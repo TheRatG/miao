@@ -45,7 +45,7 @@ class ModuleCommand extends \Symfony\Component\Console\Command\Command
             $output->writeln( $msg );
         }
 
-        $app = \Miao\Application::getInstance();
+        $app = \Miao\App::getInstance();
         $path = $app->getPath();
         $dir = $path->getModuleDir( $name );
 

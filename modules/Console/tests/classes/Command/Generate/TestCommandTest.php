@@ -22,7 +22,7 @@ class TestCommandTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->_path = \Miao\Application::getInstance()
+        $this->_path = \Miao\App::getInstance()
             ->getPath();
         require_once $this->_path->getRootDir() . DIRECTORY_SEPARATOR . 'vendor/autoload.php';
 
@@ -42,6 +42,21 @@ class TestCommandTest extends \PHPUnit_Framework_TestCase
     public function testCommand()
     {
         $className = $this->_module . '\\MetaTest';
+
+        $command = $this->_app->find( 'miao:generate-test' );
+        $commandTester = new \Symfony\Component\Console\Tester\CommandTester( $command );
+        $commandTester->execute(
+            array( 'command' => $command->getName(), 'name' => $className )
+        );
+
+        $filename = \Miao\Autoload::getInstance()
+            ->getFilenameByClassName( $className );
+        $this->assertFileExists( $filename );
+    }
+
+    public function testCommand2()
+    {
+        $className = 'Miao\\TestOfficeTest';
 
         $command = $this->_app->find( 'miao:generate-test' );
         $commandTester = new \Symfony\Component\Console\Tester\CommandTester( $command );

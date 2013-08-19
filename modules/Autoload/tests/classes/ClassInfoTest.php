@@ -53,6 +53,16 @@ class ClassInfoTest extends \PHPUnit_Framework_TestCase
             )
         );
 
+        $data[ ] = array(
+            'Miao\OfficeTest',
+            array(
+                'parsedString' => 'Miao\OfficeTest',
+                'lib' => 'Miao',
+                'module' => 'Office',
+                'class' => 'Miao\\OfficeTest'
+            )
+        );
+
         return $data;
     }
 

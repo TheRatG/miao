@@ -15,7 +15,7 @@ class ModuleCommandTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->_path = \Miao\Application::getInstance()
+        $this->_path = \Miao\App::getInstance()
             ->getPath();
         require_once $this->_path->getRootDir() . DIRECTORY_SEPARATOR . 'vendor/autoload.php';
 

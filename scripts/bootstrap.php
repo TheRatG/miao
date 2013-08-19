@@ -49,4 +49,4 @@ require_once $projectRoot . '/modules/Autoload/classes/Autoload.php';
 // Register libs
 \Miao\Autoload::init( $configMap[ 'libs' ] );
 // Init application
-\Miao\Application::init( $configMap, $configMain, $configModules );
+\Miao\App::init( $configMap, $configMain, $configModules );

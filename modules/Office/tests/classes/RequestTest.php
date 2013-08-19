@@ -134,26 +134,4 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $res = $request->getValueOf( 'variable_does_not_exists', null, false );
         $this->assertNull( $res );
     }
-
-    public function testGetServerVar()
-    {
-        $_SERVER = array( 'REQUEST_URI' => '/' );
-        $r = $this->_request;
-
-        $this->assertSame( $r->getServerVar( 'HTTP_HOST' ), false );
-
-        $_SERVER[ 'HTTP_HOST' ] = 'test.rbc.ru';
-
-        $this->assertSame( $r->getServerVar( 'HTTP_HOST' ), 'test.rbc.ru' );
-
-        $_SERVER[ 'SERVER_NAME' ] = 'test2.rbc.ru';
-
-        $this->assertSame( $r->getServerVar( 'HTTP_HOST' ), 'test2.rbc.ru' );
-        $this->assertSame( $r->getServerVar( 'SERVER_NAME' ), 'test2.rbc.ru' );
-
-        unset( $_SERVER[ 'SERVER_NAME' ] );
-
-        $this->assertSame( $r->getServerVar( 'SERVER_NAME' ), 'test.rbc.ru' );
-        $this->assertSame( $r->getServerVar( 'REQUEST_URI' ), '/' );
-    }
 }

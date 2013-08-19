@@ -27,12 +27,19 @@ class Standart extends Autoload\Plugin implements Autoload\PluginInterface
                 $formatString = '%s/modules/%s/tests/classes/%s.php';
             }
 
+            $module = $items[ 1 ];
             if ( count( $items ) == 2 )
             {
                 $items[ 2 ] = $items[ 1 ];
+
+                $pos = strpos( strrev( $module ), 'tseT' );
+                if ( 0 === $pos )
+                {
+                    $module = substr( $module, 0, strrpos( $module, 'Test' ) );
+                }
             }
             $result = sprintf(
-                $formatString, $this->getLibPath(), $items[ 1 ], implode( '/', array_slice( $items, 2 ) )
+                $formatString, $this->getLibPath(), $module, implode( '/', array_slice( $items, 2 ) )
             );
         }
         return $result;
