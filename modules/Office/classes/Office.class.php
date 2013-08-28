@@ -129,6 +129,7 @@ class Miao_Office
 	public function setViewBlock( $viewBlock )
 	{
 		$this->_viewBlock = $viewBlock;
+		$this->_viewBlock->setOffice( $this );
 	}
 
 	public function sendResponse( $sendHeader = true, $sendContent = true )
