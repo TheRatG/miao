@@ -183,6 +183,7 @@ abstract class Miao_Office_View
 			}
 		}
 		$viewBlock = new $block_class_name( $name, $templates, $block_class_process_params );
+		$viewBlock->setOffice( $this->getOffice() );
 		$this->_templatesObj->addBlock( $name, $viewBlock );
 	}
 }
