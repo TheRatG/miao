@@ -54,4 +54,21 @@ class ModuleCommandTest extends \PHPUnit_Framework_TestCase
 
         $this->assertRegExp( '/Invalid module name/', $commandTester->getDisplay() );
     }
+
+    public function testGenerateOffice()
+    {
+        $module = '\\Miao\\TestOffice';
+        $moduleDir = $this->_path->getModuleDir( $module );
+
+        $command = $this->_app->find( 'miao:generate-module' );
+        $commandTester = new \Symfony\Component\Console\Tester\CommandTester( $command );
+        $commandTester->execute(
+            array( 'command' => $command->getName(), 'name' => $module )
+        );
+
+        $layoutFilename = $moduleDir . '/templates/layouts/index.tpl';
+        $this->assertFileExists( $layoutFilename );
+
+        \Miao\Path\Helper::removeDir( $moduleDir );
+    }
 }
