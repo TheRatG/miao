@@ -1,0 +1,12 @@
+{
+    "name": "theratg/miao",
+    "authors": [
+        {
+            "name": "Vladimir",
+            "email": "TheRatW@gmail.com"
+        }
+    ],
+    "require": {
+        "symfony/console": "2.3.*"
+    }
+}
