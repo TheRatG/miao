@@ -15,6 +15,7 @@
             "modules/App/classes",
             "modules/Autoload/classes",
             "modules/Config/classes",
+            "modules/Console/classes",
             "modules/Path/classes"
         ]
     }

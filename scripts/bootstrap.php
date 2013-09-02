@@ -18,7 +18,13 @@ $configMap = array(
     'project_root' => $projectRoot,
     'config_root' => $projectRoot . '/config',
     'use_glue' => false,
-    'libs' => array()
+    'libs' => array(
+        0 => array(
+            'name' => 'Miao',
+            'path' => $projectRoot,
+            'plugin' => 'Standart'
+        )
+    )
 );
 
 /**
@@ -42,6 +48,9 @@ $configMain = array(
  * Modules properties
  */
 $configModules = array( 'Miao' => array() );
+
+// Register libs
+\Miao\Autoload::init( $configMap[ 'libs' ] );
 
 // Init application
 \Miao\App::init( $configMap, $configMain, $configModules );

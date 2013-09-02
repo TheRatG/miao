@@ -10,7 +10,11 @@ namespace Miao;
 
 class App
 {
-    const INSTANCE_DEFAULT_NAME = 'default';
+    const INSTANCE_DEFAULT_NICK = 'app:default';
+
+    const INSTANCE_CONFIG_NICK = 'app:config';
+
+    const INSTANCE_PATH_NICK = 'app:path';
 
     /**
      * @var array Application
@@ -29,7 +33,7 @@ class App
      * @return \Miao\App
      */
     static public function init( array $configMap, array $configMain, array $configModules = array(),
-                                 $name = self::INSTANCE_DEFAULT_NAME )
+                                 $name = self::INSTANCE_DEFAULT_NICK )
     {
         if ( !isset( self::$_instance[ $name ] ) )
         {
@@ -37,6 +41,28 @@ class App
         }
         $result = self::$_instance[ $name ];
         return $result;
+    }
+
+    /**
+     * @param string $name Instance application name (default = 'Main')
+     * @return null|App
+     */
+    static public function getInstance( $name = self::INSTANCE_DEFAULT_NICK )
+    {
+        $result = null;
+        if ( isset( self::$_instance[ $name ] ) )
+        {
+            $result = self::$_instance[ $name ];
+        }
+        return $result;
+    }
+
+    /**
+     * @return \Miao\Path\Resolver
+     */
+    public function getPath()
+    {
+        return $this->getObject( self::INSTANCE_PATH_NICK );
     }
 
     /**
@@ -77,7 +103,9 @@ class App
 
     protected function __construct( array $configMap, array $configMain, array $configModules = array() )
     {
-        $this->setObject( new App\Config( $configMain, $configModules ) );
-        $this->setObject( new \Miao\Path\Resolver( $configMap[ 'project_root' ], $configMap[ 'libs' ] ) );
+        $this->setObject( new App\Config( $configMain, $configModules ), self::INSTANCE_CONFIG_NICK );
+        $this->setObject(
+            new \Miao\Path\Resolver( $configMap[ 'project_root' ], $configMap[ 'libs' ] ), self::INSTANCE_PATH_NICK
+        );
     }
 }
