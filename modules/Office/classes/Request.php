@@ -28,10 +28,13 @@ class Request
         return $this->_vars;
     }
 
-    public function __construct()
+    /**
+     * @param array $data
+     */
+    public function __construct( array $data = null )
     {
         $this->_method = isset( $_SERVER[ 'REQUEST_METHOD' ] ) ? strtoupper( $_SERVER[ 'REQUEST_METHOD' ] ) : 'GET';
-        $this->resetVars();
+        $this->resetVars( $data );
     }
 
     public function getMethod()
@@ -55,17 +58,25 @@ class Request
     }
 
     /**
-     * Переинициализация данных
+     * Restore vars
+     * @param array $data
      */
-    public function resetVars()
+    public function resetVars( array $data = null )
     {
         $method = $this->_method;
         if ( $method == 'HEAD' )
         {
             $method = 'GET';
         }
-        $this->_vars = $GLOBALS[ '_' . $method ];
-        $this->_vars = array_merge_recursive( $this->_vars, $_FILES );
+        if ( is_null( $data ) )
+        {
+            $this->_vars = $GLOBALS[ '_' . $method ];
+            $this->_vars = array_merge_recursive( $this->_vars, $_FILES );
+        }
+        else
+        {
+            $this->_vars = $data;
+        }
     }
 
     /**

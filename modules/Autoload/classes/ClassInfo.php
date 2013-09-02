@@ -3,6 +3,11 @@ namespace Miao\Autoload;
 
 class ClassInfo
 {
+    const TYPE_OBJECT_REQUEST_RESOURCE = 'Resource';
+    const TYPE_OBJECT_REQUEST_VIEW = 'View';
+    const TYPE_OBJECT_REQUEST_VIEWBLOCK = 'ViewBlock';
+    const TYPE_OBJECT_REQUEST_ACTION = 'Action';
+
     private $_parsedString;
 
     private $_lib;
@@ -202,15 +207,15 @@ class ClassInfo
 
     protected function _initOffice()
     {
-        if ( false !== strpos( $this->_class, 'Office' . $this->_delimiter . 'ViewBlock' ) )
+        if ( false !== strpos( $this->_class, 'Office' . $this->_delimiter . self::TYPE_OBJECT_REQUEST_VIEWBLOCK ) )
         {
             $this->_isViewBlock = true;
         }
-        else if ( false !== strpos( $this->_class, 'Office' . $this->_delimiter . 'View' ) )
+        else if ( false !== strpos( $this->_class, 'Office' . $this->_delimiter . self::TYPE_OBJECT_REQUEST_VIEW ) )
         {
             $this->_isView = true;
         }
-        else if ( false !== strpos( $this->_class, 'Office' . $this->_delimiter . 'Action' ) )
+        else if ( false !== strpos( $this->_class, 'Office' . $this->_delimiter . self::TYPE_OBJECT_REQUEST_ACTION ) )
         {
             $this->_isAction = true;
         }
