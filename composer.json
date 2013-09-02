@@ -6,6 +6,7 @@
             "email": "TheRatW@gmail.com"
         }
     ],
+    "minimum-stability": "dev",
     "require": {
         "symfony/console": "2.3.*"
     }
