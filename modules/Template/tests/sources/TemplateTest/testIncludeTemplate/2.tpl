@@ -1,1 +1,0 @@
-two <?=$this->_includeTemplate( '2_2.tpl' )?>
