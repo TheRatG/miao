@@ -1,13 +1,21 @@
 {
-    "name": "theratg/miao",
-    "authors": [
+    "name" : "theratg/miao",
+    "authors" : [
         {
-            "name": "Vladimir",
-            "email": "TheRatW@gmail.com"
+            "name" : "Vladimir",
+            "email" : "TheRatW@gmail.com"
         }
     ],
-    "minimum-stability": "dev",
-    "require": {
-        "symfony/console": "2.3.*"
+    "minimum-stability" : "stable",
+    "require" : {
+        "symfony/console" : "2.3"
+    },
+    "autoload" : {
+        "classmap" : [
+            "modules/App/classes",
+            "modules/Autoload/classes",
+            "modules/Config/classes",
+            "modules/Path/classes"
+        ]
     }
 }
