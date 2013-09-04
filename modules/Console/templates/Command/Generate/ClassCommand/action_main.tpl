@@ -7,7 +7,7 @@
 
 namespace %namespace%;
 
-class %class% extends %parent%
+class %class% extends %parent% implements \Miao\Office\Controller\ActionInterface
 {
     public function execute()
     {

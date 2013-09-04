@@ -61,7 +61,7 @@ class Resolver
     /**
      * @param string $string
      * @return mixed
-     * @throws Path\Exception
+     * @throws \Miao\Path\Exception
      */
     public function getRootDir( $string = '' )
     {
@@ -82,7 +82,7 @@ class Resolver
      * Return module dir by __CLASS__ or __METHOD__
      * @param $string
      * @return string
-     * @throws Path\Exception
+     * @throws \Miao\Path\Exception
      */
     public function getModuleDir( $string )
     {
@@ -92,7 +92,24 @@ class Resolver
             throw new Exception( $msg );
         }
         $classInfo = \Miao\Autoload\ClassInfo::parse( $string );
-        $result = sprintf( '%s/modules/%s', $this->_getDir( $classInfo->getLib() ), $classInfo->getModule() );
+
+        try
+        {
+            $this->_getDir( $classInfo->getLib() );
+            $result = sprintf( '%s/modules/%s', $this->_getDir( $classInfo->getLib() ), $classInfo->getModule() );
+        }
+        catch ( \Miao\Path\Exception $e )
+        {
+            $loader = \Miao\App::getInstance()->getObject( \Miao\App::INSTANCE_COMPOSER_LOADER_NICK );
+            if ( $loader )
+            {
+                $filename = $loader->findFile( ltrim( $string, '\\' ) );
+                if ( $filename )
+                {
+                    $result = substr( $filename, 0, strpos( $filename, '/classes/') );
+                }
+            }
+        }
         return $result;
     }
 
@@ -127,7 +144,7 @@ class Resolver
      * Generate sources dir for tests
      * @param string $string Use __METHOD__
      * @return string
-     * @throws Path\Exception
+     * @throws \Miao\Path\Exception
      */
     public function getTestSourcesDir( $string )
     {
@@ -182,7 +199,7 @@ class Resolver
     /**
      * @param $name
      * @return string
-     * @throws Path\Exception
+     * @throws \Miao\Path\Exception
      */
     protected function _getDir( $name )
     {
@@ -192,7 +209,7 @@ class Resolver
         }
         else
         {
-            $msg = sprintf( 'Lib name (%s) by string', $name );
+            $msg = sprintf( 'Lib name (%s) undefined', $name );
             throw new Exception( $msg );
         }
         return $result;

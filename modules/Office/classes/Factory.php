@@ -9,24 +9,19 @@ namespace Miao\Office;
 
 class Factory
 {
-    protected $_resourceRequestName = '_resource';
+    protected $_viewRequestName = '_miaoView';
 
-    protected $_viewRequestName = '_view';
+    protected $_viewBlockRequestName = '_miaoViewBlock';
 
-    protected $_viewBlockRequestName = '_viewBlock';
+    protected $_actionRequestName = '_miaoAction';
 
-    protected $_actionRequestName = '_action';
-
-    protected $_prefixRequestName = '_prefix';
+    protected $_prefixRequestName = '_miaoPrefix';
 
     protected $_defaultPrefix;
 
-    protected $_requestMethod;
-
-    public function __construct( $defaultPrefix = '', $requestMethod = 'get' )
+    public function __construct( $defaultPrefix = '' )
     {
         $this->_defaultPrefix = $defaultPrefix;
-        $this->_requestMethod = $requestMethod;
     }
 
     /**
@@ -136,71 +131,42 @@ class Factory
         return $result;
     }
 
-    /**
-     * @return string
-     */
-    public function getRequestMethod()
+    public function getControllerClassName( array $params, array $defaultParams = array() )
     {
-        if ( empty( $this->_requestMethod ) )
-        {
-            $this->_requestMethod = 'Get';
-            if ( isset( $_SERVER[ 'REQUEST_METHOD' ] ) )
-            {
-                $this->_requestMethod = $_SERVER[ 'REQUEST_METHOD' ];
-            }
-            $this->_requestMethod = strtolower( $this->_requestMethod );
-            $this->_requestMethod = ucfirst( $this->_requestMethod );
-        }
-        return $this->_requestMethod;
-    }
-
-    public function getClassList( array $requestParams, array $default = array() )
-    {
-        $resourceName = '\\Miao\\Office\\Resource\\' . ucfirst(
-                $this->getRequestMethod()
-            );
-
-        $types = \Miao\Office::getTypesObjectRequest();
-        $result = $this->_getClassList( $requestParams, $resourceName, $types );
-        if ( !empty( $default ) )
-        {
-            $defaultValues = $this->_getClassList( $default, $resourceName, $types );
-            if ( count( array_unique( $result ) ) < count( array_unique( $defaultValues ) ) )
-            {
-                $result = $defaultValues;
-            }
-        }
-        return $result;
-    }
-
-    protected function _getClassList( array $params, $resourceName, array $types )
-    {
+        $params = array_merge_recursive( $params, $defaultParams );
         $prefix = $this->getPrefix( $params );
-        $types = array_map( 'lcfirst', $types );
-        $values[ ] = $resourceName;
-        for ( $i = 1, $cnt = count( $types ); $i < $cnt; $i++ )
+
+        $types = array( 'view', 'action', 'viewBlock' );
+        $result = null;
+        foreach ( $types as $type )
         {
-            $values[ ] = $this->_getParamValue(
-                $params, lcfirst( $types[ $i ] ), $prefix
-            );
+            $tmp = $this->_getParamValue( $params, $type, $prefix );
+            if ( $tmp  )
+            {
+                if ( !empty( $result ) )
+                {
+                    $msg = 'Only one type controller in the same time';
+                    throw new \Miao\Office\Exception( $msg );
+                }
+                $result = $tmp;
+            }
         }
-        $result = array_combine( $types, $values );
         return $result;
     }
 
-    protected function _getParamValue( array $requestParams, $typeName, $prefix )
+    protected function _getParamValue( array $params, $typeName, $prefix )
     {
         $requestName = sprintf( '_%sRequestName', $typeName );
         $result = null;
         $requestValue = '';
 
-        if ( isset( $requestParams[ $this->$requestName ] )
+        if ( isset( $params[ $this->$requestName ] )
             && strlen(
-                $requestParams[ $this->$requestName ]
+                $params[ $this->$requestName ]
             )
         )
         {
-            $requestValue = $requestParams[ $this->$requestName ];
+            $requestValue = $params[ $this->$requestName ];
         }
         if ( $requestValue )
         {

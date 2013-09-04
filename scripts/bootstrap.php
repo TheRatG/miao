@@ -6,8 +6,14 @@
  * Time: 15:05
  */
 $projectRoot = realpath( dirname( __FILE__ ) . '/../' );
+$loaderFilename = $projectRoot . '/vendor/autoload.php';
+if ( !file_exists( $loaderFilename ) )
+{
+    $loaderFilename = realpath( $projectRoot . '/../..' ) . '/autoload.php';
+}
+
 /** @var Composer\Autoload\ClassLoader $loader */
-$loader = require_once $projectRoot . '/vendor/autoload.php';
+$loader = require_once $loaderFilename;
 
 ## Load config file
 
@@ -54,3 +60,6 @@ $configModules = array( 'Miao' => array() );
 
 // Init application
 \Miao\App::init( $configMap, $configMain, $configModules );
+
+//Register composer loader
+\Miao\App::getInstance()->setObject( $loader, \Miao\App::INSTANCE_COMPOSER_LOADER_NICK );

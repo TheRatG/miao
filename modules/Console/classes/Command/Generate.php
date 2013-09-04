@@ -23,7 +23,7 @@ class Generate extends \Symfony\Component\Console\Command\Command
 
     public function _makeFile( \Miao\Autoload\ClassInfo $classInfo, $template, $search, $replace )
     {
-        $classTemplateFolder = $this->_path->getTemplateDir( '\\Miao\\Console\\Generate\\ClassCommand' );
+        $classTemplateFolder = $this->_path->getTemplateDir( 'Miao\\Console\\Command\\Generate\\ClassCommand' );
         $classTemplateFilename = $classTemplateFolder . DIRECTORY_SEPARATOR . $template;
 
         $libName = $classInfo->getLib();

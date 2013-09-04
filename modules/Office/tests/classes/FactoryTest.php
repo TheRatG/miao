@@ -6,7 +6,7 @@
 
 namespace Miao\Office;
 
-class FactoryTest
+class FactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider providerTestGetClassName
@@ -68,31 +68,27 @@ class FactoryTest
     }
 
     /**
-     * @dataProvider providerTestGetClassList
+     * @dataProvider providerGetControllerClassName
      * @param array $config
-     * @param array $requestParams
-     * @param array $default
+     * @param array $params
+     * @param array $defaultParams
      * @param $expected
      * @param string $exceptionName
      */
-    public function testGetClassList( array $config, array $requestParams, array $default, $expected,
-                                      $exceptionName = '' )
+    public function testGetControllerClassName( array $config, array $params, array $defaultParams, $expected,
+                                                $exceptionName = '' )
     {
-        if ( $exceptionName )
-        {
-            $this->setExpectedException( $exceptionName );
-        }
-
         $defaultPrefix = $config[ 'defaultPrefix' ];
-        $requestMethod = isset( $config[ 'requestMethod' ] ) ? $config[ 'requestMethod' ] : 'get';
+        $factory = new \Miao\Office\Factory( $defaultPrefix );
+        $actual = $factory->getControllerClassName( $params, $defaultParams );
 
-        $obj = new \Miao\Office\Factory( $defaultPrefix, $requestMethod );
-        $actual = $obj->getClassList( $requestParams, $default );
         $this->assertEquals( $expected, $actual );
     }
 
-    public function providerTestGetClassList()
+    public function providerGetControllerClassName()
     {
+        $factory = new \Miao\Office\Factory();
+
         $data = array();
 
         $config = array(
@@ -100,143 +96,133 @@ class FactoryTest
         );
         $data[ ] = array(
             $config,
-            array( '_view' => 'Main' ),
+            array( $factory->getViewRequestName() => 'Main' ),
             array(),
-            array(
-                'resource' => '\\Miao\\Office\\Resource\\Get',
-                'view' => '\\Project\\Office\\View\\Main',
-                'viewBlock' => null,
-                'action' => null
-            ),
+            '\\Project\\Office\\View\\Main',
             ''
         );
 
         $config = array( 'defaultPrefix' => '\\Miao\\BackOffice' );
         $data[ ] = array(
             $config,
-            array( '_view' => 'Main' ),
+            array( $factory->getViewRequestName() => 'Main' ),
             array(),
-            array(
-                'resource' => '\\Miao\\Office\\Resource\\Get',
-                'view' => '\\Miao\\BackOffice\\View\\Main',
-                'viewBlock' => null,
-                'action' => null
-            ),
+            '\\Miao\\BackOffice\\View\\Main',
             ''
         );
 
-        $config = array(
-            'defaultPrefix' => 'Miao\\BackOffice',
-            'requestMethod' => 'post'
-        );
-        $data[ ] = array(
-            $config,
-            array( '_action' => 'Article\\Add' ),
-            array(),
-            array(
-                'resource' => '\\Miao\\Office\\Resource\\Post',
-                'view' => '',
-                'viewBlock' => '',
-                'action' => 'Miao\\BackOffice\\Action\\Article\\Add'
-            )
-        );
-
-        $config = array(
-            'defaultPrefix' => '\\Miao\\BackOffice',
-            'requestMethod' => 'post'
-        );
-        $data[ ] = array(
-            $config,
-            array(),
-            array(),
-            array(
-                'resource' => '\\Miao\\Office\\Resource\\Post',
-                'view' => null,
-                'viewBlock' => null,
-                'action' => null
-            )
-        );
-
-        $config = array(
-            'defaultPrefix' => '\\Miao\\BackOffice',
-            'requestMethod' => 'get'
-        );
-        $data[ ] = array(
-            $config,
-            array( '_view' => 'Main2' ),
-            array( '_view' => 'Main' ),
-            array(
-                'resource' => '\\Miao\\Office\\Resource\\Get',
-                'view' => '\\Miao\\BackOffice\\View\\Main2',
-                'viewBlock' => null,
-                'action' => null
-            )
-        );
-
-        $config = array(
-            'defaultPrefix' => '\\Miao\\BackOffice',
-            'requestMethod' => 'get'
-        );
-        $data[ ] = array(
-            $config,
-            array( '_view' => 'Main2' ),
-            array( '_action' => 'Main' ),
-            array(
-                'resource' => '\\Miao\\Office\\Resource\\Get',
-                'view' => '\\Miao\\BackOffice\\View\\Main2',
-                'viewBlock' => null,
-                'action' => null
-            )
-        );
-
-        // test default
-        $config = array(
-            'defaultPrefix' => '\\Miao\\BackOffice',
-            'requestMethod' => 'get'
-        );
-        $data[ ] = array(
-            $config,
-            array(),
-            array( '_view' => 'Main' ),
-            array(
-                'resource' => '\\Miao\\Office\\Resource\\Get',
-                'view' => '\\Miao\\BackOffice\\View\\Main',
-                'viewBlock' => null,
-                'action' => null
-            )
-        );
-
-        $config = array(
-            'defaultPrefix' => '\\Miao\\BackOffice',
-            'requestMethod' => 'post'
-        );
-        $data[ ] = array(
-            $config,
-            array( '_view' => '' ),
-            array( '_action' => 'Main' ),
-            array(
-                'resource' => '\\Miao\\Office\\Resource\\Post',
-                'view' => null,
-                'viewBlock' => null,
-                'action' => '\\Miao\\BackOffice\\Action\\Main'
-            )
-        );
-
-        $config = array(
-            'defaultPrefix' => '\\Miao\\BackOffice',
-            'requestMethod' => 'get'
-        );
-        $data[ ] = array(
-            $config,
-            array(),
-            array( '_viewBlock' => 'Main' ),
-            array(
-                'resource' => '\\Miao\\Office\\Resource\\Get',
-                'view' => null,
-                'viewBlock' => '\\Miao\\BackOffice\\ViewBlock\\Main',
-                'action' => null
-            )
-        );
+//        $config = array(
+//            'defaultPrefix' => 'Miao\\BackOffice',
+//            'requestMethod' => 'post'
+//        );
+//        $data[ ] = array(
+//            $config,
+//            array( '_action' => 'Article\\Add' ),
+//            array(),
+//            array(
+//                'resource' => '\\Miao\\Office\\Resource\\Post',
+//                'view' => '',
+//                'viewBlock' => '',
+//                'action' => 'Miao\\BackOffice\\Action\\Article\\Add'
+//            )
+//        );
+//
+//        $config = array(
+//            'defaultPrefix' => '\\Miao\\BackOffice',
+//            'requestMethod' => 'post'
+//        );
+//        $data[ ] = array(
+//            $config,
+//            array(),
+//            array(),
+//            array(
+//                'resource' => '\\Miao\\Office\\Resource\\Post',
+//                'view' => null,
+//                'viewBlock' => null,
+//                'action' => null
+//            )
+//        );
+//
+//        $config = array(
+//            'defaultPrefix' => '\\Miao\\BackOffice',
+//            'requestMethod' => 'get'
+//        );
+//        $data[ ] = array(
+//            $config,
+//            array( '_view' => 'Main2' ),
+//            array( '_view' => 'Main' ),
+//            array(
+//                'resource' => '\\Miao\\Office\\Resource\\Get',
+//                'view' => '\\Miao\\BackOffice\\View\\Main2',
+//                'viewBlock' => null,
+//                'action' => null
+//            )
+//        );
+//
+//        $config = array(
+//            'defaultPrefix' => '\\Miao\\BackOffice',
+//            'requestMethod' => 'get'
+//        );
+//        $data[ ] = array(
+//            $config,
+//            array( '_view' => 'Main2' ),
+//            array( '_action' => 'Main' ),
+//            array(
+//                'resource' => '\\Miao\\Office\\Resource\\Get',
+//                'view' => '\\Miao\\BackOffice\\View\\Main2',
+//                'viewBlock' => null,
+//                'action' => null
+//            )
+//        );
+//
+//        // test default
+//        $config = array(
+//            'defaultPrefix' => '\\Miao\\BackOffice',
+//            'requestMethod' => 'get'
+//        );
+//        $data[ ] = array(
+//            $config,
+//            array(),
+//            array( '_view' => 'Main' ),
+//            array(
+//                'resource' => '\\Miao\\Office\\Resource\\Get',
+//                'view' => '\\Miao\\BackOffice\\View\\Main',
+//                'viewBlock' => null,
+//                'action' => null
+//            )
+//        );
+//
+//        $config = array(
+//            'defaultPrefix' => '\\Miao\\BackOffice',
+//            'requestMethod' => 'post'
+//        );
+//        $data[ ] = array(
+//            $config,
+//            array( '_view' => '' ),
+//            array( '_action' => 'Main' ),
+//            array(
+//                'resource' => '\\Miao\\Office\\Resource\\Post',
+//                'view' => null,
+//                'viewBlock' => null,
+//                'action' => '\\Miao\\BackOffice\\Action\\Main'
+//            )
+//        );
+//
+//        $config = array(
+//            'defaultPrefix' => '\\Miao\\BackOffice',
+//            'requestMethod' => 'get'
+//        );
+//        $data[ ] = array(
+//            $config,
+//            array(),
+//            array( '_viewBlock' => 'Main' ),
+//            array(
+//                'resource' => '\\Miao\\Office\\Resource\\Get',
+//                'view' => null,
+//                'viewBlock' => '\\Miao\\BackOffice\\ViewBlock\\Main',
+//                'action' => null
+//            )
+//        );
 
         return $data;
     }

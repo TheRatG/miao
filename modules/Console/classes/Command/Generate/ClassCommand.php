@@ -25,6 +25,7 @@ class ClassCommand extends Command\Generate
     {
         $this
             ->setName( 'miao:generate-class' )
+            ->setAliases( array( 'miao:gc' ) )
             ->setDescription( 'Create class' )
             ->addArgument(
                 'name', InputArgument::REQUIRED,
@@ -66,6 +67,7 @@ class ClassCommand extends Command\Generate
         {
             $error = $e->getMessage();
         }
+
 
         if ( $error )
         {
@@ -164,11 +166,14 @@ class ClassCommand extends Command\Generate
                     '<info>...Generated parent class "%s", file "%s"</info>', $baseClassName, $parentFilename
                 );
                 $output->writeln( $msg );
-
-                $result = '\\' . $parentClassName;
             }
+            $result = '\\' . $parentClassName;
         }
-
+        else
+        {
+            $msg = sprintf( 'Parent class for "%s" not found', $this->_classInfo->getParsedString() );
+            throw new Command\Exception( $msg );
+        }
         return $result;
     }
 }

@@ -16,6 +16,8 @@ class App
 
     const INSTANCE_PATH_NICK = 'app:path';
 
+    const INSTANCE_COMPOSER_LOADER_NICK = 'composer:loader';
+
     /**
      * @var array Application
      */
@@ -86,7 +88,13 @@ class App
         return $this;
     }
 
-    public function getObject( $nick )
+    /**
+     * @param $nick
+     * @param bool $throwException
+     * @return null
+     * @throws \Miao\App\Exception
+     */
+    public function getObject( $nick, $throwException = true )
     {
         $result = null;
         if ( isset( $this->_objects[ $nick ] ) )
@@ -95,8 +103,11 @@ class App
         }
         else
         {
-            $msg = sprintf( 'Object by nick %s not found', $nick );
-            throw new \Miao\App\Exception( $msg );
+            if ( $throwException )
+            {
+                $msg = sprintf( 'Object by nick %s not found', $nick );
+                throw new \Miao\App\Exception( $msg );
+            }
         }
         return $result;
     }

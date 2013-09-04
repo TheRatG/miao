@@ -7,25 +7,25 @@
 
 namespace %namespace%;
 
-class %class% extends %parent%
+class %class% extends %parent% implements \Miao\Office\Controller\ViewInterface
 {
     protected $_expires = 10;
 
     protected function _init()
 	{
-        $this->_initTmplVariables();
+        $this->_initTemplateVariables();
         $this->_initHeaders();
 	}
 
     /**
-     * There is place for define view bloks
-     * @example $this->_initBlock( 'Meta', 'Project_FrontOffice_ViewBlock_Meta', array( 'index.tpl' ) );
+     * (non-PHPdoc)
+     * @see \Miao\Office\Controller\ViewInterface
      */
-	protected function _initializeBlock()
+	public function initializeBlock()
 	{
     }
 
-    protected function _initTmplVariables()
+    protected function _initTemplateVariables()
     {
     }
 
