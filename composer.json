@@ -17,8 +17,10 @@
             "modules/Autoload/classes",
             "modules/Config/classes",
             "modules/Console/classes",
+            "modules/Log/classes",
+            "modules/Office/classes",
             "modules/Path/classes",
-            "modules/Office/classes"
+            "modules/Template/classes"
         ]
     }
 }

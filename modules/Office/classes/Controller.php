@@ -8,6 +8,7 @@
 namespace Miao\Office;
 
 
-class Controller {
-
+abstract class Controller
+{
+    abstract public function generateContent();
 }

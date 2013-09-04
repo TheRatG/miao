@@ -10,5 +10,18 @@ namespace Miao\Office\Controller;
 
 class View extends \Miao\Office\Controller
 {
+    /**
+     * @var \Miao\Template\Native
+     */
+    protected $_template;
 
+    public function __construct()
+    {
+
+    }
+
+    public function generateContent()
+    {
+
+    }
 }
