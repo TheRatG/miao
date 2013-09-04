@@ -11,6 +11,54 @@ namespace Miao\Path;
 
 class Helper
 {
+    static public function copyr( $source, $target, array $excludeList = array( '.svn' ) )
+    {
+        $result = array();
+        if ( is_dir( $source ) )
+        {
+            if ( in_array( basename( $source ), $excludeList ) )
+            {
+
+            }
+            else
+            {
+                if ( !file_exists( $target ) )
+                {
+                    mkdir( $target );
+                    $result[ ] = $target;
+                }
+                $d = dir( $source );
+                while ( false !== ( $entry = $d->read() ) )
+                {
+                    if ( $entry == '.' || $entry == '..' )
+                    {
+                        continue;
+                    }
+                    $newSource = $source . DIRECTORY_SEPARATOR . $entry;
+                    $newTarget = $target . DIRECTORY_SEPARATOR . $entry;
+
+                    if ( is_dir( $newSource ) )
+                    {
+                        $res = self::copyr( $newSource, $newTarget );
+                        $result = array_merge( $result, $res );
+                        continue;
+                    }
+                    copy( $newSource, $newTarget );
+                    chmod( $newTarget, 0775 );
+                    $result[ ] = $newTarget;
+                }
+                $d->close();
+            }
+        }
+        else
+        {
+            copy( $source, $target );
+            chmod( $target, 0775 );
+            $result[ ] = $target;
+        }
+        return $result;
+    }
+
     static public function isDirEmpty( $dir, $throwException = true )
     {
         $result = true;

@@ -19,6 +19,11 @@ class Factory
 
     protected $_defaultPrefix;
 
+    /**
+     * @var array
+     */
+    protected $_defaultParams;
+
     public function __construct( $defaultPrefix = '' )
     {
         $this->_defaultPrefix = $defaultPrefix;
@@ -120,6 +125,22 @@ class Factory
         return $result;
     }
 
+    /**
+     * @param array $defaultParams
+     */
+    public function setDefaultParams( $defaultParams )
+    {
+        $this->_defaultParams = $defaultParams;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDefaultParams()
+    {
+        return $this->_defaultParams;
+    }
+
     public function getClassName( $type, $name, $prefix = '' )
     {
         if ( empty( $prefix ) )
@@ -133,7 +154,32 @@ class Factory
 
     public function getControllerClassName( array $params, array $defaultParams = array() )
     {
-        $params = array_merge_recursive( $params, $defaultParams );
+        $result = $this->_getControllerClassName( $params );
+        if ( !$result )
+        {
+            $result = $this->_getControllerClassName( $defaultParams );
+        }
+        return $result;
+    }
+
+    public function getOffice( array $params, array $defaultParams = array() )
+    {
+        if ( empty( $defaultParams ) )
+        {
+            $defaultParams = $this->getDefaultParams();
+        }
+        $controllerClassName = $this->getControllerClassName( $params, $defaultParams );
+        if ( !$controllerClassName )
+        {
+            $msg = 'Invalid params, controller key is broken or does not exists';
+            throw new \Miao\Office\Exception( $msg );
+        }
+        $result = new \Miao\Office\Index( $this, new $controllerClassName() );
+        return $result;
+    }
+
+    protected function _getControllerClassName( array $params )
+    {
         $prefix = $this->getPrefix( $params );
 
         $types = array( 'view', 'action', 'viewBlock' );

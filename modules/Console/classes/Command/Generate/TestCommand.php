@@ -14,6 +14,7 @@ class TestCommand extends Command\Generate
     {
         $this
             ->setName( 'miao:generate-test' )
+            ->setAliases( array( 'miao:gt' ) )
             ->setDescription( 'Create test class' )
             ->addArgument(
                 'name', InputArgument::REQUIRED,

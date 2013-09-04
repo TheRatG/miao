@@ -8,7 +8,7 @@
 namespace Miao\Office\Controller;
 
 
-class View extends \Miao\Office\Controler
+class View extends \Miao\Office\Controller
 {
 
 }

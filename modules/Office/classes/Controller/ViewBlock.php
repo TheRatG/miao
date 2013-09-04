@@ -7,6 +7,6 @@
 
 namespace Miao\Office\Controller;
 
-class ViewBlock extends \Miao\Office\Controler
+class ViewBlock extends \Miao\Office\Controller
 {
 }

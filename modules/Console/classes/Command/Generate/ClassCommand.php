@@ -136,19 +136,19 @@ class ClassCommand extends Command\Generate
         {
             $parentClassName = $this->_classInfo->getLib() . '\\' . $this->_classInfo->getModule() . '\\' . 'View';
             $parentTemplate = 'view_main.tpl';
-            $baseClassName = '\\Miao\\Office\\View';
+            $baseClassName = '\\Miao\\Office\\Controller\\View';
         }
         else if ( $this->_classInfo->isViewBlock() )
         {
             $parentClassName = $this->_classInfo->getLib() . '\\' . $this->_classInfo->getModule() . '\\' . 'ViewBlock';
             $parentTemplate = 'view_block_main.tpl';
-            $baseClassName = '\\Miao\\Office\\ViewBlock';
+            $baseClassName = '\\Miao\\Office\\Controller\\ViewBlock';
         }
         else if ( $this->_classInfo->isAction() )
         {
             $parentClassName = $this->_classInfo->getLib() . '\\' . $this->_classInfo->getModule() . '\\' . 'Action';
             $parentTemplate = 'action_main.tpl';
-            $baseClassName = '\\Miao\\Office\\Action';
+            $baseClassName = '\\Miao\\Office\\Controller\\Action';
         }
 
         if ( $parentClassName )
