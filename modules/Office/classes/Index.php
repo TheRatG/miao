@@ -38,10 +38,10 @@ class Index
         return $result;
     }
 
-    public function __construct( \Miao\Office\Factory $factory, \Miao\Office\Controller $controller )
+    public function __construct( \Miao\Office\Factory $factory, $controllerClassName )
     {
         $this->_factory = $factory;
-        $this->_controller = $controller;
+        $this->_controller = new $controllerClassName( $this );
     }
 
     public function setController( \Miao\Office\Controller $controller )

@@ -7,7 +7,7 @@
 
 namespace Miao\TestOffice\ViewBlock;
 
-class Main extends \Miao\TestOffice\ViewBlock
+class Main extends \Miao\TestOffice\ViewBlock implements \Miao\Office\Controller\ViewBlockInterface
 {
     /**
      * (non-PHPdoc)

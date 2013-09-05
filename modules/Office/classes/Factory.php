@@ -174,7 +174,7 @@ class Factory
             $msg = 'Invalid params, controller key is broken or does not exists';
             throw new \Miao\Office\Exception( $msg );
         }
-        $result = new \Miao\Office\Index( $this, new $controllerClassName() );
+        $result = new \Miao\Office\Index( $this, $controllerClassName );
         return $result;
     }
 

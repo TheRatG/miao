@@ -20,5 +20,14 @@ class Article extends \Miao\TestOffice\View implements \Miao\Office\Controller\V
     public function initializeBlock()
 	{
 	    parent::initializeBlock();
+
+        $menuViewBlock = new \Miao\TestOffice\ViewBlock\Menu();
+        $this->initBlock( 'MenuTop', $menuViewBlock->setTemplateFilename( 'top.tpl' ) );
+
+        $viewBlock = new \Miao\TestOffice\ViewBlock\Article\Item();
+        $this->initBlock( 'Article', $viewBlock );
+
+
+        $this->initBlock( 'MenuBottom', $menuViewBlock->setTemplateFilename( 'bottom.tpl' ) );
 	}
 }

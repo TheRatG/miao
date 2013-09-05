@@ -7,13 +7,8 @@
 
 namespace Miao\TestOffice;
 
-class ViewBlock extends \Miao\Office\Controller\ViewBlock
+class ViewBlock extends \Miao\Office\Controller\ViewBlock implements \Miao\Office\Controller\ViewBlockInterface
 {
-    protected function _init()
-	{
-	    parent::_init();
-	}
-
     /**
      * (non-PHPdoc)
      * @see \Miao\Office\Controller\ViewBlockInterface::processData()

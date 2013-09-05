@@ -10,5 +10,9 @@ namespace Miao\Office;
 
 abstract class Controller
 {
+    /**
+     * Generate html content
+     * @return string
+     */
     abstract public function generateContent();
 }

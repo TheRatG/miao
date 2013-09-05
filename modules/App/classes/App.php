@@ -10,13 +10,17 @@ namespace Miao;
 
 class App
 {
-    const INSTANCE_DEFAULT_NICK = 'app:default';
+    const INSTANCE_DEFAULT_NICK = 'miao:default';
 
-    const INSTANCE_CONFIG_NICK = 'app:config';
+    const INSTANCE_CONFIG_NICK = 'miao:config';
 
-    const INSTANCE_PATH_NICK = 'app:path';
+    const INSTANCE_PATH_NICK = 'miao:path';
 
     const INSTANCE_COMPOSER_LOADER_NICK = 'composer:loader';
+    
+    const INSTANCE_OFFICE_NICK = 'miao:office';
+    
+    const INSTANCE_RESPONSE_NICK = 'miao:response';
 
     /**
      * @var array Application
