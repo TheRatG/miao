@@ -100,13 +100,14 @@ class Resolver
         }
         catch ( \Miao\Path\Exception $e )
         {
-            $loader = \Miao\App::getInstance()->getObject( \Miao\App::INSTANCE_COMPOSER_LOADER_NICK );
+            $loader = \Miao\App::getInstance()
+                ->getObject( \Miao\App::INSTANCE_COMPOSER_LOADER_NICK );
             if ( $loader )
             {
                 $filename = $loader->findFile( ltrim( $string, '\\' ) );
                 if ( $filename )
                 {
-                    $result = substr( $filename, 0, strpos( $filename, '/classes/') );
+                    $result = substr( $filename, 0, strpos( $filename, '/classes/' ) );
                 }
             }
         }
@@ -121,6 +122,7 @@ class Resolver
     {
         $classInfo = \Miao\Autoload\ClassInfo::parse( $className );
         $delimiter = $classInfo->isOldFashion() ? '_' : '\\';
+        $className = ltrim( $className, '\\' );
         $ar = explode( $delimiter, $className );
         $cnt = count( $ar );
 
@@ -136,6 +138,21 @@ class Resolver
             {
                 $result .= DIRECTORY_SEPARATOR . implode( DIRECTORY_SEPARATOR, array_slice( $ar, 2 ) );
             }
+        }
+        return $result;
+    }
+
+    public function getTemplateNameByClassName( $className )
+    {
+        $classInfo = \Miao\Autoload\ClassInfo::parse( $className );
+        $result = 'index.tpl';
+        if ( $classInfo->isView() )
+        {
+            $class = $classInfo->getClass( true );
+            $result = str_replace(
+                    array( 'View' . $classInfo->getDelimiter(), $classInfo->getDelimiter() ), array( '', '_' ), $class
+                ) . '.tpl';
+            $result = strtolower( $result );
         }
         return $result;
     }

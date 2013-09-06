@@ -74,12 +74,9 @@ class View extends \Miao\Office\Controller implements \Miao\Office\Controller\Vi
     {
         if ( !$this->_templateFilename )
         {
-            $classInfo = \Miao\Autoload\ClassInfo::parse( get_called_class() );
-            $class = $classInfo->getClass( true );
-            $this->_templateFilename = str_replace(
-                    array( 'View' . $classInfo->getDelimiter(), $classInfo->getDelimiter() ), array( '', '_' ), $class
-                ) . '.tpl';
-            $this->_templateFilename = strtolower( $this->_templateFilename );
+            $path = \Miao\App::getInstance()
+                ->getPath();
+            $this->_templateFilename = $path->getTemplateNameByClassName( get_called_class() );
         }
         return $this->_templateFilename;
     }

@@ -266,10 +266,43 @@ class ResolverTest extends \PHPUnit_Framework_TestCase
             'Miao_TestOffice_ViewBlock_Article_Item',
             '/www/rbc/libs/miao/master/modules/TestOffice/templates/ViewBlock/Article/Item'
         );
+
+        $data[ ] = array(
+            '\\Miao\\Office\\ViewBlock\\Main',
+            '/www/rbc/libs/miao/master/modules/Office/templates/ViewBlock/Main'
+        );
+
         $data[ ] = array(
             'Miao_Console_Generator',
             '/www/rbc/libs/miao/master/modules/Console/templates/Generator'
         );
+        return $data;
+    }
+
+    /**
+     * @dataProvider providerTestGetTemplateNameByClassName
+     * @param $className
+     * @param $expected
+     */
+    public function testGetTemplateNameByClassName( $className, $expected )
+    {
+        $actual = $this->_path->getTemplateNameByClassName( $className );
+        $this->assertEquals( $expected, $actual );
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return array
+     */
+    public function providerTestGetTemplateNameByClassName()
+    {
+        $data = array();
+
+        $data[ ] = array( '\\Miao\\Office\\View\\Main', 'main.tpl' );
+        $data[ ] = array( '\\Miao\\Office\\ViewBlock\\Main', 'index.tpl' );
+
+        $data[ ] = array( '\\Miao\\Console', 'index.tpl' );
+
         return $data;
     }
 }

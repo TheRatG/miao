@@ -41,7 +41,7 @@ class TemplateCommand extends Command\Generate
     protected function execute( InputInterface $input, OutputInterface $output )
     {
         $name = $input->getArgument( 'name' );
-        $this->_author = $input->getOption( 'author' ) ? $input->getOption( 'author' ) : $_SERVER[ 'USER' ];
+        $author = $input->getOption( 'author' ) ? $input->getOption( 'author' ) : $_SERVER[ 'USER' ];
 
         $msg = sprintf( '<info>Begin generate class by name "%s"</info>', $name );
         $output->writeln( $msg );
@@ -49,36 +49,59 @@ class TemplateCommand extends Command\Generate
         $this->checkModuleExists( $name );
 
         $this->_classInfo = \Miao\Autoload\ClassInfo::parse( $name );
-
-        $template = $this->_getTemplateName();
+        $classInfo = $this->_classInfo;
 
         $app = \Miao\App::getInstance();
         $path = $app->getPath();
-        $templateDir = $path->getTemplateDir( $name );
-
-        $templateFilename = $templateDir . DIRECTORY_SEPARATOR . $template;
 
         $classTemplateFolder = $path->getTemplateDir( 'Miao\\Console\\Command\\Generate\\TemplateCommand' );
-        $sourceTemplateFilename = '';
 
-        $classTemplateFilename = $classTemplateFolder . DIRECTORY_SEPARATOR . $template;
-
-    }
-
-    protected function _getTemplateName()
-    {
-        $classInfo = $this->_classInfo;
-        $result = null;
+        $sourceTemplateName = 'index.tpl';
         if ( $classInfo->isView() )
         {
-            $result = $classInfo->getClass( true );
-            $result = str_replace( $classInfo->getDelimiter(), '_', $result ) . '.tpl';
-            $result = strtolower( $result );
+            $sourceTemplateName = 'view.tpl';
         }
         else if ( $classInfo->isViewBlock() )
         {
-            $result = 'index.tpl';
+            $sourceTemplateName = 'view_block.tpl';
         }
-        return $result;
+        $sourceTemplateFilename = $classTemplateFolder . DIRECTORY_SEPARATOR . $sourceTemplateName;
+
+        $classTemplateFilename = $path->getTemplateDir( $name ) . DIRECTORY_SEPARATOR . $path->getTemplateNameByClassName( $name );
+
+        if ( file_exists( $classTemplateFilename ) )
+        {
+            $msg = sprintf( 'Template for class "%s" exists by file (%s)', $name, $classTemplateFilename );
+            throw new \Miao\Console\Command\Generate\Exception( $msg );
+        }
+
+        $string = file_get_contents( $sourceTemplateFilename );
+        $search = array(
+            '%namespace%',
+            '%date%',
+            '%author%',
+            '%class%'
+        );
+        $replace = array(
+            $classInfo->getNamespace(),
+            date( 'Y-m-d H:i:s' ),
+            $author,
+            $name
+        );
+        $string = str_replace(
+            $search, $replace, $string
+        );
+
+        $dir = dirname( $classTemplateFilename );
+        if ( !file_exists( $dir ) )
+        {
+            mkdir( $dir, 0775, true );
+        }
+        file_put_contents( $classTemplateFilename, $string );
+
+        $msg = sprintf( '<info>Generated file (%s), for class %s</info>', $classTemplateFilename, $name );
+        $output->writeln( $msg );
+
+        return $classTemplateFilename;
     }
 }

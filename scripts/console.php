@@ -11,4 +11,5 @@ $application->add( new \Miao\Console\Command\Info() );
 $application->add( new \Miao\Console\Command\Generate\ModuleCommand() );
 $application->add( new \Miao\Console\Command\Generate\ClassCommand() );
 $application->add( new \Miao\Console\Command\Generate\TestCommand() );
+$application->add( new \Miao\Console\Command\Generate\TemplateCommand() );
 $application->run();
