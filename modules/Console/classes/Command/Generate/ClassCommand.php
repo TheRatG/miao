@@ -169,7 +169,7 @@ class ClassCommand extends Command\Generate
             }
             $result = '\\' . $parentClassName;
         }
-        else
+        else if ( $this->_classInfo->isView() || $this->_classInfo->isViewBlock() || $this->_classInfo->isAction()  )
         {
             $msg = sprintf( 'Parent class for "%s" not found', $this->_classInfo->getParsedString() );
             throw new Command\Exception( $msg );

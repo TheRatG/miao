@@ -14,7 +14,9 @@ class IndexTest extends \PHPUnit_Framework_TestCase
 
     static public function setUpBeforeClass()
     {
-        $moduleDir = \Miao\App::getInstance()->getPath()->getModuleDir( __CLASS__ );
+        $moduleDir = \Miao\App::getInstance()
+            ->getPath()
+            ->getModuleDir( __CLASS__ );
         $sourceTestOfficeDir = $moduleDir . '/tests/source/TestOffice';
 
         self::$_testOfficeDir = dirname( $moduleDir ) . DIRECTORY_SEPARATOR . 'TestOffice';
@@ -65,10 +67,26 @@ class IndexTest extends \PHPUnit_Framework_TestCase
         $data[ ] = array( $factory, $params, '\\Miao\\TestOffice\\View\\Main' );
 
         $factory->setDefaultParams( array( $factory->getViewRequestName() => 'Main' ) );
-        $factory->setDefaultPrefix('\\Miao\\TestOffice');
+        $factory->setDefaultPrefix( '\\Miao\\TestOffice' );
         $params = array( $factory->getViewRequestName() => 'Article' );
         $data[ ] = array( $factory, $params, '\\Miao\\TestOffice\\View\\Article' );
 
         return $data;
+    }
+
+    public function testResponse()
+    {
+        $officeFactory = new \Miao\Office\Factory( '\\Miao\\TestOffice' );
+        $officeFactory->setDefaultParams( array( $officeFactory->getViewRequestName() => 'Main' ) );
+        $office = $officeFactory->getOffice( array( $officeFactory->getViewRequestName() => 'Main' ) );
+        $response = new \Miao\Office\Response();
+        $office->setResponse( $response );
+
+        $expected = 'file:layouts/index.tpl file:View/main.tpl';
+        $actual = $office->getContent();
+        $this->assertEquals( $expected, $actual );
+
+        $actual = $response->getContent();
+        $this->assertEquals( $expected, $actual );
     }
 }

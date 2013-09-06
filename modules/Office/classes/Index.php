@@ -66,6 +66,14 @@ class Index
     }
 
     /**
+     * @param \Miao\Office\Response $response
+     */
+    public function setResponse( $response )
+    {
+        $this->_response = $response;
+    }
+
+    /**
      * @return Controller
      */
     public function getController()
@@ -73,13 +81,19 @@ class Index
         return $this->_controller;
     }
 
-    public function sendResponse()
+    public function getContent()
     {
         $content = $this->_controller->generateContent();
         if ( $content )
         {
-            $this->_repsonse->setContent( $content );
+            $this->_response->setContent( $content );
         }
-        $this->_repsonse->send();
+        return $content;
+    }
+
+    public function sendResponse()
+    {
+        $this->getContent();
+        $this->_response->send();
     }
 }

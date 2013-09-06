@@ -14,6 +14,7 @@ class ModuleCommand extends \Symfony\Component\Console\Command\Command
     {
         $this
             ->setName( 'miao:generate-module' )
+            ->setAliases( array( 'miao:gm' ) )
             ->setDescription( 'Create module' )
             ->addArgument(
                 'name', InputArgument::REQUIRED,
