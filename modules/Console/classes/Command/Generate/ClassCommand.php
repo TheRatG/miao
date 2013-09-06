@@ -58,12 +58,15 @@ class ClassCommand extends Command\Generate
             $classFilename = $this->_makeClassFile(
                 $this->_classInfo, $template, array( '%author%', '%parent%' ), array( $this->_author, $parent )
             );
+            if ( $this->_classInfo->isView() || $this->_classInfo->isViewBlock() )
+            {
+                $this->_generateTemplate( $name, $output );
+            }
         }
         catch ( Command\Exception $e )
         {
             $error = $e->getMessage();
         }
-
 
         if ( $error )
         {
@@ -83,6 +86,20 @@ class ClassCommand extends Command\Generate
             ->find( 'miao:generate-module' );
         $arguments = array(
             'command' => 'miao:generate-module',
+            'name' => $name
+        );
+
+        $inputModule = new \Symfony\Component\Console\Input\ArrayInput( $arguments );
+        $command->run( $inputModule, $output );
+    }
+
+    protected function _generateTemplate( $name, OutputInterface $output )
+    {
+        $command = $this
+            ->getApplication()
+            ->find( 'miao:generate-template' );
+        $arguments = array(
+            'command' => 'miao:generate-template',
             'name' => $name
         );
 
