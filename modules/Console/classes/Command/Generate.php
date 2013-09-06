@@ -21,7 +21,25 @@ class Generate extends \Symfony\Component\Console\Command\Command
         $this->_path = $this->_miaoApp->getPath();
     }
 
-    public function _makeFile( \Miao\Autoload\ClassInfo $classInfo, $template, $search, $replace )
+    public function checkModuleExists( $name, $throwException = true )
+    {
+        $app = \Miao\App::getInstance();
+        $path = $app->getPath();
+        $dir = $path->getModuleDir( $name );
+        $result = false;
+        if ( file_exists( $dir ) && is_dir( $dir ) )
+        {
+            $result = true;
+        }
+        else if ( $throwException )
+        {
+            $msg = sprintf( 'Module for class %s does not exists, make module first miao:generate-module', $name );
+            throw new \Miao\Console\Exception( $msg );
+        }
+        return $result;
+    }
+
+    public function _makeClassFile( \Miao\Autoload\ClassInfo $classInfo, $template, $search, $replace )
     {
         $classTemplateFolder = $this->_path->getTemplateDir( 'Miao\\Console\\Command\\Generate\\ClassCommand' );
         $classTemplateFilename = $classTemplateFolder . DIRECTORY_SEPARATOR . $template;

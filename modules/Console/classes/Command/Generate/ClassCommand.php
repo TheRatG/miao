@@ -42,13 +42,9 @@ class ClassCommand extends Command\Generate
         $msg = sprintf( '<info>Begin generate class by name "%s"</info>', $name );
         $output->writeln( $msg );
 
-        $app = \Miao\App::getInstance();
-        $path = $app->getPath();
-        $dir = $path->getModuleDir( $name );
-
         $this->_classInfo = \Miao\Autoload\ClassInfo::parse( $name );
 
-        if ( !file_exists( $dir ) )
+        if ( !$this->checkModuleExists( $name, false ) )
         {
             $this->_generateModule( $name, $output );
         }
@@ -59,7 +55,7 @@ class ClassCommand extends Command\Generate
         $error = '';
         try
         {
-            $classFilename = $this->_makeFile(
+            $classFilename = $this->_makeClassFile(
                 $this->_classInfo, $template, array( '%author%', '%parent%' ), array( $this->_author, $parent )
             );
         }
@@ -157,7 +153,7 @@ class ClassCommand extends Command\Generate
                 ->getFilenameByClassName( $parentClassName );
             if ( !$isParentExists )
             {
-                $parentFilename = $this->_makeFile(
+                $parentFilename = $this->_makeClassFile(
                     \Miao\Autoload\ClassInfo::parse( $parentClassName ), $parentTemplate,
                     array( '%author%', '%parent%' ), array( $this->_author, $baseClassName )
                 );

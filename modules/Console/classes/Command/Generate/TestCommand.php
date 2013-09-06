@@ -36,12 +36,14 @@ class TestCommand extends Command\Generate
         $msg = sprintf( '<info>Begin generate class by name "%s"</info>', $name );
         $output->writeln( $msg );
 
+        $this->checkModuleExists( $name );
+
         $classInfo = \Miao\Autoload\ClassInfo::parse( $name );
 
         $error = '';
         try
         {
-            $classFilename = $this->_makeFile( $classInfo, 'test.tpl', array( '%author%' ), array( $author ) );
+            $classFilename = $this->_makeClassFile( $classInfo, 'test.tpl', array( '%author%' ), array( $author ) );
         }
         catch ( Command\Exception $e )
         {
