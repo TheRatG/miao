@@ -25,6 +25,11 @@ class Native
     protected $_log;
 
     /**
+     * @var array
+     */
+    protected $_templateVars = array();
+
+    /**
      * @var bool
      */
     protected $_consumeException = true;
