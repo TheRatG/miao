@@ -24,7 +24,6 @@ class TestCommandTest extends \PHPUnit_Framework_TestCase
     {
         $this->_path = \Miao\App::getInstance()
             ->getPath();
-        require_once $this->_path->getRootDir() . DIRECTORY_SEPARATOR . 'vendor/autoload.php';
 
         $this->_app = new \Symfony\Component\Console\Application();
         $this->_app->add( new \Miao\Console\Command\Generate\TestCommand );

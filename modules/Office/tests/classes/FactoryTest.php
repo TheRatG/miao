@@ -6,6 +6,8 @@
 
 namespace Miao\Office;
 
+use Miao\Autoload\Exception;
+
 class FactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -71,7 +73,6 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
      * @dataProvider providerGetControllerClassName
      * @param array $config
      * @param array $params
-     * @param array $defaultParams
      * @param $expected
      * @param string $exceptionName
      */
@@ -84,6 +85,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
 
         $defaultPrefix = $config[ 'defaultPrefix' ];
         $defaultParams = isset( $config[ 'defaultParams' ] ) ? $config[ 'defaultParams' ] : array();
+
         $factory = new \Miao\Office\Factory( $defaultPrefix );
         $actual = $factory->getControllerClassName( $params, $defaultParams );
 
@@ -114,7 +116,6 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $data[ ] = array(
             $config,
             array( $factory->getViewRequestName() => 'Main' ),
-            array(),
             '\\Miao\\BackOffice\\View\\Main',
             ''
         );
@@ -126,7 +127,6 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $data[ ] = array(
             $config,
             array( $factory->getActionRequestName() => 'Article\\Add' ),
-            array(),
             'action' => 'Miao\\BackOffice\\Action\\Article\\Add'
         );
 
@@ -187,7 +187,6 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         );
         $data[ ] = array(
             $config,
-            array(),
             array(),
             ''
         );

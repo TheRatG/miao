@@ -72,7 +72,7 @@ class ModuleCommand extends \Symfony\Component\Console\Command\Command
                 );
                 $this->_createDir( $dir, $folders, $output, 6 );
 
-                $classTemplateFolder = $path->getTemplateDir( '\\Miao\\Console\\Generate\\ModuleCommand' );
+                $classTemplateFolder = $path->getTemplateDir( __CLASS__ );
                 copy( $classTemplateFolder . '/layouts/index.tpl', $dir . '/templates/layouts/index.tpl' );
                 $msg = sprintf(
                     '<info>%sCreated file (%s)</info>', str_repeat( '.', 6 ), $dir . '/templates/layouts/index.tpl'

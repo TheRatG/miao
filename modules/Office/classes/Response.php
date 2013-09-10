@@ -179,6 +179,19 @@ class Response
     }
 
     /**
+     * @return mixed
+     */
+    public function getStatusCode()
+    {
+        return $this->_statusCode;
+    }
+
+    public function getStatusText()
+    {
+        return $this->_statusText;
+    }
+
+    /**
      * @param mixed $content
      * @return $this
      */
@@ -191,7 +204,7 @@ class Response
 
     public function checkStatusCode( $code )
     {
-        return $code < 100 || $code >= 600;
+        return $code >= 100 && $code < 600;
     }
 
     /**
@@ -205,7 +218,7 @@ class Response
         // headers have already been sent by the developer
         if ( headers_sent() )
         {
-            throw new \Miao\Office\Header\Exception\AlreadySended();
+            throw new \Miao\Office\Response\Exception\AlreadySended();
         }
         // status
         header( sprintf( 'HTTP/%s %s %s', $this->_version, $this->_statusCode, $this->_statusText ) );
@@ -215,5 +228,24 @@ class Response
             header( $item );
         }
         return $this;
+    }
+
+    /**
+     * Send content
+     * @return $this
+     */
+    public function sendContent()
+    {
+        echo $this->getContent();
+        return $this;
+    }
+
+    /**
+     * Send headers and content
+     */
+    public function send()
+    {
+        $this->sendHeaders();
+        $this->sendContent();
     }
 }

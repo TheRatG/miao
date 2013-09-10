@@ -41,9 +41,20 @@ class Header
         return $this;
     }
 
+    /**
+     * Returns a header value by name.
+     * @param $key
+     * @param bool $asString
+     * @return null|string
+     * @throws Header\Exception\InvalidArgument
+     */
     public function get( $key, $asString = false )
     {
-        assert( !empty( $key ) && is_string( $key ), 'Invalid argument $key, must be string' );
+        if ( empty( $key ) || !is_string( $key ) )
+        {
+            $msg = 'Invalid argument $key, must be string';
+            throw new \Miao\Office\Header\Exception\InvalidArgument( $msg );
+        }
 
         $uniqueKey = $this->_getUniqueKey( $key );
         $result = null;
