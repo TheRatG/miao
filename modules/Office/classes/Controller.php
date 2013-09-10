@@ -14,11 +14,6 @@ abstract class Controller
      */
     protected $_response = null;
 
-    public function __construct()
-    {
-        $this->_init();
-    }
-
     /**
      * @param Response $response
      */

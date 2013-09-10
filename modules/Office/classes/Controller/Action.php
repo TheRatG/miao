@@ -8,7 +8,21 @@
 namespace Miao\Office\Controller;
 
 
-class Action extends \Miao\Office\Controller
+class Action extends \Miao\Office\Controller implements \Miao\Office\Controller\ActionInterface
 {
+    public function execute()
+    {
+        throw new Exception( spritnf( 'Redeclare method "%s" in children classes', __METHOD__ ) );
+    }
 
+    /**
+     * Generate html content
+     * @return string
+     */
+    public function generateContent()
+    {
+        $this->_init();
+        $content = $this->execute();
+        return $content;
+    }
 }

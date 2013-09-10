@@ -143,6 +143,7 @@ class View extends \Miao\Office\Controller implements \Miao\Office\Controller\Vi
         $this->_template->setViewTemplateFilename(
             $this->getTemplateDir() . DIRECTORY_SEPARATOR . $this->getTemplateFilename()
         );
+        $this->_init();
         $this->_template->setValueOfByArray( $this->_templateVariables );
         $this->initializeBlock();
         $result = $this->_template->fetch( $this->getLayout() );

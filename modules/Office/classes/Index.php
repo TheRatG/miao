@@ -104,6 +104,12 @@ class Index
             throw new \Miao\Office\Exception( $msg );
         }
         $this->_controller = $controller;
+
+        $this->_controller->setResponse( $this->getResponse() );
+        if ( method_exists ( $this->_controller, 'debugMode' ) )
+        {
+            $this->_controller->debugMode( $this->_debugMode );
+        }
     }
 
     /**
@@ -112,6 +118,10 @@ class Index
     public function setResponse( $response )
     {
         $this->_response = $response;
+        if ( $this->_controller )
+        {
+            $this->_controller->setResponse( $response );
+        }
     }
 
     /**
@@ -121,12 +131,7 @@ class Index
     {
         if ( is_null( $this->_controller ) )
         {
-            $this->_controller = new $this->_controllerClassName( $this );
-            $this->_controller->setResponse( $this->getResponse() );
-            if ( method_exists ( $this->_controller, 'debugMode' ) )
-            {
-                $this->_controller->debugMode( $this->_debugMode );
-            }
+            $this->setController( new $this->_controllerClassName() );
         }
         return $this->_controller;
     }

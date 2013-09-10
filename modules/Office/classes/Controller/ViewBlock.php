@@ -171,6 +171,7 @@ class ViewBlock extends \Miao\Office\Controller implements \Miao\Office\Controll
     {
         $this->_template = new \Miao\Office\Controller\View\Template(  $this->getTemplateDir(), $this->debugMode(
         ) );
+        $this->_init();
         $this->processData();
         $this->initTemplateVariables();
         $result = $this->_template->fetch( $this->getTemplateFilename() );
