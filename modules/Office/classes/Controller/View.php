@@ -10,11 +10,6 @@ namespace Miao\Office\Controller;
 class View extends \Miao\Office\Controller implements \Miao\Office\Controller\ViewInterface
 {
     /**
-     * @var \Miao\Template\Native
-     */
-    protected $_template;
-
-    /**
      * @var string
      */
     protected $_layout;
@@ -35,9 +30,19 @@ class View extends \Miao\Office\Controller implements \Miao\Office\Controller\Vi
     protected $_templateDir;
 
     /**
+     * @var array
+     */
+    protected $_templateVariables = array();
+
+    /**
      * @var bool
      */
     protected $_debugMode = false;
+
+    /**
+     * @var \Miao\Office\Controller\View\Template
+     */
+    protected $_template;
 
     /**
      * @param string $layout
@@ -79,10 +84,6 @@ class View extends \Miao\Office\Controller implements \Miao\Office\Controller\Vi
             $this->_templateFilename = $path->getTemplateNameByClassName( get_called_class() );
         }
         return $this->_templateFilename;
-    }
-
-    public function initializeBlock()
-    {
     }
 
     public function getTemplateDir()
@@ -142,13 +143,24 @@ class View extends \Miao\Office\Controller implements \Miao\Office\Controller\Vi
         $this->_template->setViewTemplateFilename(
             $this->getTemplateDir() . DIRECTORY_SEPARATOR . $this->getTemplateFilename()
         );
+        $this->_template->setValueOfByArray( $this->_templateVariables );
         $this->initializeBlock();
         $result = $this->_template->fetch( $this->getLayout() );
         return $result;
     }
 
-    public function __destruct()
+    /**
+     * @param $name
+     * @param $value
+     * @return $this
+     */
+    public function setTmplVar( $name, $value )
     {
-        unset( $this->_template );
+        $this->_templateVariables[ $name ] = $value;
+        return $this;
+    }
+
+    public function initializeBlock()
+    {
     }
 }

@@ -202,6 +202,19 @@ class Response
         return $this;
     }
 
+    /**
+     * @see \Miao\Office\Header::set()
+     * @param $key
+     * @param $values
+     * @param bool $replace
+     * @return $this
+     */
+    public function setHeader( $key, $values, $replace = true )
+    {
+        $this->_header->set( $key, $values, $replace );
+        return $this;
+    }
+
     public function checkStatusCode( $code )
     {
         return $code >= 100 && $code < 600;

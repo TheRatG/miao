@@ -1,1 +1,1 @@
-one <?=$this->_includeTemplate( '1_1.tpl' )?>
+one <?=$this->includeTemplate( '1_1.tpl' )?>

@@ -25,6 +25,11 @@ class Index
     protected $_factory;
 
     /**
+     * @var string
+     */
+    protected $_controllerClassName;
+
+    /**
      * @var bool
      */
     protected $_debugMode = false;
@@ -38,14 +43,23 @@ class Index
             $msg = 'Invalid params, controller key is broken or does not exists';
             throw new \Miao\Office\Exception( $msg );
         }
-        $result = new self( $factory, new $controllerClassName() );
+        $result = new self( $factory, $controllerClassName );
         return $result;
     }
 
     public function __construct( \Miao\Office\Factory $factory, $controllerClassName )
     {
         $this->_factory = $factory;
-        $this->setController( new $controllerClassName( $this ) );
+        $this->_controllerClassName = $controllerClassName;
+    }
+
+    public function getResponse()
+    {
+        if  ( !$this->_response )
+        {
+            $this->_response = new \Miao\Office\Response();
+        }
+        return $this->_response;
     }
 
     /**
@@ -57,10 +71,6 @@ class Index
         if ( !is_null( $state ) )
         {
             $this->_debugMode = (bool)$state;
-            if ( function_exists( array( $this->_controller, 'debugMode' ) ) )
-            {
-                $this->_controller->debugMode( $this->_debugMode );
-            }
         }
         return $this->_debugMode;
     }
@@ -109,12 +119,21 @@ class Index
      */
     public function getController()
     {
+        if ( is_null( $this->_controller ) )
+        {
+            $this->_controller = new $this->_controllerClassName( $this );
+            $this->_controller->setResponse( $this->getResponse() );
+            if ( method_exists ( $this->_controller, 'debugMode' ) )
+            {
+                $this->_controller->debugMode( $this->_debugMode );
+            }
+        }
         return $this->_controller;
     }
 
     public function getContent()
     {
-        $content = $this->_controller->generateContent();
+        $content = $this->getController()->generateContent();
         if ( $content )
         {
             $this->_response->setContent( $content );
@@ -124,7 +143,11 @@ class Index
 
     public function sendResponse()
     {
-        $this->_controller->generateContent();
+        if ( !$this->_response->getContent() )
+        {
+            $content = $this->getContent();
+            $this->_response->setContent( $content );
+        }
         $this->_response->send();
     }
 }

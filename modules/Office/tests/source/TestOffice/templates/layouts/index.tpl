@@ -1,1 +1,1 @@
-file:layouts/index.tpl <?=$this->_includeTemplate( $this->getViewTemplateFilename(), false )?>
+file:layouts/index.tpl <?=$this->includeTemplate( $this->getViewTemplateFilename(), false )?>

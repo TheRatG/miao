@@ -199,7 +199,7 @@ class Native
         $this->_templateVars = array();
     }
 
-    protected function _includeTemplate( $templateFilename, $useSelfBaseDir = true, array $templateVars = array() )
+    public function includeTemplate( $templateFilename, $useSelfBaseDir = true, array $templateVars = array() )
     {
         if ( $templateVars )
         {

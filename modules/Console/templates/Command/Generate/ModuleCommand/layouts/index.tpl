@@ -5,6 +5,6 @@
 <head>
 </head>
 <body>
-    <?=$this->_includeTemplate( $this->_getViewTemplate() )?>
+    <?=$this->includeTemplate( $this->_getViewTemplate() )?>
 </body>
 </html>

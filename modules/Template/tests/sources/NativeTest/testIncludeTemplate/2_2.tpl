@@ -1,1 +1,1 @@
-2_2 plus <?=$this->_includeTemplate( 'fileNotFound.tpl' )?> other
+2_2 plus <?=$this->includeTemplate( 'fileNotFound.tpl' )?> other
