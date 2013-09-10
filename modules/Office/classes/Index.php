@@ -1,12 +1,11 @@
 <?php
-/** 
+/**
  * User: vpak
  * Date: 03.09.13
- * Time: 16:42 
+ * Time: 16:42
  */
 
 namespace Miao\Office;
-
 
 class Index
 {
@@ -25,6 +24,11 @@ class Index
      */
     protected $_factory;
 
+    /**
+     * @var bool
+     */
+    protected $_debugMode = false;
+
     static public function factory( array $params, $defaultPrefix = null, $defaultParams = array( '_view' => 'Main' ) )
     {
         $factory = new \Miao\Office\Factory( $defaultPrefix );
@@ -41,22 +45,49 @@ class Index
     public function __construct( \Miao\Office\Factory $factory, $controllerClassName )
     {
         $this->_factory = $factory;
-        $this->_controller = new $controllerClassName( $this );
+        $this->setController( new $controllerClassName( $this ) );
+    }
+
+    /**
+     * @param $state
+     * @return bool If it enable, exceptions messages will show in the result of fetch.
+     */
+    public function debugMode( $state = null )
+    {
+        if ( !is_null( $state ) )
+        {
+            $this->_debugMode = (bool)$state;
+            if ( function_exists( array( $this->_controller, 'debugMode' ) ) )
+            {
+                $this->_controller->debugMode( $this->_debugMode );
+            }
+        }
+        return $this->_debugMode;
     }
 
     public function setController( \Miao\Office\Controller $controller )
     {
+        $msg = '';
         if ( $controller instanceof \Miao\Office\Controller\Action && !$controller instanceof \Miao\Office\Controller\ActionInterface )
         {
-            $msg = spritnf( 'Invalid controller "%s", must be implemented in \Miao\Office\Controller\ActionInterface', get_class( $controller ) );
+            $msg = spritnf(
+                'Invalid controller "%s", must be implemented in \Miao\Office\Controller\ActionInterface',
+                get_class( $controller )
+            );
         }
         else if ( $controller instanceof \Miao\Office\Controller\View && !$controller instanceof \Miao\Office\Controller\ViewInterface )
         {
-            $msg = spritnf( 'Invalid controller "%s", must be implemented in \Miao\Office\Controller\ViewInterface', get_class( $controller ) );
+            $msg = spritnf(
+                'Invalid controller "%s", must be implemented in \Miao\Office\Controller\ViewInterface',
+                get_class( $controller )
+            );
         }
         else if ( $controller instanceof \Miao\Office\Controller\ViewBlock && !$controller instanceof \Miao\Office\Controller\ViewBlockInterface )
         {
-            $msg = spritnf( 'Invalid controller "%s", must be implemented in \Miao\Office\Controller\ViewBlockInterface', get_class( $controller ) );
+            $msg = spritnf(
+                'Invalid controller "%s", must be implemented in \Miao\Office\Controller\ViewBlockInterface',
+                get_class( $controller )
+            );
         }
         if ( $msg )
         {
@@ -93,7 +124,7 @@ class Index
 
     public function sendResponse()
     {
-        $this->getContent();
+        $this->_controller->generateContent();
         $this->_response->send();
     }
 }
