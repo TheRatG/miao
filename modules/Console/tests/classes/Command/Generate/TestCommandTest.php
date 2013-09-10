@@ -29,7 +29,14 @@ class TestCommandTest extends \PHPUnit_Framework_TestCase
         $this->_app->add( new \Miao\Console\Command\Generate\TestCommand );
 
         $moduleRoot = $this->_path->getModuleDir( $this->_module );
-        \Miao\Path\Helper::removeDir( $moduleRoot );
+        if ( file_exists( $moduleRoot ) )
+        {
+            \Miao\Path\Helper::removeDir( $moduleRoot );
+        }
+        else
+        {
+            mkdir( $moduleRoot, 0777, true );
+        }
     }
 
     public function tearDown()
@@ -41,7 +48,6 @@ class TestCommandTest extends \PHPUnit_Framework_TestCase
     public function testCommand()
     {
         $className = $this->_module . '\\MetaTest';
-
         $command = $this->_app->find( 'miao:generate-test' );
         $commandTester = new \Symfony\Component\Console\Tester\CommandTester( $command );
         $commandTester->execute(

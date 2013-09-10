@@ -21,8 +21,9 @@ class ClassCommandTest extends \PHPUnit_Framework_TestCase
             ->getPath();
 
         $this->_app = new \Symfony\Component\Console\Application();
-        $this->_app->add( new \Miao\Console\Command\Generate\ModuleCommand );
-        $this->_app->add( new \Miao\Console\Command\Generate\ClassCommand );
+        $this->_app->add( new \Miao\Console\Command\Generate\ModuleCommand() );
+        $this->_app->add( new \Miao\Console\Command\Generate\ClassCommand() );
+        $this->_app->add( new \Miao\Console\Command\Generate\TemplateCommand() );
 
         $moduleRoot = $this->_path->getModuleDir( $this->_module );
         \Miao\Path\Helper::removeDir( $moduleRoot );
@@ -86,6 +87,6 @@ class ClassCommandTest extends \PHPUnit_Framework_TestCase
         $this->assertFileExists( $filename );
 
         $content = file_get_contents( $filename );
-        $this->assertRegExp( '/class View extends \\\\Miao\\\\Office\\\\View/', $content );
+        $this->assertRegExp( '/class View extends \\\\Miao\\\\Office\\\\Controller\\\\View/', $content );
     }
 }

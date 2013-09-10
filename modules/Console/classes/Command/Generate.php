@@ -33,7 +33,7 @@ class Generate extends \Symfony\Component\Console\Command\Command
         }
         else if ( $throwException )
         {
-            $msg = sprintf( 'Module for class %s does not exists, make module first miao:generate-module', $name );
+            $msg = sprintf( 'Module for class "%s" does not exists (%s), make module first miao:generate-module', $name, $dir );
             throw new \Miao\Console\Exception( $msg );
         }
         return $result;
