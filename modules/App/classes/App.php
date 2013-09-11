@@ -22,6 +22,8 @@ class App
 
     const INSTANCE_RESPONSE_NICK = 'miao:response';
 
+    const INSTANCE_LOGGER_NICK = 'miao:logger';
+
     /**
      * @var array Application
      */
@@ -60,6 +62,17 @@ class App
             ->getObject( self::INSTANCE_CONFIG_NICK );
         $result = $config->getObject( $path, $throwException );
         return $result;
+    }
+
+    static public function logger()
+    {
+        $logger = self::getInstance()->getObject( self::INSTANCE_LOGGER_NICK, false );
+        if ( !$logger )
+        {
+            $logger = \Miao\Logger::factory();
+            self::getInstance()->setObject( $logger, self::INSTANCE_LOGGER_NICK );
+        }
+        return $logger;
     }
 
     /**

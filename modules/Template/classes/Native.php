@@ -20,9 +20,9 @@ class Native
     protected $_debugMode = true;
 
     /**
-     * @var \Miao\Log
+     * @var \Miao\Logger
      */
-    protected $_log;
+    protected $_logger;
 
     /**
      * @var array
@@ -34,16 +34,16 @@ class Native
      */
     protected $_consumeException = true;
 
-    public function __construct( $templatesDir, $debugMode = true, \Miao\Log $log = null )
+    public function __construct( $templatesDir, $debugMode = true, \Psr\Log\LoggerInterface $logger = null )
     {
         $this->setTemplatesDir( $templatesDir );
         $this->debugMode( $debugMode );
-        $this->setLog( $log );
+        $this->setLogger( $logger );
     }
 
     public function __destruct()
     {
-        unset( $this->_log );
+        unset( $this->_logger );
     }
 
     /**
@@ -83,23 +83,23 @@ class Native
     }
 
     /**
-     * @param \Miao\Log $log
+     * @param \Psr\Log\LoggerInterface $logger
      */
-    public function setLog( $log )
+    public function setLogger( $logger )
     {
-        $this->_log = $log;
+        $this->_logger = $logger;
     }
 
     /**
-     * @return \Miao\Log
+     * @return \Psr\Log\LoggerInterface
      */
-    public function getLog()
+    public function getLogger()
     {
-        if ( is_null( $this->_log ) )
+        if ( is_null( $this->_logger ) )
         {
-            $this->_log = \Miao\Log::factory();
+            $this->_logger = \Miao\App::logger();
         }
-        return $this->_log;
+        return $this->_logger;
     }
 
     /**
@@ -129,7 +129,6 @@ class Native
     {
         if ( is_null( $useSelfBaseDir ) )
         {
-            //TODO: autodetect
             $result = $this->getTemplatesDir() . DIRECTORY_SEPARATOR . ltrim( $template, DIRECTORY_SEPARATOR );
         }
         else if ( true === $useSelfBaseDir )
@@ -243,10 +242,8 @@ class Native
 
             $msg = $this->_exceptionToString( $e, $absoluteFilename );
             $this
-                ->getLog()
-                ->log(
-                    $msg, \Miao\Log::ERR
-                );
+                ->getLogger()
+                ->error( $msg );
 
             if ( !$this->getConsumeException() )
             {
