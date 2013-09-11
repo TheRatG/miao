@@ -17,9 +17,9 @@ class App
     const INSTANCE_PATH_NICK = 'miao:path';
 
     const INSTANCE_COMPOSER_LOADER_NICK = 'composer:loader';
-    
+
     const INSTANCE_OFFICE_NICK = 'miao:office';
-    
+
     const INSTANCE_RESPONSE_NICK = 'miao:response';
 
     /**
@@ -46,6 +46,19 @@ class App
             self::$_instance[ $name ] = new self( $configMap, $configMain, $configModules );
         }
         $result = self::$_instance[ $name ];
+        return $result;
+    }
+
+    /**
+     * @param $path
+     * @param bool $throwException
+     * @return \Miao\Config\Base
+     */
+    static public function config( $path, $throwException = true )
+    {
+        $config = self::getInstance()
+            ->getObject( self::INSTANCE_CONFIG_NICK );
+        $result = $config->getObject( $path, $throwException );
         return $result;
     }
 

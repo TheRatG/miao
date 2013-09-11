@@ -7,7 +7,7 @@
 
 namespace Miao\Config\Exception;
 
-class InvalidPath extends Config\Exception
+class InvalidPath extends \Miao\Config\Exception
 {
     public function __construct( $path, $reason )
     {

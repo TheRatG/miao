@@ -7,7 +7,7 @@
 
 namespace Miao\Config\Exception;
 
-class PathNotFound extends Config\Exception
+class PathNotFound extends \Miao\Config\Exception
 {
     public function __construct( $path )
     {

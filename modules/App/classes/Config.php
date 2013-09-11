@@ -37,12 +37,11 @@ class Config
         {
             $result = $this->_config[ $libName ];
         }
-
         if ( count( $items ) > 0 && $result instanceof \Miao\Config\Base )
         {
             try
             {
-                $data = $result->get( implode( $items ) );
+                $data = $result->get( implode( '.', $items ) );
                 $result = new \Miao\Config\Base( $data );
             }
             catch ( \Miao\Config\Exception $e )
