@@ -21,7 +21,7 @@ class Logger extends \Monolog\Logger
 
         if ( $verbose )
         {
-            $handlers[] = new \Monolog\Handler\NullHandler( $logLevel );
+            $handlers[] = new \Monolog\Handler\StreamHandler( 'php://output' );
         }
         if ( $filename )
         {
