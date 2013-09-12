@@ -10,6 +10,7 @@ namespace Miao\App;
 class Config
 {
     const MAIN_NAME = 'Main';
+    const INCLUDES_SECTION_NAME = 'secret_lib_includes';
 
     /**
      * @var array \Miao\Config\Base[]
@@ -37,6 +38,7 @@ class Config
         {
             $result = $this->_config[ $libName ];
         }
+
         if ( count( $items ) > 0 && $result instanceof \Miao\Config\Base )
         {
             try
@@ -59,6 +61,21 @@ class Config
     public function setConfig( $name, array $data )
     {
         $this->_config[ $name ] = new \Miao\Config\Base( $data );
+        $includes = $this->_config[ $name ]->get( self::INCLUDES_SECTION_NAME . '.php', false );
+        if ( $includes )
+        {
+            foreach( $includes as $includeLibName => $filename )
+            {
+                if ( file_exists( $filename ) && $includeLibName != $name )
+                {
+                    $data = include $filename;
+                    if ( isset( $data[ $includeLibName ] ) )
+                    {
+                        $this->_config[ $includeLibName ] = new \Miao\Config\Base( $data[ $includeLibName ] );
+                    }
+                }
+            }
+        }
     }
 
     public function __construct( array $configMain, array $configModules = array() )
