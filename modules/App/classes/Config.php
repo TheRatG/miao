@@ -61,7 +61,7 @@ class Config
     public function setConfig( $name, array $data )
     {
         $this->_config[ $name ] = new \Miao\Config\Base( $data );
-        $includes = $this->_config[ $name ]->get( self::INCLUDES_SECTION_NAME . '.php', false );
+        $includes = $this->_config[ $name ]->get( self::INCLUDES_SECTION_NAME . '.php', null, false );
         if ( $includes )
         {
             foreach( $includes as $includeLibName => $filename )

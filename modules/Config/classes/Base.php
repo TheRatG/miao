@@ -26,7 +26,7 @@ class Base
      * @throws Exception\PathNotFound
      * @throws Exception\InvalidPath
      */
-    public function get( $path, $default = null )
+    public function get( $path, $default = null, $throwException = true )
     {
         if ( empty( $path ) )
         {
@@ -49,7 +49,7 @@ class Base
                 }
                 if ( !is_array( $result ) || !isset( $result[ $keys[ $i ] ] ) )
                 {
-                    if ( is_null( $default ) )
+                    if ( $throwException )
                     {
                         throw new \Miao\Config\Exception\PathNotFound( $path );
                     }

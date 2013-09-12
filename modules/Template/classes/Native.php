@@ -17,7 +17,7 @@ class Native
     /**
      * @var bool If it enable, exceptions messages will show in the result of fetch.
      */
-    protected $_debugMode = true;
+    protected $_debugMode = null;
 
     /**
      * @var \Miao\Logger
@@ -34,8 +34,28 @@ class Native
      */
     protected $_consumeException = true;
 
-    public function __construct( $templatesDir, $debugMode = true, \Psr\Log\LoggerInterface $logger = null )
+    public function __construct( $templatesDir, $debugMode = null, \Psr\Log\LoggerInterface $logger = null )
     {
+        $config = \Miao\App::config( __CLASS__, false, false );
+        if ( $config )
+        {
+            $configTemplateDir = $config->get( 'templateDir', false, false );
+            $templatesDir = ( !is_null( $templatesDir ) ) ? $templatesDir : $configTemplateDir;
+
+            $configDebugMode = $config->get( 'debugMode', false, false );
+            $debugMode = ( !is_null( $debugMode ) ) ? $debugMode : $configDebugMode;
+            if ( is_null( $logger )  )
+            {
+                $configLoggerFilename = $config->get( 'logger.filename', false, false );
+                $configLogLevel = $config->get( 'logger.logLevel', \Monolog\Logger::DEBUG, false );
+                $configLogLevel = $configLogLevel ? $configLogLevel : \Monolog\Logger::DEBUG;
+                if ( $configLoggerFilename )
+                {
+                    $logger = \Miao\Logger::factory( $configLoggerFilename, null, $configLogLevel );
+                }
+            }
+        }
+
         $this->setTemplatesDir( $templatesDir );
         $this->debugMode( $debugMode );
         $this->setLogger( $logger );
