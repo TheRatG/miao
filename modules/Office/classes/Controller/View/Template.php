@@ -48,7 +48,22 @@ class Template extends \Miao\Template\Native
             $msg = sprintf( 'Place named "%s" already init', $name );
             throw new \Miao\Office\Controller\View\Exception( $msg );
         }
-        $this->_viewBlockList[ $name ] = $viewBlock;
+        try
+        {
+            $this->_viewBlockList[ $name ] = $viewBlock->generateContent();
+        }
+        catch ( \Miao\Template\Exception\Crititcal $e )
+        {
+            throw $e; // re-throw exception to the outer catch block
+        }
+        catch ( Exception $e )
+        {
+            $message = $this->_exceptionToString( $e );
+            if ( $this->debugMode() )
+            {
+                $this->_viewBlockList[ $name ] = $message;
+            }
+        }
         return $this;
     }
 
@@ -57,25 +72,8 @@ class Template extends \Miao\Template\Native
         $result = '';
         if ( array_key_exists( $name, $this->_viewBlockList ) )
         {
-            $viewBlock = $this->_viewBlockList[ $name ];
-            try
-            {
-                $result .= $viewBlock->generateContent();
-            }
-            catch ( \Miao\Template\Exception\Crititcal $e )
-            {
-                throw $e; // re-throw exception to the outer catch block
-            }
-            catch ( Exception $e )
-            {
-                $message = $this->_exceptionToString( $e );
-                if ( $this->debugMode() )
-                {
-                    $result .= $message;
-                }
-            }
+            $result = $this->_viewBlockList[ $name ];
         }
-
         $trmRes = trim( $result );
         if ( !empty( $trmRes ) )
         {

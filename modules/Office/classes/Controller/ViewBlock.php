@@ -110,6 +110,14 @@ class ViewBlock extends \Miao\Office\Controller implements \Miao\Office\Controll
         return $this->_params;
     }
 
+    public function setParam( $name, $value )
+    {
+        assert( !empty( $name ) );
+        assert( is_string( $name ) );
+
+        $this->_params[ $name ] = $value;
+    }
+
     public function getParam( $name, $defaultValue = null, $throwException = true )
     {
         assert( !empty( $name ) );

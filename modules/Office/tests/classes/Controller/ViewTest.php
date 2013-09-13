@@ -81,7 +81,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
    {
        $view = new \Miao\TestOffice\View\Article();
        $actual = $view->generateContent();
-       $expected = 'file:layouts/index.tpl file:View/article.tpl file:ViewBlock/Menu/bottom.tpl file:ViewBlock/Article/Item/index.tpl file:ViewBlock/Menu/bottom.tpl';
+       $expected = 'file:layouts/index.tpl file:View/article.tpl file:ViewBlock/Menu/top.tpl file:ViewBlock/Article/Item/index.tpl file:ViewBlock/Menu/bottom.tpl';
        $this->assertEquals( $expected, $actual );
    }
 }

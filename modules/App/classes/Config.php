@@ -31,7 +31,17 @@ class Config
             $name = self::MAIN_NAME;
         }
         $name = ltrim( $name, '\\' );
-        $items = explode( '\\', $name );
+
+        $separator = '.';
+        if ( false !== strpos( $name, '\\' ) )
+        {
+            $separator = '\\';
+        }
+        else if ( false !== strpos( $name, '/' ) )
+        {
+            $separator = '/';
+        }
+        $items = explode( $separator, $name );
 
         $libName = array_shift( $items );
         if ( isset( $this->_config[ $libName ] ) )

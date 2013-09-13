@@ -27,7 +27,6 @@ class Article extends \Miao\TestOffice\View implements \Miao\Office\Controller\V
         $viewBlock = new \Miao\TestOffice\ViewBlock\Article\Item();
         $this->initBlock( 'Article', $viewBlock );
 
-
         $this->initBlock( 'MenuBottom', $menuViewBlock->setTemplateFilename( 'bottom.tpl' ) );
 	}
 }

@@ -56,7 +56,7 @@ class App
      * @param bool $throwException
      * @return \Miao\Config\Base
      */
-    static public function config( $path, $throwException = true )
+    static public function config( $path = null, $throwException = true )
     {
         $config = self::getInstance()
             ->getObject( self::INSTANCE_CONFIG_NICK );
