@@ -7,7 +7,7 @@
 
 namespace Miao\Office\Header\Exception;
 
-class InvalidArgument extends \Miao\Office\Response\Exception
+class InvalidArgument extends \Miao\Office\Header\Exception
 {
 
 }

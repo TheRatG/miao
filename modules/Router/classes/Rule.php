@@ -173,6 +173,57 @@ class Rule
         $this->_validator = $validator;
     }
 
+    public function match( $uri, $method = null )
+    {
+        if ( empty( $method ) )
+        {
+            $method = Miao_Router::getRequestMethod();
+        }
+
+        $result = false;
+        if ( $method == $this->getMethod() )
+        {
+            $parts = explode( '/', trim( $uri, '/' ) );
+            $result = array(
+                $this->_getOfficeTypeParamName() => $this->getName() );
+
+            $cnt = count( $this->_validators );
+            $partsIterator = 0;
+            for( $i = 0; $i < $cnt; $i++ )
+            {
+                $validator = $this->_validators[ $i ];
+                if ( $validator instanceof \Miao\Router\Rule\Validator\Regexp )
+                {
+                    $slash = $validator->getSlash();
+                    $part = implode( '/',
+                        array_slice( $parts, $partsIterator, $slash + 1 ) );
+                    $partsIterator += $slash + 1;
+                }
+                else
+                {
+                    $part = isset( $parts[ $partsIterator ] ) ? $parts[ $partsIterator ] : '';
+                    $partsIterator++;
+                }
+                $check = $validator->test( $part );
+                if ( false == $check )
+                {
+                    $result = $check;
+                    break;
+                }
+                $paramIndex = $validator->getId();
+                if ( $paramIndex )
+                {
+                    $result[ $paramIndex ] = $part;
+                }
+            }
+            if ( count( $parts ) > $partsIterator )
+            {
+                $result = false;
+            }
+        }
+        return $result;
+    }
+
     public function makeUrl( array $params = array(), $method = null )
     {
         if ( empty( $method ) )
@@ -222,5 +273,10 @@ class Rule
 
     public function makeRewrite()
     {
+    }
+
+    protected function _isParam( $str )
+    {
+        return ':' == $str[ 0 ];
     }
 }

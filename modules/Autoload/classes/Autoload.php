@@ -92,7 +92,7 @@ class Autoload
         {
             $result = $self->autoload( $className );
         }
-        catch ( Exception\FileNotFound $e )
+        catch ( \Miao\Autoload\Exception\FileNotFound $e )
         {
             $result = false;
         }
@@ -101,12 +101,12 @@ class Autoload
 
     static public function throwFileNotFoundException( $message )
     {
-        throw new Exception\FileNotFound( $message );
+        throw new \Miao\Autoload\Exception\FileNotFound( $message );
     }
 
     static public function throwClassNotFoundException( $message )
     {
-        throw new Exception\ClassNotFound( $message );
+        throw new \Miao\Autoload\Exception\ClassNotFound( $message );
     }
 
     public function checkConfigItem( array $libItem )
@@ -119,7 +119,7 @@ class Autoload
                 $message = sprintf(
                     'Invalid config item (%s), does not exists param (%s)', print_r( $libItem, true ), $paramName
                 );
-                throw new Exception\InvalidConfig( $message );
+                throw new \Miao\Autoload\Exception\InvalidConfig( $message );
             }
         }
 
@@ -127,7 +127,7 @@ class Autoload
         {
             $message = sprintf( 'Invalid config item (path): file (%s) does not exists', $libItem[ 'path' ] );
 
-            throw new Exception\InvalidConfig( $message );
+            throw new \Miao\Autoload\Exception\InvalidConfig( $message );
         }
 
         return true;
