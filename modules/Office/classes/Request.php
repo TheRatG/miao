@@ -42,8 +42,8 @@ class Request
      * @param $name
      * @param null $defaultValue
      * @param bool $throwException
-     * @return mixed
-     * @throws Exception\OnFileNotFound
+     * @return null
+     * @throws Request\Exception\OnVarNotExists
      */
     public function getValueOf( $name, $defaultValue = null, $throwException = true )
     {
@@ -55,7 +55,7 @@ class Request
         elseif ( $throwException )
         {
             $msg = sprintf( 'Request variable with name "%s" was not received', $name );
-            throw new \Miao\Office\Exception\OnFileNotFound( $msg );
+            throw new \Miao\Office\Request\Exception\OnVarNotExists( $msg );
         }
         return $result;
     }
