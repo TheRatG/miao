@@ -20,7 +20,7 @@ class NotEmptyTest extends \PHPUnit_Framework_TestCase
             $this->setExpectedException( $exceptionName );
         }
 
-        $obj = new \Miao\Router\Rule\Validator\NotEmpty( $config );
+        $obj = \Miao\Router\Rule\Validator\NotEmpty::create( $config );
         $expected = $obj->test( $value );
 
         $this->assertEquals( $expected, $actual );

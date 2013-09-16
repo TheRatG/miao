@@ -20,7 +20,7 @@ class RegexpTest extends \PHPUnit_Framework_TestCase
             $this->setExpectedException( $exceptionName );
         }
 
-        $obj = new \Miao\Router\Rule\Validator\Regexp( $config );
+        $obj = \Miao\Router\Rule\Validator\Regexp::create( $config );
         $expected = $obj->test( $value );
 
         $this->assertEquals( $expected, $actual );

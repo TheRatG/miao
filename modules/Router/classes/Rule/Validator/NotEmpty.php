@@ -1,6 +1,5 @@
 <?php
 /**
- *
  * @author vpak
  * @date 2013-09-16 16:34:27
  */
@@ -10,23 +9,34 @@ namespace Miao\Router\Rule\Validator;
 class NotEmpty extends \Miao\Router\Rule\Validator
 {
     private $_min = 1;
+
     private $_max = null;
 
-    public function __construct( array $config )
+    static public function create( array $config )
     {
+        $min = 1;
         if ( array_key_exists( 'min', $config ) )
         {
-            $this->_min = $config[ 'min' ];
+            $min = $config[ 'min' ];
         }
+        $max = null;
         if ( array_key_exists( 'max', $config ) )
         {
-            $this->_max = $config[ 'max' ];
+            $max = $config[ 'max' ];
         }
+        $result = new self( $min, $max );
+        return $result;
+    }
+
+    public function __construct( $min = 1, $max = null )
+    {
+        $this->_min = $min;
+        $this->_max = $max;
     }
 
     public function test( $value )
     {
-        $value = ( string ) trim( $value );
+        $value = ( string )trim( $value );
         $result = ( '' !== $value );
         $len = strlen( $value );
         if ( $this->_min )

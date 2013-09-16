@@ -60,9 +60,8 @@ class Rule
     private $_parts = array();
 
     /**
-     *
      * @param array $config
-     * @return \Miao\Router_Rule
+     * @return \Miao\Router\Rule
      */
     static public function factory( array $config )
     {
@@ -72,14 +71,15 @@ class Rule
         $rule = \Miao\Router::checkAndReturnParam( $config, 'rule' );
         $method = \Miao\Router::checkAndReturnParam( $config, 'method', '' );
         $desc = \Miao\Router::checkAndReturnParam( $config, 'desc', '' );
-        $validators = \Miao\Router::checkAndReturnParam( $config, 'validators',
-            array() );
+        $validators = \Miao\Router::checkAndReturnParam(
+            $config, 'validators', array()
+        );
         $noRewrite = \Miao\Router::checkAndReturnParam( $config, 'norewrite', '' );
 
         $result = new self( $rule, $name, $type, $method, $validators, $desc, $prefix, $noRewrite );
         return $result;
     }
-    
+
     public function __construct( $rule, $controller, $controllerType, $method, array $validators = array(),
                                  $description = null, $prefix = null, $noRewrite = false )
     {
@@ -115,6 +115,18 @@ class Rule
      */
     public function setControllerType( $controllerType )
     {
+        if ( !in_array(
+            $controllerType, array(
+                                  \Miao\Autoload\ClassInfo::TYPE_OBJECT_REQUEST_ACTION,
+                                  \Miao\Autoload\ClassInfo::TYPE_OBJECT_REQUEST_VIEW,
+                                  \Miao\Autoload\ClassInfo::TYPE_OBJECT_REQUEST_VIEWBLOCK
+                             )
+        )
+        )
+        {
+            $message = sprintf( 'Invalid route type: %s', $controllerType );
+            throw new \Miao\Router\Rule\Exception( $message );
+        }
         $this->_controllerType = $controllerType;
     }
 
@@ -155,6 +167,14 @@ class Rule
      */
     public function getMethod()
     {
+        if ( empty( $this->_method ) )
+        {
+            $this->_method = 'GET';
+            if ( \Miao\Autoload\ClassInfo::TYPE_OBJECT_REQUEST_ACTION == $this->getControllerType() )
+            {
+                $this->_method = 'POST';
+            }
+        }
         return $this->_method;
     }
 
@@ -266,6 +286,7 @@ class Rule
                     $partsIterator++;
                 }
                 $check = $validator->test( $part );
+
                 if ( false == $check )
                 {
                     $result = $check;
@@ -390,7 +411,7 @@ class Rule
             else
             {
                 $config = array(
-                    'id' => $value,
+                    'id' => null,
                     'type' => 'Compare',
                     'str' => $value
                 );

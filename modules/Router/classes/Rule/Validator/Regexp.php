@@ -15,21 +15,26 @@ class Regexp extends \Miao\Router\Rule\Validator
 
     private $_slash = 0;
 
-    /**
-     * @param array $config
-     * @throws \Miao\Router\Rule\Validator\Exception
-     */
-    public function __construct( array $config )
+    static public function create( array $config )
     {
         if ( !isset( $config[ 'pattern' ] ) )
         {
             throw new \Miao\Router\Rule\Validator\Exception( 'Invalid config: param "pattern" was not found' );
         }
-        $this->_pattern = $config[ 'pattern' ];
+        $pattern = $config[ 'pattern' ];
+        $slash = 0;
         if ( array_key_exists( 'slash', $config ) )
         {
-            $this->_slash = $config[ 'slash' ];
+            $slash = $config[ 'slash' ];
         }
+        $result = new self( $pattern, $slash );
+        return $result;
+    }
+
+    public function __construct( $pattern, $slash = 0 )
+    {
+        $this->_pattern = $pattern;
+        $this->_slash = $slash;
     }
 
     /**

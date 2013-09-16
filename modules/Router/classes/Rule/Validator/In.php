@@ -12,17 +12,25 @@ class In extends \Miao\Router\Rule\Validator
 
     private $_variants = array();
 
-    public function __construct( array $config )
+    static public function create( array $config )
     {
         if ( !isset( $config[ 'variants' ] ) )
         {
             throw new \Miao\Router\Rule\Validator\Exception( 'Invalid config: param "variants" was not found' );
         }
+        $delimiter = ',';
         if ( array_key_exists( 'delimiter', $config ) )
         {
-            $this->_delimiter = $config[ 'delimiter' ];
+            $delimiter = $config[ 'delimiter' ];
         }
-        $this->_initVariants( $config[ 'variants' ] );
+        $result = new self( $config[ 'variants' ], $delimiter );
+        return $result;
+    }
+
+    public function __construct( $variants, $delimiter )
+    {
+        $this->_delimiter = $delimiter;
+        $this->_initVariants( $variants );
     }
 
     public function test( $value )

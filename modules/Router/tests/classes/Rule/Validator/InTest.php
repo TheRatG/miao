@@ -18,7 +18,7 @@ class InTest extends \PHPUnit_Framework_TestCase
             $this->setExpectedException( $exceptionName );
         }
 
-        $obj = new \Miao\Router\Rule\Validator\In( $config );
+        $obj = \Miao\Router\Rule\Validator\In::create( $config );
         $expected = $obj->test( $value );
 
         $this->assertEquals( $expected, $actual );

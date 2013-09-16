@@ -20,7 +20,7 @@ abstract class Validator
 
         try
         {
-            $result = new $className( $config );
+            $result = $className::create( $config );
         }
         catch ( \Miao\Autoload\Exception\FileNotFound $e )
         {
@@ -47,6 +47,11 @@ abstract class Validator
     protected function _setId( $id )
     {
         $this->_id = $id;
+    }
+
+    static public function create( array $config )
+    {
+
     }
 
     abstract public function test( $value );

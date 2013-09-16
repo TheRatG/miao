@@ -172,6 +172,9 @@ class RuleTest extends \PHPUnit_Framework_TestCase
     {
         $data = array();
 
+        $factory = $this->getFactory();
+
+
         $data[ ] = array(
             array(
                 'prefix' => 'Miao\\TestOffice',
@@ -195,7 +198,7 @@ class RuleTest extends \PHPUnit_Framework_TestCase
                 )
             ),
             '/article/123',
-            array( '_view' => 'Article\\Item', 'id' => '123' )
+            array( $factory->getViewRequestName() => 'Article\\Item', 'id' => '123' )
         );
 
         return $data;
@@ -226,7 +229,7 @@ class RuleTest extends \PHPUnit_Framework_TestCase
             'rule' => '/article/:id',
             'validators' => array()
         );
-        $data[ ] = array( $config, array( 'id' => 123 ), 'article/123' );
+        $data[ ] = array( $config, array( 'id' => 123 ), '/article/123' );
 
         $config = array(
             'prefix' => 'Miao\\TestOffice',
@@ -235,7 +238,7 @@ class RuleTest extends \PHPUnit_Framework_TestCase
             'rule' => '/article/:id',
             'validators' => array( array( 'id' => 'id', 'type' => 'Numeric' ) )
         );
-        $data[ ] = array( $config, array( 'id' => 123 ), 'article/123' );
+        $data[ ] = array( $config, array( 'id' => 123 ), '/article/123' );
 
         $data[ ] = array(
             $config,
@@ -266,7 +269,7 @@ class RuleTest extends \PHPUnit_Framework_TestCase
         $data[ ] = array(
             $config,
             array( 'section' => 'finance' ),
-            'article/finance'
+            '/article/finance'
         );
         $data[ ] = array(
             $config,
