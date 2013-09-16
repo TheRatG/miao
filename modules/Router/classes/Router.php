@@ -9,9 +9,14 @@ namespace Miao;
 
 class Router
 {
-    static public function getRequestMethod()
+    static public function checkAndReturnParam( array $config, $param, $default = null )
     {
-        $result = ( isset( $_SERVER[ 'REQUEST_METHOD' ] ) ) ? $_SERVER[ 'REQUEST_METHOD' ] : 'GET';
+        if ( !array_key_exists( $param, $config ) && is_null( $default ) )
+        {
+            $message = sprintf( 'Invalid config: need "%s" param', $param );
+            throw new \Miao\Router\Exception( $message );
+        }
+        $result = !empty( $config[ $param ] ) ? $config[ $param ] : $default;
         return $result;
     }
 }

@@ -73,6 +73,7 @@ class Request
     }
 
     /**
+     * Check exists var in vars
      * @param $name
      * @return bool
      */

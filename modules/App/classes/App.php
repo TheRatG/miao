@@ -20,6 +20,8 @@ class App
 
     const INSTANCE_OFFICE_NICK = 'miao:office';
 
+    const INSTANCE_OFFICE_FACTORY_NICK = 'miao:office_factory';
+
     const INSTANCE_RESPONSE_NICK = 'miao:response';
 
     const INSTANCE_LOGGER_NICK = 'miao:logger';
