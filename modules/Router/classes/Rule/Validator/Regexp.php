@@ -27,12 +27,13 @@ class Regexp extends \Miao\Router\Rule\Validator
         {
             $slash = $config[ 'slash' ];
         }
-        $result = new self( $pattern, $slash );
+        $result = new self( $config[ 'id' ], $pattern, $slash );
         return $result;
     }
 
-    public function __construct( $pattern, $slash = 0 )
+    public function __construct( $id, $pattern, $slash = 0 )
     {
+        $this->_setId( $id );
         $this->_pattern = $pattern;
         $this->_slash = $slash;
     }

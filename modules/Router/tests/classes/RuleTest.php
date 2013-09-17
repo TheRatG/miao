@@ -227,7 +227,7 @@ class RuleTest extends \PHPUnit_Framework_TestCase
             'type' => \Miao\Autoload\ClassInfo::TYPE_OBJECT_REQUEST_VIEW,
             'name' => 'Article\\Item',
             'rule' => '/article/:id',
-            'validators' => array()
+            'validators' => array( array( 'id' => 'id', 'type' => 'regexp', 'pattern' => '[0-9]+' ) )
         );
         $data[ ] = array( $config, array( 'id' => 123 ), '/article/123' );
 
@@ -306,84 +306,4 @@ class RuleTest extends \PHPUnit_Framework_TestCase
         return $data;
     }
 
-    /**
-     * @dataProvider dataProviderTestMakeRewrite
-     */
-    public function testMakeRewrite( array $config, $actual )
-    {
-        $route = \Miao\Router\Rule::factory( $config );
-        $expected = $route->makeRewrite();
-        $this->assertEquals( $actual, $expected );
-    }
-
-    public function dataProviderTestMakeRewrite()
-    {
-        $data = array();
-
-        $config = array(
-            'prefix' => 'Miao\\TestOffice2',
-            'type' => \Miao\Autoload\ClassInfo::TYPE_OBJECT_REQUEST_VIEW,
-            'name' => 'Article\\Item',
-            'desc' => 'Article item page. Some notes.',
-            'rule' => '/article/:id',
-            'validators' => array()
-        );
-        $data[ ] = array(
-            $config,
-            '# view:Article\\Item Article item page. Some notes.' . "\n" . 'RewriteRule ^article/([^/]+)$ index.php?id=$1&_view=Article\\Item&_prefix=Miao\\TestOffice2 [L,QSA]'
-        );
-
-        $config = array(
-            'prefix' => 'Miao\\TestOffice',
-            'type' => \Miao\Autoload\ClassInfo::TYPE_OBJECT_REQUEST_VIEW,
-            'name' => 'Article\\Item',
-            'rule' => '/article/:id',
-            'validators' => array( array( 'id' => 'id', 'type' => 'Numeric' ) )
-        );
-        $data[ ] = array(
-            $config,
-            '# view:Article\\Item' . "\n" . 'RewriteRule ^article/([0-9]+)$ index.php?id=$1&_view=Article\\Item&_prefix=Miao\\TestOffice [L,QSA]'
-        );
-
-        $config = array(
-            'prefix' => 'Miao\\TestOffice',
-            'type' => \Miao\Autoload\ClassInfo::TYPE_OBJECT_REQUEST_ACTION,
-            'name' => 'Article\\Item',
-            'rule' => '/article/:section',
-            'validators' => array(
-                array(
-                    'id' => 'section',
-                    'type' => 'In',
-                    'variants' => 'lifestyle,finance'
-                )
-            )
-        );
-
-        $data[ ] = array(
-            $config,
-            '# action:Article\\Item' . "\n" . 'RewriteRule ^article/(lifestyle|finance)$ index.php?section=$1&_action=Article\\Item&_prefix=Miao\\TestOffice [L,QSA]'
-        );
-
-        $config = array(
-            'prefix' => 'Miao\\TestOffice',
-            'type' => \Miao\Autoload\ClassInfo::TYPE_OBJECT_REQUEST_VIEW,
-            'name' => 'Article\\Item',
-            'rule' => '/:page/:id/:part/:user/:mode/:param',
-            'validators' => array(
-                array( 'id' => 'id', 'type' => 'Numeric' ),
-                array( 'id' => 'part', 'type' => 'Numeric', 'max' => 5, 'min' => 0 ),
-                array( 'id' => 'user', 'type' => 'Numeric', 'min' => 32, 'max' => 32 ),
-                array( 'id' => 'page', 'type' => 'Numeric', 'min' => 1 ),
-                array( 'id' => 'mode', 'type' => 'Numeric', 'min' => 2 ),
-                array( 'id' => 'param', 'type' => 'Numeric', 'min' => 3, 'max' => 5 )
-
-            )
-        );
-        $data[ ] = array(
-            $config,
-            '# view:Article\\Item' . "\n" . 'RewriteRule ^([0-9]+)/([0-9]+)/([0-9]+)/([0-9]{32})/([0-9]{2,})/([0-9]{3,5})$ index.php?page=$1&id=$2&part=$3&user=$4&mode=$5&param=$6&_view=Article\\Item&_prefix=Miao\\TestOffice [L,QSA]'
-        );
-
-        return $data;
-    }
 }

@@ -16,12 +16,13 @@ class Compare extends \Miao\Router\Rule\Validator
         {
             throw new \Miao\Router\Rule\Validator\Exception( 'Invalid config: param "str" was not found' );
         }
-        $result = new self( $config[ 'str' ] );
+        $result = new self( $config[ 'id' ], $config[ 'str' ] );
         return $result;
     }
 
-    public function __construct( $str )
+    public function __construct( $id, $str )
     {
+        $this->_setId( $id );
         $this->_str = $str;
     }
 

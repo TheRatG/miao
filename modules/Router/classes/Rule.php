@@ -9,6 +9,10 @@ namespace Miao\Router;
 
 class Rule
 {
+    const REWRITE_MODE_APACHE = 'apache';
+
+    const REWRITE_MODE_NGINX = 'nginx';
+
     /**
      * @var string
      */
@@ -58,6 +62,28 @@ class Rule
      * @var string[]
      */
     private $_parts = array();
+
+    /**
+     * @var array
+     */
+    private $_params = array();
+
+    static protected $_rewriteRuleModeMasks = array(
+        self::REWRITE_MODE_APACHE => array(
+            'mask' => '^%s%s$',
+            'rewrite' => '%s?%s',
+            'start' => 'RewriteRule',
+            'flags' => '[L,QSA]',
+            'index' => 'index.php'
+        ),
+        self::REWRITE_MODE_NGINX => array(
+            'mask' => '"^/?%s%s$"',
+            'rewrite' => '/%s?%s',
+            'start' => 'rewrite',
+            'flags' => 'break;',
+            'index' => 'index.php'
+        )
+    );
 
     /**
      * @param array $config
@@ -111,18 +137,12 @@ class Rule
     }
 
     /**
-     * @param mixed $controllerType
+     * @param $controllerType
+     * @throws Rule\Exception
      */
     public function setControllerType( $controllerType )
     {
-        if ( !in_array(
-            $controllerType, array(
-                                  \Miao\Autoload\ClassInfo::TYPE_OBJECT_REQUEST_ACTION,
-                                  \Miao\Autoload\ClassInfo::TYPE_OBJECT_REQUEST_VIEW,
-                                  \Miao\Autoload\ClassInfo::TYPE_OBJECT_REQUEST_VIEWBLOCK
-                             )
-        )
-        )
+        if ( !$this->checkControllerType( $controllerType ) )
         {
             $message = sprintf( 'Invalid route type: %s', $controllerType );
             throw new \Miao\Router\Rule\Exception( $message );
@@ -227,6 +247,30 @@ class Rule
     }
 
     /**
+     * @return array
+     */
+    public function getParams()
+    {
+        return $this->_params;
+    }
+
+    /**
+     * @return Rule\Validator[]
+     * @throws Rule\Exception
+     */
+    public function getValidators()
+    {
+        if ( count( $this->_validators ) < count( $this->_parts ) )
+        {
+            $msg = sprintf(
+                'Number of validators wrong (%s), parts (%s)', count( $this->_validators ), count( $this->_parts )
+            );
+            throw new \Miao\Router\Rule\Exception( $msg );
+        }
+        return $this->_validators;
+    }
+
+    /**
      * @param \Miao\Office\Factory $officeFactory
      */
     public function setOfficeFactory( $officeFactory )
@@ -252,6 +296,11 @@ class Rule
         return $result;
     }
 
+    public function addValidator( \Miao\Router\Rule\Validator $validator )
+    {
+        $this->_validators[ ] = $validator;
+    }
+
     public function match( $uri, $method = null )
     {
         if ( empty( $method ) )
@@ -269,6 +318,7 @@ class Rule
 
             $cnt = count( $this->_validators );
             $partsIterator = 0;
+
             for ( $i = 0; $i < $cnt; $i++ )
             {
                 $validator = $this->_validators[ $i ];
@@ -286,7 +336,6 @@ class Rule
                     $partsIterator++;
                 }
                 $check = $validator->test( $part );
-
                 if ( false == $check )
                 {
                     $result = $check;
@@ -354,8 +403,95 @@ class Rule
         return $uri;
     }
 
-    public function makeRewrite()
+    public function makeRewrite( $mode = 'apache', $addDesc = true )
     {
+        if ( !in_array( $mode, array_keys( self::$_rewriteRuleModeMasks ) ) )
+        {
+            throw new \Miao\Router\Rule\Exception( sprintf(
+                'Bad rewrite mode: %s', $mode
+            ) );
+        }
+
+        if ( $this->getNoRewrite() )
+        {
+            $rule = sprintf( '# rule asks to skip it /%s', $this->_rule );
+            return $rule;
+        }
+
+        $validators = $this->getValidators();
+        $url = array();
+        $params = array();
+        $j = 1;
+        foreach ( $this->_parts as $k => $part )
+        {
+            $pattern = $validators[ $k ]->getPattern();
+            if ( $this->_isParam( $part ) && !empty( $pattern ) )
+            {
+                $part = substr( $part, 1 );
+                $params[ $part ] = '$' . $j++;
+
+                if ( false !== strpos( $pattern, '(' ) )
+                {
+                    $url[ ] = $pattern;
+                }
+                else
+                {
+                    $url[ ] = '(' . $pattern . ')';
+                }
+            }
+            else
+            {
+                $url[ ] = $part;
+            }
+        }
+
+        if ( $mode == 'nginx' && count( $params ) > 9 )
+        {
+            $rule = sprintf(
+                '# error happened while generating rewrite for /%s (too many params)', $this->_rule
+            );
+        }
+        else
+        {
+            $params[ $this->_getControllerRequestName() ] = $this->getController();
+            if ( $this->getPrefix() )
+            {
+                $params[ '_prefix' ] = $this->getPrefix();
+            }
+
+            $suffix = substr( $this->_rule, -1 ) == '/' ? '/' : '';
+
+            $mask = sprintf(
+                self::$_rewriteRuleModeMasks[ $mode ][ 'mask' ], implode( '/', $url ), $suffix
+            );
+            $rewrite = sprintf(
+                self::$_rewriteRuleModeMasks[ $mode ][ 'rewrite' ], self::$_rewriteRuleModeMasks[ $mode ][ 'index' ],
+                str_replace( '%24', '$', urldecode( http_build_query( $params ) ) )
+            );
+            $start = self::$_rewriteRuleModeMasks[ $mode ][ 'start' ];
+            $flags = self::$_rewriteRuleModeMasks[ $mode ][ 'flags' ];
+
+            $desc = $addDesc ? sprintf(
+                "# %s:%s%s\n", $this->getControllerType(), $this->getController(),
+                $this->getDescription() ? ' ' . $this->getDescription() : ''
+            ) : '';
+            $rule = sprintf(
+                '%s%s %s %s %s', $desc, $start, $mask, $rewrite, $flags
+            );
+        }
+        return $rule;
+    }
+
+    public function checkControllerType( $controllerType )
+    {
+        $result = in_array(
+            $controllerType, array(
+                                  \Miao\Autoload\ClassInfo::TYPE_OBJECT_REQUEST_ACTION,
+                                  \Miao\Autoload\ClassInfo::TYPE_OBJECT_REQUEST_VIEW,
+                                  \Miao\Autoload\ClassInfo::TYPE_OBJECT_REQUEST_VIEWBLOCK
+                             )
+        );
+        return $result;
     }
 
     protected function _isParam( $str )
@@ -398,14 +534,10 @@ class Rule
         $parts = explode( '/', $rule );
         foreach ( $parts as $key => $value )
         {
-            if ( ':' == $value[ 0 ] )
+            if ( $value && ':' == $value[ 0 ] )
             {
                 $id = substr( $value, 1 );
                 $config = $this->_searchValidatorConfigById( $id, $validators );
-                if ( is_null( $config ) )
-                {
-                    $config = array( 'id' => $id, 'type' => 'NotEmpty' );
-                }
                 $this->_params[ ] = $id;
             }
             else
@@ -416,8 +548,11 @@ class Rule
                     'str' => $value
                 );
             }
-            $validator = \Miao\Router\Rule\Validator::factory( $config );
-            $this->_validators[ $key ] = $validator;
+            if ( !is_null( $config ) )
+            {
+                $validator = \Miao\Router\Rule\Validator::factory( $config );
+                $this->_validators[ $key ] = $validator;
+            }
         }
         $this->_parts = $parts;
 

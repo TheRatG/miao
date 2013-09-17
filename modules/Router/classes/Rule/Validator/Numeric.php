@@ -24,12 +24,13 @@ class Numeric extends \Miao\Router\Rule\Validator
         {
             $max = $config[ 'max' ];
         }
-        $result = new self( $min, $max );
+        $result = new self( $config[ 'id' ],$min, $max );
         return $result;
     }
 
-    public function __construct( $min = 1, $max = null )
+    public function __construct( $id, $min = 1, $max = null )
     {
+        $this->_setId( $id );
         $this->_min = $min;
         $this->_max = $max;
     }

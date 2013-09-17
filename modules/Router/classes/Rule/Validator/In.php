@@ -8,8 +8,6 @@ namespace Miao\Router\Rule\Validator;
 
 class In extends \Miao\Router\Rule\Validator
 {
-    private $_delimiter = ',';
-
     private $_variants = array();
 
     static public function create( array $config )
@@ -23,14 +21,15 @@ class In extends \Miao\Router\Rule\Validator
         {
             $delimiter = $config[ 'delimiter' ];
         }
-        $result = new self( $config[ 'variants' ], $delimiter );
+        $variants = explode( $delimiter, $config[ 'variants' ] );
+        $result = new self( $config[ 'id' ], $variants );
         return $result;
     }
 
-    public function __construct( $variants, $delimiter )
+    public function __construct( $id, array $variants )
     {
-        $this->_delimiter = $delimiter;
-        $this->_initVariants( $variants );
+        $this->_setId( $id );
+        $this->setVariants( $variants );
     }
 
     public function test( $value )
@@ -39,21 +38,34 @@ class In extends \Miao\Router\Rule\Validator
         return $result;
     }
 
-    protected function _initVariants( $variantsStr )
+    public function setVariants( $variants )
     {
-        $this->_variants = explode( $this->_delimiter, $variantsStr );
+        $message = '';
+        if ( empty( $variants ) )
+        {
+            $message = sprintf(
+                'Invalid param "variants": %s', $variants
+            );
+        }
 
-        foreach ( $this->_variants as &$item )
+        foreach ( $variants as &$item )
         {
             $item = trim( $item );
             if ( '' === $item )
             {
                 $message = sprintf(
-                    'Invalid param "variants": %s', $variantsStr
+                    'Invalid element into "variants": %s', print_r( $variants, true )
                 );
-                throw new \Miao\Router\Rule\Validator\Exception( $message );
+                break;
             }
         }
+
+        if ( !empty( $message ) )
+        {
+            throw new \Miao\Router\Rule\Validator\Exception( $message );
+        }
+
+        $this->_variants = $variants;
     }
 
     public function getPattern()
