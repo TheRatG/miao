@@ -20,6 +20,7 @@
             "modules/Logger/classes",
             "modules/Office/classes",
             "modules/Path/classes",
+            "modules/Router/classes",
             "modules/Template/classes"
         ]
     }
