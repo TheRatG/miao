@@ -32,6 +32,16 @@ class Request
         return $result;
     }
 
+    static public function getRequestUri()
+    {
+        $uri = '/';
+        if ( isset( $_SERVER[ 'REQUEST_URI' ] ) && !empty( $_SERVER[ 'REQUEST_URI' ] ) )
+        {
+            list( $uri ) = explode( '?', $_SERVER[ 'REQUEST_URI' ] );
+        }
+        return $uri;
+    }
+
     public function __construct( array $data )
     {
         $this->resetVars();

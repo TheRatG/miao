@@ -83,6 +83,25 @@ class Router
         return $result;
     }
 
+    public function getCurrentRoute()
+    {
+        $uri = \Miao\Office\Request::getRequestUri();
+        $result = $this->route( $uri );
+        return $result;
+    }
+
+    public function getCurrentView()
+    {
+        $params = $this->getCurrentRoute();
+        $viewRequestName = $this->getOfficeFactory()->getViewRequestName();
+        $result = '';
+        if ( isset( $params[ $viewRequestName ] ) )
+        {
+            $result = $params[ $viewRequestName ];
+        }
+        return $result;
+    }
+
     public function add( \Miao\Router\Rule $rule )
     {
         $rule->setOfficeFactory( $this->getOfficeFactory() );
@@ -95,11 +114,25 @@ class Router
         return $result;
     }
 
+    public function action( $name, array $params, $method = 'POST' )
+    {
+        $result = $this->makeUrl( $name, \Miao\Autoload\ClassInfo::TYPE_OBJECT_REQUEST_ACTION, $params, $method );
+        return $result;
+    }
+
+    public function viewBlock( $name, array $params )
+    {
+        $result = $this->makeUrl( $name, \Miao\Autoload\ClassInfo::TYPE_OBJECT_REQUEST_VIEWBLOCK, $params );
+        return $result;
+    }
+
     /**
      * Looking for a suitable rule and return params
      * @param $uri
      * @param null $method
      * @param bool $throwException
+     * @throws Router\Exception
+     * @return array|bool
      */
     public function route( $uri, $method = null, $throwException = true )
     {
@@ -109,13 +142,7 @@ class Router
         $prefixRequestName = $this
             ->getOfficeFactory()
             ->getPrefixRequestName();
-        if ( empty( $uri ) )
-        {
-//            $result = array();
-//            $result[ '_view' ] = $this->_main;
-//            $result[ '_prefix' ] = $this->_defaultPrefix;
-        }
-        else
+        if ( !empty( $uri ) )
         {
             $params = array();
             $rule = $this->getRuleByUri( $uri, $method, $params );
