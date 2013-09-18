@@ -104,6 +104,25 @@ class Router
         return $result;
     }
 
+    public function getCurrentUrl()
+    {
+        $uri = \Miao\Office\Request::getRequestUri();
+        $rule = $this->getRuleByUri( $uri );
+        $result = '';
+        if ( $rule )
+        {
+            $method = \Miao\Office\Request::getMethod();
+            $params = $GLOBALS[ '_' . $method ];
+            $params = array_diff_key( $params, array(
+                                                    $this->getOfficeFactory()->getViewRequestName() => 1,
+                                                    $this->getOfficeFactory()->getActionRequestName() => 2,
+                                                    $this->getOfficeFactory()->getViewBlockRequestName() => 3 ) );
+
+            $result = $rule->makeUrl( $params, $method );
+        }
+        return $result;
+    }
+
     public function add( \Miao\Router\Rule $rule )
     {
         $rule->setOfficeFactory( $this->getOfficeFactory() );

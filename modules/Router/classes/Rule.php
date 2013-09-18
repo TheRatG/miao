@@ -106,7 +106,7 @@ class Rule
         return $result;
     }
 
-    public function __construct( $rule, $controller, $controllerType, $method, array $validators = array(),
+    public function __construct( $rule, $controller, $controllerType, $method = \Miao\Office\Request::METHOD_GET, array $validators = array(),
                                  $description = null, $prefix = null, $noRewrite = false )
     {
         $this->setRule( $rule );
