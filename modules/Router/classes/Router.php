@@ -93,7 +93,9 @@ class Router
     public function getCurrentView()
     {
         $params = $this->getCurrentRoute();
-        $viewRequestName = $this->getOfficeFactory()->getViewRequestName();
+        $viewRequestName = $this
+            ->getOfficeFactory()
+            ->getViewRequestName();
         $result = '';
         if ( isset( $params[ $viewRequestName ] ) )
         {
@@ -142,18 +144,15 @@ class Router
         $prefixRequestName = $this
             ->getOfficeFactory()
             ->getPrefixRequestName();
-        if ( !empty( $uri ) )
+        $params = array();
+        $rule = $this->getRuleByUri( $uri, $method, $params );
+        if ( $rule )
         {
-            $params = array();
-            $rule = $this->getRuleByUri( $uri, $method, $params );
-            if ( $rule )
+            if ( !array_key_exists( $prefixRequestName, $params ) )
             {
-                if ( !array_key_exists( $prefixRequestName, $params ) )
-                {
-                    $params[ $prefixRequestName ] = $this->getDefaultPrefix();
-                }
-                $result = $params;
+                $params[ $prefixRequestName ] = $this->getDefaultPrefix();
             }
+            $result = $params;
         }
 
         if ( $result == false && $throwException )

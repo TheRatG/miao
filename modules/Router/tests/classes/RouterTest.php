@@ -8,6 +8,9 @@ namespace Miao;
 
 class RouterTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var \Miao\Router
+     */
     private $_router;
 
     public function setUp()
@@ -84,6 +87,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     {
         $data = array();
 
+        $data[ ] = array( 'Main', array(), '/' );
         $data[ ] = array( 'Article\\List', array(), '/articles' );
         $data[ ] = array( 'Article\\Item', array( 'id' => '123' ), '/article/123' );
         $data[ ] = array( 'Article\\Item', array( 'id' => '123', 'flag' => '1' ), '/article/123?flag=1' );
@@ -128,6 +132,15 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $data = array();
 
         $factory = new \Miao\Office\Factory();
+
+        $data[ ] = array(
+            '/',
+            array(
+                $factory->getPrefixRequestName() => 'Miao\\TestOffice',
+                $factory->getViewRequestName() => 'Main'
+            )
+        );
+
         $data[ ] = array(
             '/import',
             array(
