@@ -311,11 +311,14 @@ class Rule
         $result = false;
         if ( $method == $this->getMethod() )
         {
-            $parts = explode( '/', trim( $uri, '/' ) );
+            $parts = array();
+            if ( $uri )
+            {
+                $parts = explode( '/', trim( $uri, '/' ) );
+            }
             $result = array(
                 $this->_getControllerRequestName() => $this->getController()
             );
-
             $cnt = count( $this->_validators );
             $partsIterator = 0;
 
@@ -361,7 +364,6 @@ class Rule
         {
             $method = \Miao\Office\Request::getMethod();
         }
-
         $uri = array();
         $parts = $this->_parts;
         foreach ( $parts as $paramName )
@@ -531,38 +533,41 @@ class Rule
     protected function _init( array $validators )
     {
         $rule = $this->getRule();
-        $parts = explode( '/', $rule );
-        foreach ( $parts as $key => $value )
+        if ( $rule )
         {
-            if ( $value && ':' == $value[ 0 ] )
+            $parts = explode( '/', $rule );
+            foreach ( $parts as $key => $value )
             {
-                $id = substr( $value, 1 );
-                $config = $this->_searchValidatorConfigById( $id, $validators );
-                $this->_params[ ] = $id;
+                if ( $value && ':' == $value[ 0 ] )
+                {
+                    $id = substr( $value, 1 );
+                    $config = $this->_searchValidatorConfigById( $id, $validators );
+                    $this->_params[ ] = $id;
+                }
+                else
+                {
+                    $config = array(
+                        'id' => null,
+                        'type' => 'Compare',
+                        'str' => $value
+                    );
+                }
+                if ( !is_null( $config ) )
+                {
+                    $validator = \Miao\Router\Rule\Validator::factory( $config );
+                    $this->_validators[ $key ] = $validator;
+                }
             }
-            else
-            {
-                $config = array(
-                    'id' => null,
-                    'type' => 'Compare',
-                    'str' => $value
-                );
-            }
-            if ( !is_null( $config ) )
-            {
-                $validator = \Miao\Router\Rule\Validator::factory( $config );
-                $this->_validators[ $key ] = $validator;
-            }
-        }
-        $this->_parts = $parts;
+            $this->_parts = $parts;
 
-        if ( count( $validators ) )
-        {
-            $message = sprintf(
-                "Some validators did not find his part of uri (%s). Validators: %s", implode( '/', $this->_parts ),
-                print_r( $validators, true )
-            );
-            throw new \Miao\Router\Rule\Exception( $message );
+            if ( count( $validators ) )
+            {
+                $message = sprintf(
+                    "Some validators did not find his part of uri (%s). Validators: %s", implode( '/', $this->_parts ),
+                    print_r( $validators, true )
+                );
+                throw new \Miao\Router\Rule\Exception( $message );
+            }
         }
     }
 

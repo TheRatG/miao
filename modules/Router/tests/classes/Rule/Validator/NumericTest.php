@@ -44,7 +44,7 @@ class NumericTest extends \PHPUnit_Framework_TestCase
 
         $config = array( 'id' => 'objectid', 'min' => 2, 'max' => 5 );
         $data[] = array( $config, '1', false );
-        $data[] = array( $config, '12345', true );
+        $data[] = array( $config, '5', true );
         $data[] = array( $config, '123456', false );
 
         return $data;

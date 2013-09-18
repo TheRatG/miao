@@ -9,12 +9,12 @@ namespace Miao\Router\Rule\Validator;
 
 class Numeric extends \Miao\Router\Rule\Validator
 {
-    private $_min = 1;
+    private $_min = 0;
     private $_max = null;
 
     static public function create( array $config )
     {
-        $min = 1;
+        $min = 0;
         if ( array_key_exists( 'min', $config ) )
         {
             $min = $config[ 'min' ];
@@ -28,7 +28,7 @@ class Numeric extends \Miao\Router\Rule\Validator
         return $result;
     }
 
-    public function __construct( $id, $min = 1, $max = null )
+    public function __construct( $id, $min = 0, $max = null )
     {
         $this->_setId( $id );
         $this->_min = $min;
@@ -40,11 +40,10 @@ class Numeric extends \Miao\Router\Rule\Validator
         $value = ( string ) trim( $value );
         $result = is_numeric( $value );
 
-        $len = strlen( $value );
-
-        if ( $this->_min )
+        $number = (int) $value;
+        if ( $result && $this->_min )
         {
-            if ( $len < $this->_min )
+            if ( $number < $this->_min )
             {
                 $result = false;
             }
@@ -52,12 +51,11 @@ class Numeric extends \Miao\Router\Rule\Validator
 
         if ( $result && $this->_max )
         {
-            if ( $len > $this->_max )
+            if ( $number > $this->_max )
             {
                 $result = false;
             }
         }
-
         return $result;
     }
 
