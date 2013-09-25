@@ -254,4 +254,23 @@ class Router
         $result = $rule->makeUrl( $params, $method );
         return $result;
     }
+
+    public function makeRewrite( $mode = \Miao\Router\Rule::REWRITE_MODE_NGINX )
+    {
+        $s = array();
+
+        foreach ( $this->_rules as $r )
+        {
+            $s[] = $r->makeRewrite( $mode );
+        }
+
+//        foreach ( $this->_skipedRules as $r )
+//        {
+//            $s[] = '# error happened while generating rewrite for ' . $r[ 'rule' ];
+//        }
+
+        $s = implode( "\n", $s );
+
+        return $s;
+    }
 }

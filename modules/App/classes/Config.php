@@ -13,7 +13,7 @@ class Config
     const INCLUDES_SECTION_NAME = 'secret_lib_includes';
 
     /**
-     * @var array \Miao\Config\Base[]
+     * @var \Miao\Config\Base[]
      */
     protected $_config = array();
 

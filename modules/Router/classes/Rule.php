@@ -106,8 +106,8 @@ class Rule
         return $result;
     }
 
-    public function __construct( $rule, $controller, $controllerType, $method = \Miao\Office\Request::METHOD_GET, array $validators = array(),
-                                 $description = null, $prefix = null, $noRewrite = false )
+    public function __construct( $rule, $controller, $controllerType, $method = \Miao\Office\Request::METHOD_GET,
+                                 array $validators = array(), $description = null, $prefix = null, $noRewrite = false )
     {
         $this->setRule( $rule );
         $this->setController( $controller );
@@ -263,11 +263,18 @@ class Rule
         if ( count( $this->_validators ) < count( $this->_parts ) )
         {
             $msg = sprintf(
-                'Number of validators wrong (%s), parts (%s)', count( $this->_validators ), count( $this->_parts )
+                'Number of validators wrong (%s), cnt parts (%s), %s => /%s', count( $this->_validators ),
+                count( $this->_parts ), implode( '/', $this->_parts ), $this->getController()
             );
             throw new \Miao\Router\Rule\Exception( $msg );
         }
-        return $this->_validators;
+
+        $result = $this->_validators;
+        if ( is_array( $this->_validators ) )
+        {
+            $result = array_values( $result );
+        }
+        return $result;
     }
 
     /**

@@ -22,9 +22,10 @@ class Base
     /**
      * @param $path
      * @param null $default
-     * @return array|null
+     * @param bool $throwException
      * @throws Exception\PathNotFound
      * @throws Exception\InvalidPath
+     * @return array|null
      */
     public function get( $path, $default = null, $throwException = true )
     {
