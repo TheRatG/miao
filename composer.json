@@ -13,7 +13,9 @@
     },
     "autoload" : {
         "classmap" : [
+            "modules/Acl/classes",
             "modules/App/classes",
+            "modules/Auth/classes",
             "modules/Autoload/classes",
             "modules/Config/classes",
             "modules/Console/classes",

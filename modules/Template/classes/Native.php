@@ -10,7 +10,7 @@ namespace Miao\Template;
 class Native
 {
     /**
-     * @var string Default templates folder
+     * @var string Standart templates folder
      */
     protected $_templatesDir;
 
