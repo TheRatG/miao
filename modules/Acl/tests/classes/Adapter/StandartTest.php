@@ -52,8 +52,8 @@ class StandartTest extends \PHPUnit_Framework_TestCase
 
     public function testMain()
     {
-        $adapter = new Miao_Acl_Adapter_Default();
-        $acl = new Miao_Acl( $adapter );
+        $adapter = new \Miao\Acl\Adapter\Standart();
+        $acl = new \Miao\Acl( $adapter );
 
         $acl->addGroup( 'root' );
         $acl->addGroup( 'guest' );

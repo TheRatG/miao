@@ -138,7 +138,7 @@ class AllowTest extends \PHPUnit_Framework_TestCase
 
     public function testAllowExOne()
     {
-        $exceptionName = 'Miao_Acl_Exception';
+        $exceptionName = '\Miao\Acl\Adapter\Exception';
         $this->setExpectedException( $exceptionName );
 
         $adapter = new \Miao\Acl\Adapter\Standart();
