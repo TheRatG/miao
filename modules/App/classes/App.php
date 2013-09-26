@@ -26,6 +26,8 @@ class App
 
     const INSTANCE_LOGGER_NICK = 'miao:logger';
 
+    const INSTANCE_SESSION_NICK = 'miao:session';
+
     /**
      * @var array Application
      */
@@ -37,6 +39,21 @@ class App
     protected $_objects;
 
     /**
+     * @param string $name Instance application name (default = 'Main')
+     * @return null|App
+     */
+    static public function getInstance( $name = self::INSTANCE_DEFAULT_NICK )
+    {
+        $result = null;
+        if ( isset( self::$_instance[ $name ] ) )
+        {
+            $result = self::$_instance[ $name ];
+        }
+        return $result;
+    }
+
+    /**
+     * @param array $configMap
      * @param array $configMain
      * @param array $configModules
      * @param string $name Instance name
@@ -66,6 +83,20 @@ class App
         return $result;
     }
 
+    /**
+     * @return \Miao\Session
+     */
+    static public function session()
+    {
+        $session = self::getInstance()->getObject( self::INSTANCE_SESSION_NICK, false );
+        if ( !$session )
+        {
+            $session = \Miao\Session::factory();
+            self::getInstance()->setObject( $session, self::INSTANCE_SESSION_NICK );
+        }
+        return $session;
+    }
+
     static public function logger()
     {
         $logger = self::getInstance()->getObject( self::INSTANCE_LOGGER_NICK, false );
@@ -75,20 +106,6 @@ class App
             self::getInstance()->setObject( $logger, self::INSTANCE_LOGGER_NICK );
         }
         return $logger;
-    }
-
-    /**
-     * @param string $name Instance application name (default = 'Main')
-     * @return null|App
-     */
-    static public function getInstance( $name = self::INSTANCE_DEFAULT_NICK )
-    {
-        $result = null;
-        if ( isset( self::$_instance[ $name ] ) )
-        {
-            $result = self::$_instance[ $name ];
-        }
-        return $result;
     }
 
     /**
