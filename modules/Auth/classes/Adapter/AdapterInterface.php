@@ -30,7 +30,8 @@ interface AdapterInterface
 
     /**
      * Use this method for options remember me
+     * @param string $identity
      * @return \Miao\Auth\Result
      */
-    public function restore();
+    public function restore( $identity );
 }

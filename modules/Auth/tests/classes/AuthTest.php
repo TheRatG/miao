@@ -45,6 +45,9 @@ class AuthTest extends \PHPUnit_Framework_TestCase
 
         $data[ ] = array( 'michael', '123', \Miao\Auth\Result::SUCCESS );
         $data[ ] = array( 'michael', '1234', \Miao\Auth\Result::FAILURE );
+        $data[ ] = array( 'natalya', '1234', \Miao\Auth\Result::FAILURE );
+        $data[ ] = array( 'natalya', 'qwe', \Miao\Auth\Result::SUCCESS );
+        $data[ ] = array( 'michael', 'qwe', \Miao\Auth\Result::FAILURE );
 
         return $data;
     }

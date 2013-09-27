@@ -91,7 +91,7 @@ class App
         $session = self::getInstance()->getObject( self::INSTANCE_SESSION_NICK, false );
         if ( !$session )
         {
-            $session = \Miao\Session::factory();
+            $session = \Miao\Session\Manager::factoryByConfig();
             self::getInstance()->setObject( $session, self::INSTANCE_SESSION_NICK );
         }
         return $session;

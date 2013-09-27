@@ -51,19 +51,23 @@ class Manager
         $result = $app->getObject( \Miao\App::INSTANCE_SESSION_NICK, false );
         if ( !$result )
         {
-            $config = \Miao\App::getInstance()
-                ->config( __CLASS__ );
-            $options = $config->get( 'options', false );
-            if ( !$options )
-            {
-                $options = array();
-            }
-            $handlerConfig = $config->get( 'Handler', false );
+            $options = array();
             $handler = null;
-            if ( !empty( $handlerConfig ) )
+            $config = \Miao\App::getInstance()
+                ->config( __CLASS__, false );
+            if ( $config )
             {
-                $handlerClassName = '\\Miao\\Session\\Handler\\' . key( $handlerConfig );
-                $handler = \Miao\Config\Instance::get( $handlerClassName );
+                $options = $config->get( 'options', false );
+                if ( !$options )
+                {
+                    $options = array();
+                }
+                $handlerConfig = $config->get( 'Handler', false );
+                if ( !empty( $handlerConfig ) )
+                {
+                    $handlerClassName = '\\Miao\\Session\\Handler\\' . key( $handlerConfig );
+                    $handler = \Miao\Config\Instance::get( $handlerClassName );
+                }
             }
             $result = new self( $options, $handler );
             $app->setObject( $result, \Miao\App::INSTANCE_SESSION_NICK );

@@ -30,7 +30,7 @@ class Auth
     {
         if ( is_null( $storage ) )
         {
-            $this->_storage = new Miao_Auth_Storage_Session();
+            $this->_storage = new \Miao\Auth\Storage\Session();
         }
         $this->setAdapter( $adapter );
     }
@@ -52,6 +52,7 @@ class Auth
     }
 
     /**
+     * @throws Auth\Adapter\Exception
      * @return \Miao\Auth\Adapter\AdapterInterface $_adapter
      */
     public function getAdapter()
