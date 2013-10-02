@@ -67,10 +67,9 @@ class Standart implements \Miao\Auth\Adapter\AdapterInterface
     }
 
     /**
-     * @param string $identity
      * @return \Miao\Auth\Result|void
      */
-    public function restore( $identity )
+    public function restore()
     {
         // TODO: Implement restore() method.
     }

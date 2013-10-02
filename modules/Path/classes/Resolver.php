@@ -93,6 +93,7 @@ class Resolver
         }
         $classInfo = \Miao\Autoload\ClassInfo::parse( $string );
 
+        $result = '';
         try
         {
             $this->_getDir( $classInfo->getLib() );
