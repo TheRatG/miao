@@ -1,6 +1,7 @@
 {
     "name" : "theratg/miao",
     "description": "PHP framework",
+    "license": "BSD-4-Clause",
     "authors" : [
         {
             "name" : "Vladimir",
@@ -12,7 +13,9 @@
         "symfony/console" : "2.3",
         "monolog/monolog" : ">=1.6"
     },
-    "license": "MIT",
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*"
+    },    
     "autoload" : {
         "classmap" : [
             "modules"
