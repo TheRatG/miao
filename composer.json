@@ -1,0 +1,26 @@
+{
+    "name" : "theratg/miao",
+    "description": "PHP framework",
+    "authors" : [
+        {
+            "name" : "Vladimir",
+            "email" : "TheRatW@gmail.com"
+        }
+    ],
+    "minimum-stability" : "stable",
+    "require" : {
+        "symfony/console" : "2.3",
+        "monolog/monolog" : ">=1.6"
+    },
+    "license": "MIT",
+    "autoload" : {
+        "classmap" : [
+            "modules"
+        ]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "4.1-dev"
+        }
+    }
+}

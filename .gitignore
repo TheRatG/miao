@@ -1,3 +1,6 @@
 data/config*
 scripts/miao.php
 modules/Env/data/*
+/tmp/
+composer.lock
+/vendor/
