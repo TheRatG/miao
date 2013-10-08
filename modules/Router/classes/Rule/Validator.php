@@ -16,6 +16,7 @@ abstract class Validator
         assert( array_key_exists( 'type', $config ) );
 
         $type = $config[ 'type' ];
+        /** @var \Miao\Router\Rule\Validator $className */
         $className = '\\Miao\\Router\\Rule\\Validator\\' . ucfirst( $type );
 
         try

@@ -8,7 +8,7 @@
 namespace Miao\TestOffice\View\News;
 
 /**
- * Common view bloks and properties defined in parent class,
+ * Common view blocks and properties defined in parent class,
  * always check parent::_initializeBlock()
  */
 class Item extends \Miao\TestOffice\View implements \Miao\Office\Controller\ViewInterface

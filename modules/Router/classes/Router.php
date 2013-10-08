@@ -231,7 +231,7 @@ class Router
 
         if ( empty( $candidates ) )
         {
-            $message = sprintf( 'Rule with name (%s) didn\'t define. Check your config.', $name );
+            $message = sprintf( 'Rule with name (%s) did not define. Check your config.', $name );
             throw new \Miao\Router\Exception( $message );
         }
 
@@ -245,7 +245,7 @@ class Router
             //@todo: need test
             // 			else if ( $item[ 'cnt' ] == $candidate[ 'cnt' ] )
             // 			{
-            // 				$message = sprintf( 'Rule dublicate detected, name: %s', $name );
+            // 				$message = sprintf( 'Rule duplicate detected, name: %s', $name );
             // 				throw new Miao_Router_Exception( $message );
             // 			}
         }
@@ -263,12 +263,6 @@ class Router
         {
             $s[] = $r->makeRewrite( $mode );
         }
-
-//        foreach ( $this->_skipedRules as $r )
-//        {
-//            $s[] = '# error happened while generating rewrite for ' . $r[ 'rule' ];
-//        }
-
         $s = implode( "\n", $s );
 
         return $s;

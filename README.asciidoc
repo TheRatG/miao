@@ -1,4 +1,4 @@
-== Maio
+== Miao
 PHP фреймоворк
 
 == Installing/Configuring

@@ -8,6 +8,9 @@ namespace Miao;
 
 class AuthTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var \Miao\Auth
+     */
     private $_auth;
 
     public function setUp()

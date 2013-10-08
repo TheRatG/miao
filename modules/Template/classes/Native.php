@@ -278,7 +278,7 @@ class Native
     }
 
     /**
-     * Starts any parsed block ( see beore ).
+     * Starts any parsed block.
      * May be extended in child classes for additional functionality.
      * @return string
      */
@@ -290,7 +290,7 @@ class Native
     }
 
     /**
-     * Ends any parsed block ( see beore ).
+     * Ends any parsed block.
      * May be extended in child classes for additional functionality.
      * @return string
      */

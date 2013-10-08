@@ -108,13 +108,13 @@ class Standart implements \Miao\Acl\Adapter\AdapterInterface
 
     public function allow( $group = null, $resource = null, array $privileges = array() )
     {
-        $this->_changePermisssion( self::ALLOW, $group, $resource, $privileges );
+        $this->_changePermission( self::ALLOW, $group, $resource, $privileges );
         return $this;
     }
 
     public function deny( $group = null, $resource = null, array $privileges = array() )
     {
-        $this->_changePermisssion( self::DENY, $group, $resource, $privileges );
+        $this->_changePermission( self::DENY, $group, $resource, $privileges );
         return $this;
     }
 
@@ -130,7 +130,7 @@ class Standart implements \Miao\Acl\Adapter\AdapterInterface
         return $this;
     }
 
-    protected function _changePermisssion( $type, $group, $resource, $privileges = null )
+    protected function _changePermission( $type, $group, $resource, $privileges = null )
     {
         if ( is_null( $group ) || '*' == $group )
         {

@@ -53,6 +53,7 @@ class ClassCommand extends Command\Generate
         $parent = $this->_getParent( $output );
 
         $error = '';
+        $classFilename = '';
         try
         {
             $classFilename = $this->_makeClassFile(

@@ -185,7 +185,7 @@ class Manager
      * Regenerate the session ID, using session save handler's
      * native ID generation Can safely be called in the middle of a session.
      * @param  bool $deleteOldSession
-     * @return SessionManager
+     * @return $this
      */
     public function regenerateId( $deleteOldSession = true )
     {
