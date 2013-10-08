@@ -1,11 +1,14 @@
 {
     "name" : "theratg/miao",
+    "description": "PHP framework",
+    "version" : "4.1.0",
     "authors" : [
         {
             "name" : "Vladimir",
             "email" : "TheRatW@gmail.com"
         }
     ],
+    "license": "MIT",
     "minimum-stability" : "stable",
     "require" : {
         "symfony/console" : "2.3",
@@ -13,17 +16,7 @@
     },
     "autoload" : {
         "classmap" : [
-            "modules/Acl/classes",
-            "modules/App/classes",
-            "modules/Auth/classes",
-            "modules/Autoload/classes",
-            "modules/Config/classes",
-            "modules/Console/classes",
-            "modules/Logger/classes",
-            "modules/Office/classes",
-            "modules/Path/classes",
-            "modules/Router/classes",
-            "modules/Template/classes"
+            "modules"
         ]
     }
 }
