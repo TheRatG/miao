@@ -161,7 +161,7 @@ class NativeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals( $res, '' );
     }
 
-    protected function _generateTemplate( $valName = 'val_name', $additionalVars = false )
+    protected function _generateTemplate( $valName = 'val_name', array $additionalVars = array() )
     {
         $tplFilename = $this->_templatesDir . DIRECTORY_SEPARATOR . $this->_templateName;
         if ( file_exists( $tplFilename ) )
@@ -169,7 +169,7 @@ class NativeTest extends \PHPUnit_Framework_TestCase
             unlink( $tplFilename );
         }
         $s = '<?=$this->getValueOf(\'' . $valName . '\' )?>';
-        if ( is_array( $additionalVars ) && count( $additionalVars ) > 0 )
+        if ( is_array( $additionalVars ) && !empty( $additionalVars ) )
         {
             foreach ( $additionalVars as $v )
             {

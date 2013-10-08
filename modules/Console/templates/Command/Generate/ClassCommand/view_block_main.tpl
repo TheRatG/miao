@@ -20,7 +20,7 @@ class %class% extends %parent%
      */
 	public function processData()
 	{
-	    throw new Exception( spritnf( 'Redeclare method "%s" in children classes', __METHOD__ ) );
+	    throw new Exception( sprintf( 'Redeclare method "%s" in children classes', __METHOD__ ) );
 	}
 
     /**
@@ -29,6 +29,6 @@ class %class% extends %parent%
      */
     public function initTemplateVariables()
 	{
-	    throw new Exception( spritnf( 'Redeclare method "%s" in children classes', __METHOD__ ) );
+	    throw new Exception( sprintf( 'Redeclare method "%s" in children classes', __METHOD__ ) );
     }
 }

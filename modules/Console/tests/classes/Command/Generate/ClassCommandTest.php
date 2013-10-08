@@ -9,7 +9,7 @@ class ClassCommandTest extends \PHPUnit_Framework_TestCase
     private $_app;
 
     /**
-     * @var \Miao\Path
+     * @var \Miao\Path\Resolver
      */
     private $_path;
 
@@ -46,7 +46,6 @@ class ClassCommandTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertRegExp( '/Generated file/', $commandTester->getDisplay() );
-        $moduleRoot = $this->_path->getModuleDir( $className );
 
         $filename = \Miao\Autoload::getInstance()
             ->getFilenameByClassName( $className );

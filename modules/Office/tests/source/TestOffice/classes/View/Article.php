@@ -22,11 +22,13 @@ class Article extends \Miao\TestOffice\View implements \Miao\Office\Controller\V
 	    parent::initializeBlock();
 
         $menuViewBlock = new \Miao\TestOffice\ViewBlock\Menu();
-        $this->initBlock( 'MenuTop', $menuViewBlock->setTemplateFilename( 'top.tpl' ) );
+        $menuViewBlock->setTemplateFilename( 'top.tpl' );
+        $this->initBlock( 'MenuTop', $menuViewBlock );
 
         $viewBlock = new \Miao\TestOffice\ViewBlock\Article\Item();
         $this->initBlock( 'Article', $viewBlock );
 
-        $this->initBlock( 'MenuBottom', $menuViewBlock->setTemplateFilename( 'bottom.tpl' ) );
+        $menuViewBlock->setTemplateFilename( 'bottom.tpl' );
+        $this->initBlock( 'MenuBottom', $menuViewBlock );
 	}
 }

@@ -80,21 +80,21 @@ class Index
         $msg = '';
         if ( $controller instanceof \Miao\Office\Controller\Action && !$controller instanceof \Miao\Office\Controller\ActionInterface )
         {
-            $msg = spritnf(
+            $msg = sprintf(
                 'Invalid controller "%s", must be implemented in \Miao\Office\Controller\ActionInterface',
                 get_class( $controller )
             );
         }
         else if ( $controller instanceof \Miao\Office\Controller\View && !$controller instanceof \Miao\Office\Controller\ViewInterface )
         {
-            $msg = spritnf(
+            $msg = sprintf(
                 'Invalid controller "%s", must be implemented in \Miao\Office\Controller\ViewInterface',
                 get_class( $controller )
             );
         }
         else if ( $controller instanceof \Miao\Office\Controller\ViewBlock && !$controller instanceof \Miao\Office\Controller\ViewBlockInterface )
         {
-            $msg = spritnf(
+            $msg = sprintf(
                 'Invalid controller "%s", must be implemented in \Miao\Office\Controller\ViewBlockInterface',
                 get_class( $controller )
             );

@@ -84,7 +84,7 @@ class App
     }
 
     /**
-     * @return \Miao\Session
+     * @return \Miao\Session\Manager
      */
     static public function session()
     {

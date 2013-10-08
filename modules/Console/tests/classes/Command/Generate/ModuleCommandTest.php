@@ -9,7 +9,7 @@ class ModuleCommandTest extends \PHPUnit_Framework_TestCase
     private $_app;
 
     /**
-     * @var \Miao\Path
+     * @var \Miao\Path\Resolver
      */
     private $_path;
 

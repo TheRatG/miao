@@ -26,7 +26,8 @@ class AuthTest extends \PHPUnit_Framework_TestCase
      * @dataProvider providerTestLogin
      * @param $login
      * @param $pass
-     * @param $excepted
+     * @param $expected
+     * @internal param $excepted
      */
     public function testLogin( $login, $pass, $expected )
     {

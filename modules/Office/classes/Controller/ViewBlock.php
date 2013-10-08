@@ -155,7 +155,7 @@ class ViewBlock extends \Miao\Office\Controller implements \Miao\Office\Controll
      */
     public function processData()
     {
-        throw new \Miao\Office\Controller\ViewBlock\Exception( spritnf(
+        throw new \Miao\Office\Controller\ViewBlock\Exception( sprintf(
             'Redeclare method "%s" in children classes', __METHOD__
         ) );
     }
@@ -166,7 +166,7 @@ class ViewBlock extends \Miao\Office\Controller implements \Miao\Office\Controll
      */
     public function initTemplateVariables()
     {
-        throw new \Miao\Office\Controller\ViewBlock\Exception( spritnf(
+        throw new \Miao\Office\Controller\ViewBlock\Exception( sprintf(
             'Redeclare method "%s" in children classes', __METHOD__
         ) );
     }

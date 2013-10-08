@@ -70,7 +70,7 @@ class Container implements \ArrayAccess, \Iterator
 
     public function __set( $offset, $value )
     {
-        if ( $value instanceof Miao_Session_Namespace_Reference )
+        if ( $value instanceof \Miao\Session\Container\Reference )
         {
             $this->set( $offset, $value->getReference() );
         }

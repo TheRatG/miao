@@ -9,8 +9,8 @@ namespace Miao\Auth\Adapter;
 interface AdapterInterface
 {
     /**
-     * @param scalar $login
-     * @param scalar $password
+     * @param string $login
+     * @param string $password
      * @param array $options
      * @return \Miao\Auth\Result
      */

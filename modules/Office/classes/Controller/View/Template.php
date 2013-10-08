@@ -15,7 +15,7 @@ class Template extends \Miao\Template\Native
     protected $_viewTemplateFilename;
 
     /**
-     * @var \Miao\Office\Controller\ViewBlock[]
+     * @var string[]
      */
     protected $_viewBlockList = array();
 
@@ -38,8 +38,9 @@ class Template extends \Miao\Template\Native
     /**
      * @param $name
      * @param \Miao\Office\Controller\ViewBlock $viewBlock
-     * @return $this
+     * @throws \Exception|\Miao\Template\Exception\Critical
      * @throws Exception
+     * @return $this
      */
     public function initBlock( $name, \Miao\Office\Controller\ViewBlock $viewBlock )
     {
@@ -52,7 +53,7 @@ class Template extends \Miao\Template\Native
         {
             $this->_viewBlockList[ $name ] = $viewBlock->generateContent();
         }
-        catch ( \Miao\Template\Exception\Crititcal $e )
+        catch ( \Miao\Template\Exception\Critical $e )
         {
             throw $e; // re-throw exception to the outer catch block
         }
@@ -67,6 +68,12 @@ class Template extends \Miao\Template\Native
         return $this;
     }
 
+    /**
+     * @param $name
+     * @param string $before
+     * @param string $after
+     * @return string
+     */
     public function includeBlock( $name, $before = '', $after = '' )
     {
         $result = '';

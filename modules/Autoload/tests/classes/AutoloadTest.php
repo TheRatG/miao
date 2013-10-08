@@ -86,7 +86,7 @@ class AutoloadTest extends \PHPUnit_Framework_TestCase
         $autoload = Autoload::getInstance();
         $autoload->registerItem( 'Miao', 'Standart', $this->_getLibPath() );
 
-        $obj = new $className();
+        new $className();
     }
 
     /**

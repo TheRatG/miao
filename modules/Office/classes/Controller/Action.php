@@ -10,9 +10,13 @@ namespace Miao\Office\Controller;
 
 class Action extends \Miao\Office\Controller implements \Miao\Office\Controller\ActionInterface
 {
+    /**
+     * @return string|void
+     * @throws Exception
+     */
     public function execute()
     {
-        throw new Exception( spritnf( 'Redeclare method "%s" in children classes', __METHOD__ ) );
+        throw new Exception( sprintf( 'Redeclare method "%s" in children classes', __METHOD__ ) );
     }
 
     /**

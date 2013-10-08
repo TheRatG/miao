@@ -18,12 +18,13 @@ class UrlTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider providerTestHref
-     * @param $host
+     * @param $url
      * @param $path
      * @param string $query
      * @param string $fragment
      * @param $actual
      * @param string $exceptionName
+     * @internal param $host
      */
     public function testBuild( $url, $path, $query = '', $fragment = '', $actual, $exceptionName = '' )
     {

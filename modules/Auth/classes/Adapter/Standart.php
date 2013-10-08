@@ -16,8 +16,8 @@ class Standart implements \Miao\Auth\Adapter\AdapterInterface
     }
 
     /**
-     * @param scalar $login
-     * @param scalar $password
+     * @param string $login
+     * @param string $password
      * @param array $options
      * @return \Miao\Auth\Result
      */

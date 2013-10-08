@@ -177,7 +177,6 @@ class Resolver
         $className = $ar[ 0 ];
         $classInfo = \Miao\Autoload\ClassInfo::parse( $ar[ 0 ] );
 
-        $classNamePath = array();
         if ( $classInfo->isOldFashion() )
         {
             $classNamePath = explode( '_', $className );

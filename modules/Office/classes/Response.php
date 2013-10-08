@@ -105,8 +105,8 @@ class Response
     public function __toString()
     {
         $result = sprintf(
-                'HTTP/%s %s %s', $this->version, $this->statusCode, $this->statusText
-            ) . "\r\n" . $this->header . "\r\n" . $this->getContent();
+                'HTTP/%s %s %s', $this->_version, $this->_statusCode, $this->_statusText
+            ) . "\r\n" . $this->_header . "\r\n" . $this->getContent();
         return $result;
     }
 
@@ -224,7 +224,7 @@ class Response
      * Sends HTTP headers.
      *
      * @return $this
-     * @throws Header\Exception\AlreadySended
+     * @throws  \Miao\Office\Response\Exception\AlreadySended
      */
     public function sendHeaders()
     {

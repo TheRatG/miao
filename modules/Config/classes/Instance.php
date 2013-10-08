@@ -17,7 +17,7 @@ class Instance
         {
             $params = array();
         }
-        $rc = new ReflectionClass( $className );
+        $rc = new \ReflectionClass( $className );
         $result = $rc->newInstanceArgs( $params );
 
         return $result;

@@ -38,6 +38,7 @@ class Autoload
     /**
      * Registration libraries autoload
      * @param array $libs
+     * @return bool
      * @throws Exception
      */
     static public function init( array $libs )

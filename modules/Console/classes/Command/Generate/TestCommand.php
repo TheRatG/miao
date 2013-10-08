@@ -41,6 +41,7 @@ class TestCommand extends Command\Generate
         $classInfo = \Miao\Autoload\ClassInfo::parse( $name );
 
         $error = '';
+        $classFilename = '';
         try
         {
             $classFilename = $this->_makeClassFile( $classInfo, 'test.tpl', array( '%author%' ), array( $author ) );

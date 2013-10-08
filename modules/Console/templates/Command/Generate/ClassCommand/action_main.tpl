@@ -11,6 +11,6 @@ class %class% extends %parent% implements \Miao\Office\Controller\ActionInterfac
 {
     public function execute()
     {
-        throw new Exception( spritnf( 'Redeclare method "%s" in children classes', __METHOD__ ) );
+        throw new Exception( sprintf( 'Redeclare method "%s" in children classes', __METHOD__ ) );
     }
 }

@@ -145,6 +145,8 @@ class ClassCommand extends Command\Generate
     {
         $result = '';
         $parentClassName = '';
+        $baseClassName = '';
+        $parentTemplate = '';
         if ( $this->_classInfo->isView() )
         {
             $parentClassName = $this->_classInfo->getLib() . '\\' . $this->_classInfo->getModule() . '\\' . 'View';

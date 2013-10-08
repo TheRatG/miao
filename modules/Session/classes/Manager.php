@@ -105,6 +105,7 @@ class Manager
     public function getOptions()
     {
         $options = $this->_optionsMap;
+        $result = null;
         foreach ( $options as $name )
         {
             $result[ 'session.' . $name ] = $this->getOption( $name );
@@ -234,10 +235,9 @@ class Manager
 
     /**
      * Destroy/end a session
-     * @param  array $options See {@link $defaultDestroyOptions}
      * @return void
      */
-    public function destroy( array $options = null )
+    public function destroy()
     {
         if ( $this->sessionExists() )
         {
