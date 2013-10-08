@@ -169,8 +169,12 @@ class ClassCommand extends Command\Generate
 
         if ( $parentClassName )
         {
-            $isParentExists = \Miao\Autoload::getInstance()
-                ->getFilenameByClassName( $parentClassName );
+            $libName = $this->_classInfo->getLib();
+            $path = \Miao\App::getInstance()
+                ->getPath();
+            $plugin = new \Miao\Autoload\Plugin\Standart( $libName, $path->getRootDir( $libName ) );
+            $isParentExists = $plugin->getFilenameByClassName( $parentClassName );
+
             if ( !$isParentExists )
             {
                 $parentFilename = $this->_makeClassFile(
@@ -185,7 +189,7 @@ class ClassCommand extends Command\Generate
             }
             $result = '\\' . $parentClassName;
         }
-        else if ( $this->_classInfo->isView() || $this->_classInfo->isViewBlock() || $this->_classInfo->isAction()  )
+        else if ( $this->_classInfo->isView() || $this->_classInfo->isViewBlock() || $this->_classInfo->isAction() )
         {
             $msg = sprintf( 'Parent class for "%s" not found', $this->_classInfo->getParsedString() );
             throw new Command\Exception( $msg );
