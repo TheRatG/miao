@@ -52,7 +52,7 @@ abstract class Validator
 
     static public function create( array $config )
     {
-
+        //@todo must be implemented
     }
 
     abstract public function test( $value );

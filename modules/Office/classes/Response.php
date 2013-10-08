@@ -98,18 +98,6 @@ class Response
         $this->_header = new \Miao\Office\Header();
         $this->setProtocolVersion( '1.1' );
     }
-
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        $result = sprintf(
-                'HTTP/%s %s %s', $this->_version, $this->_statusCode, $this->_statusText
-            ) . "\r\n" . $this->_header . "\r\n" . $this->getContent();
-        return $result;
-    }
-
     /**
      * Sets the HTTP protocol version (1.0 or 1.1).
      * @param string $version The HTTP protocol version

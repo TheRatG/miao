@@ -185,6 +185,10 @@ class Autoload
         return $this->_registerList;
     }
 
+    /**
+     * @param $name
+     * @return \Miao\Autoload\Plugin|null
+     */
     public function getPlugin( $name )
     {
         $index = $this->_getIndex( $name );

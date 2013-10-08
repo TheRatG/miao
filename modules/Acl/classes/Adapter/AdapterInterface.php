@@ -44,4 +44,16 @@ interface AdapterInterface
      * @return \Miao\Acl\Adapter\AdapterInterface
      */
     public function addGroup( $group );
+
+    /**
+     * @param string $group
+     * @return \Miao\Acl\Adapter\AdapterInterface
+     */
+    public function deleteGroup( $group );
+
+    /**
+     * @param string $resource
+     * @return \Miao\Acl\Adapter\AdapterInterface
+     */
+    public function delete( $resource );
 }

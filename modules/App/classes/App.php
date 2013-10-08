@@ -77,6 +77,7 @@ class App
      */
     static public function config( $path = null, $throwException = true )
     {
+        /** @var \Miao\App\Config $config */
         $config = self::getInstance()
             ->getObject( self::INSTANCE_CONFIG_NICK );
         $result = $config->getObject( $path, $throwException );

@@ -23,6 +23,7 @@ namespace Miao\Acl\Adapter;
 class Standart implements \Miao\Acl\Adapter\AdapterInterface
 {
     const ALLOW = 'allow';
+
     const DENY = 'deny';
 
     protected $_resource = array();
@@ -149,10 +150,10 @@ class Standart implements \Miao\Acl\Adapter\AdapterInterface
             $this->_checkResource( $resource, true );
         }
 
-        $permission = &$this->_deny;
+        $permission = & $this->_deny;
         if ( $type == self::ALLOW )
         {
-            $permission = &$this->_allow;
+            $permission = & $this->_allow;
         }
 
         $permission[ $group ][ $resource ] = $privileges;
@@ -277,5 +278,29 @@ class Standart implements \Miao\Acl\Adapter\AdapterInterface
             throw new \Miao\Acl\Adapter\Exception( $message );
         }
         return $result;
+    }
+
+    /**
+     * @param string $group
+     * @return \Miao\Acl\Adapter\AdapterInterface
+     */
+    public function deleteGroup( $group )
+    {
+        if ( array_key_exists( $group, $this->_group ) )
+        {
+            unset( $this->_group[ $group ] );
+        }
+    }
+
+    /**
+     * @param string $resource
+     * @return \Miao\Acl\Adapter\AdapterInterface
+     */
+    public function delete( $resource )
+    {
+        if ( array_key_exists( $resource, $this->_resource ) )
+        {
+            $this->_resource[ $resource ];
+        }
     }
 }

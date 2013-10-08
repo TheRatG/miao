@@ -101,6 +101,7 @@ class Resolver
         }
         catch ( \Miao\Path\Exception $e )
         {
+            /** @var \Composer\Autoload\ClassLoader $loader */
             $loader = \Miao\App::getInstance()
                 ->getObject( \Miao\App::INSTANCE_COMPOSER_LOADER_NICK );
             if ( $loader )
