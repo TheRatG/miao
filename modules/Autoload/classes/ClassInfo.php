@@ -216,15 +216,24 @@ class ClassInfo
 
     protected function _initOffice()
     {
-        if ( false !== strpos( $this->_class, 'Office' . $this->_delimiter . self::TYPE_OBJECT_REQUEST_VIEWBLOCK ) )
+        if ( false !== strpos(
+                $this->_class, 'Office' . $this->_delimiter . self::TYPE_OBJECT_REQUEST_VIEWBLOCK . $this->_delimiter
+            )
+        )
         {
             $this->_isViewBlock = true;
         }
-        else if ( false !== strpos( $this->_class, 'Office' . $this->_delimiter . self::TYPE_OBJECT_REQUEST_VIEW ) )
+        else if ( false !== strpos(
+                $this->_class, 'Office' . $this->_delimiter . self::TYPE_OBJECT_REQUEST_VIEW . $this->_delimiter
+            )
+        )
         {
             $this->_isView = true;
         }
-        else if ( false !== strpos( $this->_class, 'Office' . $this->_delimiter . self::TYPE_OBJECT_REQUEST_ACTION ) )
+        else if ( false !== strpos(
+                $this->_class, 'Office' . $this->_delimiter . self::TYPE_OBJECT_REQUEST_ACTION . $this->_delimiter
+            )
+        )
         {
             $this->_isAction = true;
         }

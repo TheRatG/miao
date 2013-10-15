@@ -71,7 +71,7 @@ class App
     }
 
     /**
-     * @param $path
+     * @param __CLASS__ or __METHOD__
      * @param bool $throwException
      * @return \Miao\Config\Base
      */
@@ -117,6 +117,12 @@ class App
         return $this->getObject( self::INSTANCE_PATH_NICK );
     }
 
+    public function path()
+    {
+        $path = self::getInstance()->getObject( self::INSTANCE_PATH_NICK );
+        return $path;
+    }
+
     /**
      * @param object $object
      * @param null $nick
@@ -147,7 +153,7 @@ class App
     public function getObject( $nick, $throwException = true )
     {
         $result = null;
-        if ( isset( $this->_objects[ $nick ] ) )
+        if ( $this->objectExists( $nick ) )
         {
             $result = $this->_objects[ $nick ];
         }
@@ -158,6 +164,50 @@ class App
                 $msg = sprintf( 'Object by nick %s not found', $nick );
                 throw new \Miao\App\Exception( $msg );
             }
+        }
+        return $result;
+    }
+
+    public function objectExists( $nick )
+    {
+        $result = array_key_exists( $nick, $this->_objects );
+        return $result;
+    }
+
+    /**
+     * @param $nick
+     * @return bool
+     */
+    public function removeObject( $nick )
+    {
+        $result = false;
+        if ( $this->objectExists( $nick ) )
+        {
+            unset( $this->_objects[ $nick ] );
+            $result = true;
+        }
+        return $result;
+    }
+
+    /**
+     * @param $nick
+     * @param callback $instanceCallback
+     * @return null
+     */
+    public function getInstanceObject( $nick, $instanceCallback )
+    {
+        if ( \Miao\App::getInstance()
+            ->objectExists( $nick )
+        )
+        {
+            $result = \Miao\App::getInstance()
+                ->getObject( $nick );
+        }
+        else
+        {
+            $result = $instanceCallback->__invoke();
+            \Miao\App::getInstance()
+                ->setObject( $result, $nick );
         }
         return $result;
     }
